@@ -1,0 +1,30 @@
+<button
+  [type]="type"
+  [class]="classes"
+  [disabled]="disabled || loading"
+  (click)="onClick($event)">
+  
+  @if (icon && iconPosition === 'left') {
+    <span class="btn-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <use [attr.href]="'#icon-' + icon"></use>
+      </svg>
+    </span>
+  }
+
+  @if (loading) {
+    <span class="btn-loader">
+      <svg class="spinner" width="18" height="18" viewBox="0 0 24 24">
+        <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" fill="none" stroke-width="2"/>
+      </svg>
+    </span>
+  }
+
+  <span class="btn-content">
+    <ng-content></ng-content>
+  </span>
+
+  @if (icon && iconPosition === 'right') {
+    <span class="btn-icon">→</span>
+  }
+</button>

@@ -1,0 +1,22 @@
+<!-- features/administrators/administrators.component.html -->
+<div class="administrators-page">
+
+  <app-card>
+    <div class="card-actions">
+      <app-button 
+        variant="primary" 
+        icon="plus"
+        (clicked)="onAddAdmin()">
+        Ajouter un administrateur
+      </app-button>
+    </div>
+
+    <app-data-table
+      [columns]="columns"
+      [data]="administrators"
+      [showActions]="true"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)">
+    </app-data-table>
+  </app-card>
+</div>
