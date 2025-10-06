@@ -1,9 +1,9 @@
-<div class="app-container">
-  <!-- Sidebar -->
-  <app-sidebar></app-sidebar>
-  
-  <!-- Main content -->
-  <div class="main-content">
-    <router-outlet></router-outlet>
+<div class="main-layout">
+  <app-header></app-header>
+  <div class="layout-body">
+    <app-sidebar></app-sidebar>
+    <main class="main-content">
+      <ng-content></ng-content>
+    </main>
   </div>
 </div>

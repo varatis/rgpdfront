@@ -1,0 +1,39 @@
+<div class="table-container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th *ngFor="let column of columns">
+          {{ column.label }}
+        </th>
+        <th *ngIf="showActions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data">
+        <td *ngFor="let column of columns">
+          {{ item[column.key] }}
+        </td>
+        <td *ngIf="showActions" class="actions-cell">
+          <app-button 
+            variant="outline" 
+            size="sm"
+            icon="edit"
+            (clicked)="onEdit(item)">
+            Modifier
+          </app-button>
+          <app-button 
+            variant="danger" 
+            size="sm"
+            icon="delete"
+            (clicked)="onDelete(item)">
+            Supprimer
+          </app-button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div *ngIf="data.length === 0" class="empty-state">
+    Aucune donnée disponible
+  </div>
+</div>

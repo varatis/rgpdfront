@@ -1,1 +1,16 @@
-<p>header works!</p>
+<div class="page-header">
+  <div class="header-content">
+    <div class="title-section">
+      @if (showBackButton) {
+        <button class="back-button" (click)="onBack()">←</button>
+      }
+      <h1 class="page-title">{{ title }}</h1>
+    </div>
+    @if (subtitle) {
+      <p class="page-subtitle">{{ subtitle }}</p>
+    }
+  </div>
+  <div class="header-actions">
+    <ng-content></ng-content>
+  </div>
+</div>

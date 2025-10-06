@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { AdministratorsRoutingModule } from './administrators-routing-module';
-
+import { Administrators } from './administrators';
+import { SharedModule } from '../../shared/shared-module';
 
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
-    AdministratorsRoutingModule
+    Administrators
   ]
 })
 export class AdministratorsModule { }
