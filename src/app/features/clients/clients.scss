@@ -1,0 +1,339 @@
+/* --- CONTAINER GLOBAL --- */
+.clients-layout {
+  background-color: #F3F6FA;
+  display: flex;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  transition: all 0.3s ease;
+
+  /* quand les détails sont ouverts, on rétrécit la partie gauche */
+  &.details-open .clients-page {
+    width: calc(100% - 420px);
+    transition: width 0.3s ease;
+  }
+
+  &.details-open .client-details-sidebar {
+    transform: translateX(0);
+  }
+}
+
+/* --- PAGE PRINCIPALE --- */
+.clients-page {
+  padding: 2rem;
+  width: 100%;
+  transition: width 0.3s ease;
+}
+/* --- HEADER --- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.75rem;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .icon-wrapper {
+      width: 28px;
+      height: 28px;
+      top: 39px;
+      left: 304px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-title {
+      font-family: montserrat;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #111827;
+      height: 100%;
+      letter-spacing: 0%;
+
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.75rem;
+
+    .btn-filter {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 40px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      color: #374151;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.15s ease;
+
+      svg {
+        stroke-width: 2;
+      }
+
+      &:hover {
+        background: #f3f4f6;
+      }
+    }
+
+    .btn-primary {
+      background: #2E63CD;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      padding: 0.5rem 1.25rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #1d4ed8;
+      }
+    }
+  }
+}
+
+/* --- ONGLET ACTUEL / ARCHIVÉ --- */
+.tabs-header {
+  display: flex;
+  .tab-btn {
+    width: 396px;
+    padding: 0.90rem 7rem;
+    background: #fff;
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: #4F4F4F;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s ease-in-out;
+    
+
+    &:hover {
+      color: #111827;
+    }
+
+    &.active {
+      
+    
+      color: #2E63CD;
+      border-bottom-color: #2E63CD;
+    }
+
+    &:not(.active) {
+
+   
+      background: #DDE1E6; 
+      color: #374151;
+
+      &:hover {
+        background: #e5e7eb;
+      }
+    }
+
+     &:first-child {
+      border-top-left-radius: 8px;
+    }
+    &:last-child {
+      border-top-right-radius: 8px;
+    }
+  }
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem 1rem;
+  
+
+  .page-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: none;
+    border: none;
+     align-items: center;
+  justify-content: center;
+    font-size: 0.85rem;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #f3f4f6;
+    }
+
+    &.active {
+      //border-radius: 80%;
+      border: 1px solid #d1d5db;
+      background: #2E63CD;
+      color: white;
+      border-color: #2E63CD;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+}
+
+
+/* --- COLLAPSIBLE "CLIENT" --- */
+.collapse-wrapper {
+  //margin-top: 1rem;
+  width: 100%;
+
+  .collapse-container {
+    transition: all 0.3s ease;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .clients-list {
+    background: white;
+    border-top: 1px solid #f3f4f6;
+
+    .clients-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #f3f4f6;
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: #f9fafb;
+      }
+
+      .client-info {
+        font-weight: 500;
+        color: #111827;
+        flex: 1;
+        cursor: pointer;
+      }
+
+      .client-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-shrink: 0; /* pour que les boutons ne disparaissent jamais */
+
+        .action-btn,
+        .view-btn {
+          border: none;
+          background: none;
+          padding: 0.35rem;
+          cursor: pointer;
+          border-radius: 6px;
+          color: #6b7280;
+          transition: all 0.15s ease;
+
+          &:hover {
+            background: #f3f4f6;
+            color: #2563eb;
+          }
+        }
+
+        .delete:hover {
+          color: #ef4444;
+        }
+      }
+    }
+  }
+}
+.collapse-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #111827;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+
+  /* plus de style de bouton */
+  cursor: default;
+  user-select: none;
+
+  .collapse-title {
+    font-weight: 600;
+  }
+
+  .chevron {
+    transition: transform 0.25s ease;
+    stroke-width: 2;
+    color: #6b7280;
+    transform: rotate(-90deg); 
+
+    &.open {
+      transform: rotate(0deg); /* Quand ouvert : flèche vers le bas */
+    }
+  }
+}
+
+
+/* --- SIDEBAR DÉTAILS --- */
+.client-details-sidebar {
+  width: 420px;
+  background: #fff;
+  border-left: 1px solid #e5e7eb;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.05);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 20; /* passe au-dessus du contenu sans cacher les boutons */
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .sidebar-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    color: #6b7280;
+    border-radius: 6px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+  }
+
+  .sidebar-content {
+    padding: 1.5rem;
+  }
+}
+
+.clients-layout.details-open .client-details-sidebar {
+  transform: translateX(0);
+}

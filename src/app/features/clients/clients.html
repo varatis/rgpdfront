@@ -1,0 +1,124 @@
+<div class="clients-layout" [class.details-open]="selectedClient">
+
+
+  <div class="clients-page">
+   <div class="clients-main"></div> 
+    <!-- HEADER -->
+    <div class="page-header">
+      <div class="header-left">
+        <div class="icon-wrapper">
+          <img src="assets/icons/source_environment.svg" alt="Mon icône personnalisée">
+        </div>
+        <h1 class="page-title">Clients</h1>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-filter" (click)="onFilterClients()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+          </svg>
+          Filtres
+        </button>
+
+        <button class="btn-primary" (click)="onCreateClient()">+ Créer un client</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-header">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'actuel'"
+        (click)="setActiveTab('actuel')">
+        Actuel ({{ actuelsCount }})
+      </button>
+
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'archive'"
+        (click)="setActiveTab('archive')">
+        Archivé ({{ archivesCount }})
+      </button>
+    </div>
+
+    <!-- COLLAPSIBLE CLIENT -->
+    <div class="collapse-wrapper">
+      <div class="collapse-container">
+     <div class="collapse-header">
+  <span class="collapse-title">Client</span>
+  <svg 
+    class="chevron" 
+    [class.open]="clientsListOpen" 
+    (click)="toggleClientsList()"
+    width="18" height="18" 
+    viewBox="0 0 24 24" 
+    fill="none" stroke="currentColor">
+    <polyline points="6 9 12 15 18 9"></polyline>
+  </svg>
+</div>
+
+     <div class="clients-list" *ngIf="clientsListOpen">
+      <div class="clients-list-item" *ngFor="let c of displayedClients">
+        <div class="client-info" (click)="onViewClient(c)">
+          <div class="client-name">{{ c.name }}</div>
+        </div>
+
+        <div class="client-actions">
+          <button class="action-btn" title="Modifier" (click)="onEditClient(c)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+            </svg>
+          </button>
+
+          <button class="action-btn" title="Archiver" *ngIf="activeTab === 'actuel'" (click)="onArchiveClient(c)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6z"></path>
+            </svg>
+          </button>
+
+          <button class="action-btn delete" title="Supprimer" *ngIf="activeTab === 'archive'" (click)="onDeleteClient(c)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6z"></path>
+            </svg>
+          </button>
+
+          <button class="view-btn" (click)="onViewClient(c)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="pagination" *ngIf="displayedClients.length > 0">
+  <button class="page-btn" [disabled]="true">«</button>
+  <button class="page-btn active">1</button>
+  <button class="page-btn">2</button>
+  <button class="page-btn">3</button>
+  <button class="page-btn">»</button>
+</div>
+
+
+
+
+    </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+ <div class="client-details-sidebar" *ngIf="selectedClient">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">{{ selectedClient.name }}</h2>
+      <button class="close-btn" (click)="closeClientDetails()">✕</button>
+    </div>
+    <div class="sidebar-content">
+      <p>Détails du client à venir...</p>
+    </div>
+  </div>
+</div>

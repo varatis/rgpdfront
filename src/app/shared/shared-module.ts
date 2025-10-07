@@ -23,8 +23,8 @@ const COMPONENTS = [
   DataTable
 ];
 
-NgModule({
-  declarations: COMPONENTS,
+@NgModule({
+  
   imports: [
     CommonModule,
     ...COMPONENTS
