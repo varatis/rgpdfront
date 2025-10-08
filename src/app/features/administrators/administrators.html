@@ -1,22 +1,102 @@
-<!-- features/administrators/administrators.component.html -->
-<div class="administrators-page">
+<div class="administrateurs-layout" [class.details-open]="selectedAdmin">
+  <div class="administrateurs-page">
+    <!-- HEADER -->
+    <div class="page-header">
+      <div class="header-left">
+        <div class="icon-wrapper">
+            <svg
+        class="nav-icon"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        stroke="currentColor"
+      >
+        <path
+          d="M12 13C11.0167 13 10.1875 12.6625 9.5125 11.9875C8.8375 11.3125 8.5 10.4833 8.5 9.5C8.5 8.51667 8.8375 7.6875 9.5125 7.0125C10.1875 6.3375 11.0167 6 12 6C12.9833 6 13.8125 6.3375 14.4875 7.0125C15.1625 7.6875 15.5 8.51667 15.5 9.5C15.5 10.4833 15.1625 11.3125 14.4875 11.9875C13.8125 12.6625 12.9833 13 12 13ZM12 11C12.4333 11 12.7917 10.8583 13.075 10.575C13.3583 10.2917 13.5 9.93333 13.5 9.5C13.5 9.06667 13.3583 8.70833 13.075 8.425C12.7917 8.14167 12.4333 8 12 8C11.5667 8 11.2083 8.14167 10.925 8.425C10.6417 8.70833 10.5 9.06667 10.5 9.5C10.5 9.93333 10.6417 10.2917 10.925 10.575C11.2083 10.8583 11.5667 11 12 11ZM12 22C9.68333 21.4167 7.77083 20.0875 6.2625 18.0125C4.75417 15.9375 4 13.6333 4 11.1V5L12 2L20 5V11.1C20 13.6333 19.2458 15.9375 17.7375 18.0125C16.2292 20.0875 14.3167 21.4167 12 22ZM12 4.125L6 6.375V11.1C6 12 6.125 12.875 6.375 13.725C6.625 14.575 6.96667 15.375 7.4 16.125C8.1 15.775 8.83333 15.5 9.6 15.3C10.3667 15.1 11.1667 15 12 15C12.8333 15 13.6333 15.1 14.4 15.3C15.1667 15.5 15.9 15.775 16.6 16.125C17.0333 15.375 17.375 14.575 17.625 13.725C17.875 12.875 18 12 18 11.1V6.375L12 4.125ZM12 17C11.4 17 10.8167 17.0667 10.25 17.2C9.68333 17.3333 9.14167 17.5167 8.625 17.75C9.10833 18.25 9.63333 18.6833 10.2 19.05C10.7667 19.4167 11.3667 19.7 12 19.9C12.6333 19.7 13.2333 19.4167 13.8 19.05C14.3667 18.6833 14.8917 18.25 15.375 17.75C14.8583 17.5167 14.3167 17.3333 13.75 17.2C13.1833 17.0667 12.6 17 12 17Z"
+          fill="none"
+        />
+      </svg>
+        </div>
+        <h1 class="page-title">Administrateurs</h1>
+      </div>
 
-  <app-card>
-    <div class="card-actions">
-      <app-button 
-        variant="primary" 
-        icon="plus"
-        (clicked)="onAddAdmin()">
-        Ajouter un administrateur
-      </app-button>
+      <div class="header-actions">
+        <button class="btn-filter" (click)="onFilterAdmins()">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path
+              d="M8 18V12H10V14H18V16H10V18H8ZM0 16V14H6V16H0ZM4 12V10H0V8H4V6H6V12H4ZM8 10V8H18V10H8ZM12 6V0H14V2H18V4H14V6H12ZM0 4V2H10V4H0Z"
+              fill="#161617"
+            />
+          </svg>
+          Filtres
+        </button>
+
+        <button class="btn-primary" (click)="onCreateAdmin()">+ Ajouter un administrateur</button>
+      </div>
     </div>
 
-    <app-data-table
-      [columns]="columns"
-      [data]="administrators"
-      [showActions]="true"
-      (edit)="onEdit($event)"
-      (delete)="onDelete($event)">
-    </app-data-table>
-  </app-card>
+     <!-- TABLE DES ADMINISTRATEURS -->
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of administrateurs; track a.id) {
+            <tr>
+              <td>{{ a.nom }}</td>
+              <td>{{ a.prenom }}</td>
+              <td>{{ a.email }}</td>
+              <td class="actions">
+              <button class="action-btn" title="Modifier" (click)="onEditAdmin(a)">
+                <svg
+                  class="icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 19H6.425L16.2 9.225L14.775 7.8L5 17.575V19ZM3 21V16.75L16.2 3.575C16.4 3.39167 16.6208 3.25 16.8625 3.15C17.1042 3.05 17.3583 3 17.625 3C17.8917 3 18.15 3.05 18.4 3.15C18.65 3.25 18.8667 3.4 19.05 3.6L20.425 5C20.625 5.18333 20.7708 5.4 20.8625 5.65C20.9542 5.9 21 6.15 21 6.4C21 6.66667 20.9542 6.92083 20.8625 7.1625C20.7708 7.40417 20.625 7.625 20.425 7.825L7.25 21H3ZM15.475 8.525L14.775 7.8L16.2 9.225L15.475 8.525Z"
+                  />
+                </svg>
+              </button>
+             
+              <button class="action-btn delete" title="Supprimer" (click)="onDeleteAdmin(a)">
+                <svg
+                  class="icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z"
+                  />
+                </svg>
+              </button>
+              
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    
+        <div class="pagination">
+          <button class="page-btn" [disabled]="true">«</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">»</button>
+        </div>
+  </div>
 </div>

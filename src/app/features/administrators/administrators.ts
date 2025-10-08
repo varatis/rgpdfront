@@ -1,58 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { Administrator } from '../../shared/interfaces/administrator.interface';
-import { TableAction, TableColumn } from '../../shared/interfaces';
-import { Card } from '../../shared/components/card/card';
-import { Button } from '../../shared/components/button/button';
-import { DataTable } from '../../shared/components/data-table/data-table';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-administrators',
   standalone: true,
-  imports: [Card, Button, DataTable],
+  imports: [CommonModule],
   templateUrl: './administrators.html',
   styleUrl: './administrators.scss'
 })
 export class Administrators implements OnInit {
-  administrators: Administrator[] = [
-    {
-      id: '1',
-      nom: 'Doe',
-      prenom: 'John',
-      email: 'john.doe@mail.fr',
-      role: 'super-admin',
-      isActive: true,
-      lastLogin: new Date(),
-      createdAt: new Date()
-    }
+  administrateurs: Administrator[] = [{ id: '1', nom: 'Doe', prenom: 'John', email: 'test@gmail.com',role: "super-admin", isActive: true, createdAt: new Date() },  
+    { id: '2', nom: 'Smith', prenom: 'Anna', email: 'test2@gmail.com', role: "admin", isActive: false, createdAt: new Date() },
+    { id: '3', nom: 'Brown', prenom: 'James', email: 'test3@gmail.com', role: "user", isActive: true, createdAt: new Date() } 
   ];
 
-  columns: TableColumn[] = [
-    { key: 'nom', label: 'Nom', sortable: true },
-    { key: 'prenom', label: 'Prénom', sortable: true },
-    { key: 'email', label: 'Email', sortable: true },
-    { key: 'role', label: 'Rôle', sortable: true },
-    { key: 'isActive', label: 'Statut', dataType: 'boolean' }
-  ];
+  selectedAdmin: Administrator | null = null;
 
-  actions: TableAction[] = [
-    { name: 'edit', label: 'Modifier', icon: 'edit', color: 'primary' },
-    { name: 'delete', label: 'Supprimer', icon: 'delete', color: 'danger' }
-  ];
+  ngOnInit(): void {}
 
-  constructor() { }
-
-  ngOnInit(): void { }
-
-  onAddAdmin(): void {
-    // Ajoutez ici la logique pour ajouter un administrateur
-    console.log('Ajouter un administrateur');
+  onCreateAdmin(): void {
+    console.log('Créer un administrateur');
   }
 
-  onEdit(admin: Administrator): void {
-    console.log('Modifier:', admin);
+  onEditAdmin(admin: Administrator): void {
+    console.log('Modifier administrateur:', admin);
   }
 
-  onDelete(admin: Administrator): void {
-    console.log('Supprimer:', admin);
+  onDeleteAdmin(admin: Administrator): void {
+    console.log('Supprimer administrateur:', admin);
+  }
+
+  onFilterAdmins(): void {
+    console.log('Filtrer les administrateurs');
   }
 }

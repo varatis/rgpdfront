@@ -81,10 +81,9 @@
           </svg>
         </div>
         @if(clientsListOpen) {
-        <div class="clients-list" >
-          
+        <div class="clients-list">
           @for (c of displayedClients; track $index) {
-          <div class="clients-list-item" >
+          <div class="clients-list-item">
             <div class="client-info">
               <div class="client-name">{{ c.name }}</div>
             </div>
@@ -105,11 +104,7 @@
                 </svg>
               </button>
               @if(activeTab === 'actuel') {
-              <button
-                class="action-btn"
-                title="Archiver"
-                (click)="onArchiveClient(c)"
-              >
+              <button class="action-btn" title="Archiver" (click)="onArchiveClient(c)">
                 <svg
                   class="icon"
                   width="18"
@@ -123,14 +118,8 @@
                   />
                 </svg>
               </button>
-            }
-@if (activeTab === 'actuel') {
-              <button
-                class="action-btn delete"
-                title="Supprimer"
-            
-                (click)="onDeleteClient(c)"
-              >
+              } @if (activeTab === 'actuel') {
+              <button class="action-btn delete" title="Supprimer" (click)="onDeleteClient(c)">
                 <svg
                   class="icon"
                   width="24"
@@ -144,7 +133,7 @@
                   />
                 </svg>
               </button>
-            }
+              }
               <button class="view-btn detail" title="Détails">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <polyline points="9 18 15 12 9 6"></polyline>
@@ -152,19 +141,19 @@
               </button>
             </div>
           </div>
-        }
+          }
         </div>
 
-      }
-      @if(displayedClients.length > 0) {
-        <div class="pagination" >
+        } @if(displayedClients.length > 0) {
+        <div class="pagination">
           <button class="page-btn" [disabled]="true">«</button>
           <button class="page-btn active">1</button>
           <button class="page-btn">2</button>
           <button class="page-btn">3</button>
           <button class="page-btn">»</button>
-        </div>  
-      }
+        </div>
+        }
       </div>
     </div>
   </div>
+</div>
