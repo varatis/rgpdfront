@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Client, TableColumn } from '../../shared/interfaces';
 import { Router } from '@angular/router';
-import { Button } from '../../shared/components/button/button';
-import { Card } from '../../shared/components/card/card';
-import { DataTable } from '../../shared/components/data-table/data-table';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-clients',
