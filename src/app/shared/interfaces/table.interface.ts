@@ -3,7 +3,7 @@ export interface TableColumn {
   label: string;
   sortable?: boolean;
   width?: string;
-  dataType?: 'text' | 'number' | 'date' | 'boolean' | 'action';
+  dataType?: 'string' | 'number' | 'date' | 'boolean';
 }
 
 export interface TableAction {

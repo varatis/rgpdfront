@@ -1,19 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Button } from '../button/button';
-export interface TableColumn {
-  key: string;
-  label: string;
-  sortable?: boolean;
-}
+import { TableColumn } from '../../interfaces/table.interface';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-data-table',
-  imports: [Button, CommonModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './data-table.html',
   styleUrl: './data-table.scss'
 })
 export class DataTable {
-@Input() columns: TableColumn[] = [];
+  @Input() columns: TableColumn[] = [];
   @Input() data: any[] = [];
   @Input() showActions = false;
   @Output() edit = new EventEmitter<any>();
