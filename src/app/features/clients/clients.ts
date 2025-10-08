@@ -52,7 +52,6 @@ export class Clients implements OnInit {
   setActiveTab(tab: 'actuel' | 'archive'): void {
     this.activeTab = tab;
     this.selectedClient = null;
-    // Quand on change d'onglet, on remet la liste ouverte (optionnel)
     this.clientsListOpen = true;
   }
 
@@ -63,7 +62,6 @@ export class Clients implements OnInit {
   }
 
   onSelectFromList(client: Client): void {
-    // quand on clique un client dans la petite liste : fermer la liste et ouvrir la sidebar
     this.selectedClient = client;
     this.clientsListOpen = false;
   }
@@ -74,13 +72,5 @@ export class Clients implements OnInit {
   onArchiveClient(client: Client): void { console.log('Archiver client:', client); }
   onDeleteClient(client: Client): void { console.log('Supprimer client:', client); }
 
-  onViewClient(client: Client): void {
-    this.selectedClient = client;
-  
-    console.log('Afficher le détail du client:', client);
-  }
-
-  closeClientDetails(): void {
-    this.selectedClient = null;
-  }
+ 
 }

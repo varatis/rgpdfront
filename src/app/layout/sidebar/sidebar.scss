@@ -36,25 +36,24 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1.5rem;
-  color: #6B7280;
+  color: #4F4F4F;
   text-decoration: none;
   font-size: 0.938rem;
   font-weight: 500;
   transition: all 0.2s;
-  border-left: 3px solid transparent;
+  border-radius: 8px;
 
   &:hover {
-    background: #F3F4F6;
-    color: #1F2937;
+    background: #2E63CD;
+    color: #ffffff;
   }
 
   &.active {
-    background: #EFF6FF;
-    color: #4169E1;
-    border-left-color: #4169E1;
+    background: #2E63CD;
+    color: #ffffff;
 
     .nav-icon {
-      color: #4169E1;
+      color: #ffffff;
     }
   }
 }
