@@ -21,6 +21,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/administrators/administrators-module').then(m => m.AdministratorsModule)
       },
       {
+        path: 'preconisations',
+        loadChildren: () => import('./features/preconisations/preconisations-module').then(m => m.PreconisationsModule)
+      },
+      {
         path: '',
         redirectTo: 'clients',
         pathMatch: 'full'
