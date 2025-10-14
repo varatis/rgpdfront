@@ -1,81 +1,169 @@
-<aside class="sidebar">
-  <!-- Logo -->
-  <div class="sidebar-header">
-    <div class="logo">
-      <div class="logo-text">
-        <img
-          src="assets/images/creative_logo.png"
-          alt="CREATIVE Logo"
-          style="max-width: 100%; height: auto"
-        />
+@if (isAdmin()) {
+  <aside class="sidebar sidebar-admin">
+    <div class="sidebar-header">
+      <div class="logo">
+        <img [src]="logo()" alt="Logo" />
       </div>
     </div>
+
+    <nav class="sidebar-nav">
+      @for (item of navItems(); track item.route) {
+        <a 
+          [routerLink]="item.route" 
+          routerLinkActive="active" 
+          class="nav-item">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path [attr.d]="getIconPath(item.icon)" />
+          </svg>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Se déconnecter</span>
+      </button>
+    </div>
+  </aside>
+}
+
+<!-- Double Sidebar pour Client -->
+@if (currentUser()?.role === 'client') {
+  <div class="double-sidebar-container">
+   
+    <aside class="sidebar-mini">
+     
+      <div class="mini-header">
+        <div class="logo-triangle">
+          <img src="assets/images/embleme_b.png" alt="Agence" />
+        </div>
+      </div>
+
+    
+      <nav class="mini-nav">
+        <a 
+          routerLink="/compte-client" 
+          routerLinkActive="active" 
+          class="mini-nav-item"
+          title="Compte client">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </a>
+
+        <a 
+          routerLink="/securite" 
+          routerLinkActive="active" 
+          class="mini-nav-item"
+          title="Sécurité">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </a>
+
+        <a 
+          routerLink="/reglages" 
+          routerLinkActive="active" 
+          class="mini-nav-item"
+          title="Réglages">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </a>
+      </nav>
+
+      <!-- Logout en bas -->
+      <div class="mini-footer">
+        <button class="mini-logout-btn" (click)="logout()" title="Se déconnecter">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Sidebar principale -->
+    <aside class="sidebar-main">
+      <div class="sidebar-header">
+        <!-- Bouton retour -->
+        <button class="back-button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Retour à la liste des clients
+        </button>
+
+        <!-- Logo et nom du client -->
+        <div class="client-info">
+          <div class="client-logo">
+            <img [src]="logo()" [alt]="currentUser()?.clientName || 'Client'" />
+          </div>
+          <h1 class="client-title">{{ currentUser()?.clientName || 'Client' }}</h1>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        @for (item of navItems(); track item.route) {
+          <a 
+            [routerLink]="item.route" 
+            routerLinkActive="active" 
+            class="nav-item">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path [attr.d]="getIconPath(item.icon)" />
+            </svg>
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </nav>
+    </aside>
   </div>
+}
 
-  <!-- Navigation -->
-  <nav class="sidebar-nav">
-    <a routerLink="/clients" routerLinkActive="active" class="nav-item">
-      <svg
-        class="nav-icon"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        stroke="currentColor"
-      >
-        <path
-          d="M0 20V3.75L5 0L10 3.75V6H20V20H0ZM2 18H4V16H2V18ZM2 14H4V12H2V14ZM2 10H4V8H2V10ZM2 6H4V4H2V6ZM6 6H8V4H6V6ZM6 18H18V8H6V18ZM12 12V10H16V12H12ZM12 16V14H16V16H12ZM8 12V10H10V12H8ZM8 16V14H10V16H8Z"
-          fill="none"
-        />
-      </svg>
-      <span>Clients</span>
-    </a>
+<!-- Sidebar simple pour User -->
+@if (currentUser()?.role === 'user') {
+  <aside class="sidebar sidebar-user">
+    <div class="sidebar-header">
+      <div class="logo">
+        <img [src]="logo()" [alt]="currentUser()?.clientName || 'Client'" />
+      </div>
+    
+    </div>
 
-    <a routerLink="/administrators" routerLinkActive="active" class="nav-item">
-      <svg
-        class="nav-icon"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        stroke="currentColor"
-      >
-        <path
-          d="M12 13C11.0167 13 10.1875 12.6625 9.5125 11.9875C8.8375 11.3125 8.5 10.4833 8.5 9.5C8.5 8.51667 8.8375 7.6875 9.5125 7.0125C10.1875 6.3375 11.0167 6 12 6C12.9833 6 13.8125 6.3375 14.4875 7.0125C15.1625 7.6875 15.5 8.51667 15.5 9.5C15.5 10.4833 15.1625 11.3125 14.4875 11.9875C13.8125 12.6625 12.9833 13 12 13ZM12 11C12.4333 11 12.7917 10.8583 13.075 10.575C13.3583 10.2917 13.5 9.93333 13.5 9.5C13.5 9.06667 13.3583 8.70833 13.075 8.425C12.7917 8.14167 12.4333 8 12 8C11.5667 8 11.2083 8.14167 10.925 8.425C10.6417 8.70833 10.5 9.06667 10.5 9.5C10.5 9.93333 10.6417 10.2917 10.925 10.575C11.2083 10.8583 11.5667 11 12 11ZM12 22C9.68333 21.4167 7.77083 20.0875 6.2625 18.0125C4.75417 15.9375 4 13.6333 4 11.1V5L12 2L20 5V11.1C20 13.6333 19.2458 15.9375 17.7375 18.0125C16.2292 20.0875 14.3167 21.4167 12 22ZM12 4.125L6 6.375V11.1C6 12 6.125 12.875 6.375 13.725C6.625 14.575 6.96667 15.375 7.4 16.125C8.1 15.775 8.83333 15.5 9.6 15.3C10.3667 15.1 11.1667 15 12 15C12.8333 15 13.6333 15.1 14.4 15.3C15.1667 15.5 15.9 15.775 16.6 16.125C17.0333 15.375 17.375 14.575 17.625 13.725C17.875 12.875 18 12 18 11.1V6.375L12 4.125ZM12 17C11.4 17 10.8167 17.0667 10.25 17.2C9.68333 17.3333 9.14167 17.5167 8.625 17.75C9.10833 18.25 9.63333 18.6833 10.2 19.05C10.7667 19.4167 11.3667 19.7 12 19.9C12.6333 19.7 13.2333 19.4167 13.8 19.05C14.3667 18.6833 14.8917 18.25 15.375 17.75C14.8583 17.5167 14.3167 17.3333 13.75 17.2C13.1833 17.0667 12.6 17 12 17Z"
-          fill="none"
-        />
-      </svg>
-      <span>Administrateurs</span>
-    </a>
+    <nav class="sidebar-nav">
+      @for (item of navItems(); track item.route) {
+        <a 
+          [routerLink]="item.route" 
+          routerLinkActive="active" 
+          class="nav-item">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path [attr.d]="getIconPath(item.icon)" />
+          </svg>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
 
-    <a routerLink="/preconisations" routerLinkActive="active" class="nav-item">
-      <svg
-        class="nav-icon"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        stroke="currentColor"
-      >
-        <path
-          d="M8 18V12H10V14H18V16H10V18H8ZM0 16V14H6V16H0ZM4 12V10H0V8H4V6H6V12H4ZM8 10V8H18V10H8ZM12 6V0H14V2H18V4H14V6H12ZM0 4V2H10V4H0Z"
-          fill="none"
-        />
-      </svg>
-
-      <span>Gestion des préconisations</span>
-    </a>
-  </nav>
-
-  <!-- Logout button -->
-  <div class="sidebar-footer">
-    <button class="logout-btn" (click)="logout()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-        <polyline points="16 17 21 12 16 7"></polyline>
-        <line x1="21" y1="12" x2="9" y2="12"></line>
-      </svg>
-      <span>Se déconnecter</span>
-    </button>
-  </div>
-</aside>
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Se déconnecter</span>
+      </button>
+    </div>
+  </aside>
+}

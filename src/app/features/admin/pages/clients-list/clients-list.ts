@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Client, TableColumn } from '../../shared/interfaces';
+import { Client } from '../../../../shared/interfaces/client.interface';
+import { TableColumn } from '../../../../shared/interfaces/table.interface';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 @Component({
-  selector: 'app-clients',
-  imports: [CommonModule],
-  templateUrl: './clients.html',
-  styleUrl: './clients.scss'
+  selector: 'app-clients-list',
+  imports: [],
+  templateUrl: './clients-list.html',
+  styleUrl: './clients-list.scss'
 })
-export class Clients implements OnInit {
+export class ClientsList implements OnInit {
 
   selectedClient: Client | null = null;
   activeTab: 'actuel' | 'archive' = 'actuel';
@@ -69,5 +70,4 @@ export class Clients implements OnInit {
   onArchiveClient(client: Client): void { console.log('Archiver client:', client); }
   onDeleteClient(client: Client): void { console.log('Supprimer client:', client); }
 
- 
 }

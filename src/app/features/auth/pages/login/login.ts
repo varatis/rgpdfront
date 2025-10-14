@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,17 +11,19 @@ import { CommonModule } from '@angular/common';
   styleUrl: './login.scss'
 })
 export class Login {
-  loginForm: FormGroup;
-
+ loginForm: FormGroup;
   isLoading = false;
-  isProduction = false;
   errorMessage: string | null = null;
   showPassword = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -28,16 +32,35 @@ export class Login {
     return !!control && control.invalid && (control.dirty || control.touched);
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.loginForm.valid) {
-      // Handle login logic here
-      console.log('Login data:', this.loginForm.value);
       this.isLoading = true;
-      setTimeout(() => {
+      this.errorMessage = null;
+
+      const { email, password } = this.loginForm.value;
+
+      try {
+        const success = this.authService.login(email, password);
+        
+        if (await success) {
+         
+          const role = this.authService.getUserRole();
+          
+          if (role === 'admin') {
+            this.router.navigate(['admin/clients']);
+          } else if (role === 'client') {
+            this.router.navigate(['/client/compte-client']);
+          } else if (role === 'user') {
+            this.router.navigate(['user/registre-traitement-user']);
+          }
+        } else {
+          this.errorMessage = 'Identifiants invalides';
+        }
+      } catch (error) {
+        this.errorMessage = 'Une erreur est survenue lors de la connexion';
+      } finally {
         this.isLoading = false;
-        // Simulate login success or error
-        // this.errorMessage = 'Invalid credentials';
-      }, 1500);
+      }
     } else {
       this.loginForm.markAllAsTouched();
     }

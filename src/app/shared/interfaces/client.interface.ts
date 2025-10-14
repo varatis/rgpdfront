@@ -1,4 +1,4 @@
-import { User } from './user.interface';
+import { User } from '../../core/models/user.model';
 
 export interface Client {
   id: string;
