@@ -1,8 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Client } from '../../../../shared/interfaces/client.interface';
-import { TableColumn } from '../../../../shared/interfaces/table.interface';
 import { Router } from '@angular/router';
+ interface TableColumn {
+  key: string;
+  label: string;
+  sortable?: boolean;
+  width?: string;
+  dataType?: 'string' | 'number' | 'date' | 'boolean';
+}
 
+ interface TableAction {
+  name: string;
+  label: string;
+  icon?: string;
+  color?: 'primary' | 'secondary' | 'danger' | 'warning';
+  condition?: (item: any) => boolean;
+ }
 @Component({
   selector: 'app-clients-list',
   imports: [],

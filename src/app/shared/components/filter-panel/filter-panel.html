@@ -1,0 +1,8 @@
+
+<div class="filter-panel" *ngIf="visible">
+  <input 
+    type="text"
+    [placeholder]="placeholder"
+    (input)="onSearch($event)"
+  />
+</div>

@@ -1,0 +1,40 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <h3>3 - {{ treatment.treatment }}</h3>
+    <div class="actions">
+      <button class="icon-btn"><span class="material-icons">edit</span></button>
+      <button class="icon-btn"><span class="material-icons">delete</span></button>
+      <button class="icon-btn"><span class="material-icons">close</span></button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button 
+      *ngFor="let tab of tabs"
+      [class.active]="activeTab === tab"
+      (click)="activeTab = tab">
+      {{ tab }}
+    </button>
+  </div>
+
+  <div class="detail-content">
+    <div *ngIf="activeTab === 'Identification'">
+      <div class="info-row">
+        <span class="label">Entité(s)</span>
+        <span class="value">{{ treatment.manager }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Nom du traitement</span>
+        <span class="value">{{ treatment.treatment }}</span>
+      </div>
+       </div>
+    
+    <div *ngIf="activeTab === 'Données personnelles traitées'">
+       <p>Contenu sur les données personnelles...</p>
+    </div>
+
+    <div *ngIf="activeTab === 'Description du traitement'">
+       <p>Description détaillée...</p>
+    </div>
+  </div>
+</div>

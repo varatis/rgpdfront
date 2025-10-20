@@ -51,7 +51,7 @@ export class Login {
           } else if (role === 'client') {
             this.router.navigate(['/client/compte-client']);
           } else if (role === 'user') {
-            this.router.navigate(['user/registre-traitement-user']);
+            this.router.navigate(['user/registre-traitement']);
           }
         } else {
           this.errorMessage = 'Identifiants invalides';

@@ -100,6 +100,28 @@ export const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },{
+    path: 'user',
+    component: ClientLayout,
+    canActivate: [authGuard, clientGuard],
+    children: [
+      {
+        path: 'compte-client',
+        loadComponent: () => import('./features/user/pages/compte-client/compte-client')
+          .then(m => m.CompteClient)
+      },
+      {
+        path: 'registre-traitement',
+        loadComponent: () => import('./features/user/pages/registre-traitement/registre-traitement')
+          .then(m => m.RegistreTraitement)
+      },
+
+      {
+        path: '',
+        redirectTo: 'compte',
+        pathMatch: 'full'
+      }
+    ]
   },
 
   // Redirection par défaut
