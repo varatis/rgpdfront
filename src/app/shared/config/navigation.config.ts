@@ -26,23 +26,23 @@ export const CLIENT_NAV_ITEMS: NavItem[] = [
     label: 'Compte Client',
     route: '/client/compte-client',
     icon: 'clients',
-    roles: ['client']
+    roles: ['client','user']
   },
   {
     label: 'Registre de traitement',
-    route: 'client/registre-traitement',
+    route: '/client/registre-traitement',
     icon: 'registre',
     roles: ['client', 'user']
   },
   {
     label: 'Suivi des préconisations',
-    route: 'client/suivi-preconisations',
+    route: '/client/suivi-preconisations',
     icon: 'suivi',
     roles: ['client', 'user']
   },
   {
     label: 'Registre des demandes',
-    route: '/registre-demandes',
+    route: '/client/registre-demandes',
     icon: 'demandes',
     roles: ['client']
   },

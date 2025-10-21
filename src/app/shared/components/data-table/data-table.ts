@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TableColumn } from '../../interfaces/table.interface';
+import { TableAction, TableColumn } from '../../interfaces/table.interface';
+import { Treatment } from '../../interfaces/treatment.interface';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-data-table',
@@ -9,17 +10,11 @@ import { CommonModule } from '@angular/common';
   styleUrl: './data-table.scss'
 })
 export class DataTable {
-  @Input() columns: TableColumn[] = [];
-  @Input() data: any[] = [];
-  @Input() showActions = false;
-  @Output() edit = new EventEmitter<any>();
-  @Output() delete = new EventEmitter<any>();
+ @Input() data: Treatment[] = [];
+  @Input() loading = false;
+  @Output() rowClick = new EventEmitter<Treatment>();
 
-  onEdit(item: any): void {
-    this.edit.emit(item);
-  }
-
-  onDelete(item: any): void {
-    this.delete.emit(item);
+  onRowClick(item: Treatment) {
+    this.rowClick.emit(item);
   }
 }

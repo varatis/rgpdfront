@@ -1,0 +1,111 @@
+.page-container {
+    padding: 2rem;
+}
+
+/* --- HEADER (Réutilisation des styles existants si possible) --- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .page-title {
+        font-family: montserrat;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #111827;
+    }
+    .header-actions {
+        display: flex;
+        gap: 0.75rem;
+
+        .btn-secondary, .btn-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.15s ease;
+
+            &:hover {
+                background: #f3f4f6;
+            }
+        }
+        .btn-secondary {
+            border: none;
+            color: #2E63CD;
+            background: #fff;
+            padding: 0.5rem 0.75rem;
+        }
+    }
+}
+
+/* --- TABS DE STATUT (En cours / Traité) --- */
+.main-content-wrapper {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.status-tabs-header {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    padding-left: 1.5rem;
+    
+    .status-tab-btn {
+        padding: 0.75rem 1.25rem;
+        background: none;
+        border: none;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        color: #4F4F4F;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s ease-in-out;
+        
+        &.active {
+            color: #2E63CD;
+            border-bottom-color: #2E63CD;
+        }
+
+        &:hover:not(.active) {
+            color: #111827;
+        }
+    }
+}
+
+/* --- EMPTY STATE --- */
+.content-body {
+    padding: 1.5rem;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+    color: #A0A1A5;
+
+    svg {
+        margin-bottom: 1rem;
+        transform: rotate(45deg); /* Pour ressembler à l'icône de l'image */
+    }
+
+    p {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+}

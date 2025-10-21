@@ -1,0 +1,116 @@
+import { Component, OnInit } from '@angular/core';
+import { Header, HeaderAction } from '../../../../shared/components/header/header';
+import { Table, TableItem } from "../../../../shared/components/table/table";
+import { Tabs } from '../../../../shared/components/tabs/tabs';
+interface Violation {
+  id: string;
+  date: string;
+  nature: string;
+  receptionDate: string;
+  status: 'pending' | 'treated';
+}
+
+interface TableColumn { 
+  key: string; 
+  label: string;
+  sortable?: boolean;
+}
+@Component({
+  selector: 'app-recueil-violation',
+  imports: [Header, Table,Tabs],
+  templateUrl: './recueil-violation.html',
+  styleUrl: './recueil-violation.scss'
+})
+export class RecueilViolation implements OnInit {
+    title = 'Registre des activités de traitement';
+    icon = `
+      <svg viewBox="0 0 28 28" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 25.6667C6.02778 25.6667 5.20139 25.3264 4.52083 24.6458C3.84028 23.9653 3.5 23.1389 3.5 22.1667V18.6667H7V2.33333H24.5V22.1667C24.5 23.1389 24.1597 23.9653 23.4792 24.6458C22.7986 25.3264 21.9722 25.6667 21 25.6667H7ZM21 23.3333C21.3306 23.3333 21.6076 23.2215 21.8312 22.9979C22.0549 22.7743 22.1667 22.4972 22.1667 22.1667V4.66666H9.33333V18.6667H19.8333V22.1667C19.8333 22.4972 19.9451 22.7743 20.1688 22.9979C20.3924 23.2215 20.6694 23.3333 21 23.3333ZM10.5 10.5V8.16666H21V10.5H10.5ZM10.5 14V11.6667H21V14H10.5ZM7 23.3333H17.5V21H5.83333V22.1667C5.83333 22.4972 5.94514 22.7743 6.16875 22.9979C6.39236 23.2215 6.66944 23.3333 7 23.3333Z" fill="currentColor"/>
+      </svg>
+    `;
+  
+    actions: HeaderAction[] = [
+      { label: 'Export global', icon: `<svg
+                    class="icon"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9 15L13 11L11.6 9.6L10 11.2V7H8V11.2L6.4 9.6L5 11L9 15ZM2 5V16H16V5H2ZM2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V3.525C0 3.29167 0.0375 3.06667 0.1125 2.85C0.1875 2.63333 0.3 2.43333 0.45 2.25L1.7 0.725C1.88333 0.491667 2.1125 0.3125 2.3875 0.1875C2.6625 0.0625 2.95 0 3.25 0H14.75C15.05 0 15.3375 0.0625 15.6125 0.1875C15.8875 0.3125 16.1167 0.491667 16.3 0.725L17.55 2.25C17.7 2.43333 17.8125 2.63333 17.8875 2.85C17.9625 3.06667 18 3.29167 18 3.525V16C18 16.55 17.8042 17.0208 17.4125 17.4125C17.0208 17.8042 16.55 18 16 18H2ZM2.4 3H15.6L14.75 2H3.25L2.4 3Z"
+                    />
+                  </svg>`, action: 'add', color: 'default' },{
+        label: 'Filtres',
+        icon: `
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 12V10H11V12H7ZM3 7V5H15V7H3ZM0 2V0H18V2H0Z" fill="currentColor" />
+        </svg>
+    `,
+        action: 'filter',
+        color: 'default',
+      }
+    ];
+  
+    currentPage = 2;
+    totalPages = 7;
+    selectedTreatment?: TableItem;
+activeTab: 'pending' | 'treated' = 'pending';
+  
+  // Données de simulation pour les violations
+  violationsData: Violation[] = [
+    { id: '1', date: '2025-10-01', nature: 'Accès non autorisé', receptionDate: '2025-10-01', status: 'pending' },
+    { id: '2', date: '2025-09-25', nature: 'Perte de données', receptionDate: '2025-09-26', status: 'pending' },
+    { id: '3', date: '2024-05-15', nature: 'Fuite d\'information', receptionDate: '2024-05-16', status: 'treated' }
+  ];
+
+  // Colonnes du tableau (visibles sur l'image)
+  columns: TableColumn[] = [
+    { key: 'date', label: 'DATE', sortable: true },
+    { key: 'nature', label: 'NATURE DE LA VIOLATION DCP', sortable: true },
+    { key: 'receptionDate', label: 'DATE DE RÉCEPTION', sortable: true }
+  ];
+  
+  selectedViolation: Violation | null = null; // Pour gérer la sélection si vous ajoutez un panneau de détails plus tard
+
+  constructor() {}
+
+  ngOnInit(): void {}
+
+    onActionClick(action: string) {
+    if (action === 'export') {
+      console.log('Exporting data...');
+    } else if (action === 'filter') {
+      console.log('Opening filters...');
+    }
+  }
+  get displayedViolations(): Violation[] {
+    return this.violationsData.filter(v => 
+      this.activeTab === 'pending' ? v.status === 'pending' : v.status === 'treated'
+    );
+  }
+
+  get pendingCount(): number { 
+    return this.violationsData.filter(v => v.status === 'pending').length; 
+  }
+  
+  get treatedCount(): number { 
+    return this.violationsData.filter(v => v.status === 'treated').length; 
+  }
+
+  setActiveTab(tab: 'pending' | 'treated'): void {
+    this.activeTab = tab;
+    this.selectedViolation = null; // Désélectionner au changement d'onglet
+  }
+  
+  // Méthodes d'action
+  onFilterViolations(): void {
+    console.log('Ouvrir les filtres');
+  }
+
+  onSelectViolation(violation: Violation): void {
+      this.selectedViolation = violation;
+      // Ajoutez ici la logique pour ouvrir un panneau de détails si nécessaire
+  }
+}

@@ -5,3 +5,6 @@ export * from './table.interface';
 export * from './form.interface';
 export * from './button.interface';
 export * from './preconisation.interface';
+export * from './navigation.interface';
+export * from './headerAction.interface';
+export * from './treatment.interface';

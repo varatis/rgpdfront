@@ -36,7 +36,7 @@ export class AuthService {
             clientLogo: 'assets/images/client_logo.png',
             clientName: 'Abstergo Ltd.'
           };
-        } else {
+        } else  {
           user = {
             id: '3',
             email: email,
@@ -69,6 +69,7 @@ export class AuthService {
       const user = JSON.parse(userStr);
       this.setUser(user);
     }
+    console.log('Loaded user from storage:', this.currentUserSignal());
   }
 
   isAuthenticated(): boolean {

@@ -9,6 +9,10 @@ import { Modal } from './components/modal/modal';
 import { Table } from './components/table/table';
 import { Tabs } from './components/tabs/tabs';
 import { DataTable } from './components/data-table/data-table';
+import { FilterPanel } from './components/filter-panel/filter-panel';
+
+import { Pagination } from './components/pagination/pagination';
+import { Header } from './components/header/header';
 
 const COMPONENTS = [
   Button,
@@ -16,11 +20,14 @@ const COMPONENTS = [
   Loader,
   Modal,
   Card,
-  Tabs,
   IconLink,
   Table,
   Tabs,
-  DataTable
+  DataTable,
+  DataView,
+  FilterPanel,
+  Pagination,
+  Header
 ];
 
 @NgModule({

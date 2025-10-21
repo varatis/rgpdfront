@@ -1,5 +1,11 @@
 <div class="main-layout">
-  <app-sidebar></app-sidebar>
+  @if (currentUser()?.role === 'user'){
+  <app-client-sidebar></app-client-sidebar>
+  } @else if (currentUser()?.role === 'client') {
+   <app-client-sidebar></app-client-sidebar>
+  } @else if(currentUser()?.role === 'admin') {
+  <app-admin-sidebar></app-admin-sidebar>
+  }
   <div class="layout-body">
     <main class="main-content">
     <router-outlet></router-outlet>
