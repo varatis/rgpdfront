@@ -1,111 +1,256 @@
+/* --- PAGE CONTAINER --- */
 .page-container {
-    padding: 2rem;
+  padding: 2rem;
+  background-color: #F3F6FA;
+  min-height: 100vh;
 }
 
-/* --- HEADER (Réutilisation des styles existants si possible) --- */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    
-    .header-left {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-    .page-title {
-        font-family: montserrat;
-        font-size: 1.25rem;
-        font-weight: bold;
-        color: #111827;
-    }
-    .header-actions {
-        display: flex;
-        gap: 0.75rem;
+/* --- SPLIT LAYOUT --- */
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  transition: grid-template-columns 0.3s ease;
 
-        .btn-secondary, .btn-filter {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 40px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            color: #374151;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: background 0.15s ease;
+  &.split-active {
+    grid-template-columns: 1fr 500px;
+  }
 
-            &:hover {
-                background: #f3f4f6;
-            }
-        }
-        .btn-secondary {
-            border: none;
-            color: #2E63CD;
-            background: #fff;
-            padding: 0.5rem 0.75rem;
-        }
-    }
-}
+  .left-section {
+    width: 100%;
+  }
 
-/* --- TABS DE STATUT (En cours / Traité) --- */
-.main-content-wrapper {
+  .right-section {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+  }
 }
 
-.status-tabs-header {
-    display: flex;
-    border-bottom: 1px solid #e5e7eb;
-    padding-left: 1.5rem;
-    
-    .status-tab-btn {
-        padding: 0.75rem 1.25rem;
-        background: none;
-        border: none;
-        font-weight: 600;
-        font-size: 0.875rem;
-        cursor: pointer;
-        color: #4F4F4F;
-        border-bottom: 2px solid transparent;
-        transition: all 0.15s ease-in-out;
-        
-        &.active {
-            color: #2E63CD;
-            border-bottom-color: #2E63CD;
-        }
+/* --- MAIN CONTENT WRAPPER --- */
+.main-content-wrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
 
-        &:hover:not(.active) {
-            color: #111827;
-        }
+/* --- STATUS TABS --- */
+.status-tabs-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  
+  .status-tab-btn {
+    flex: 1;
+    padding: 1rem 2rem;
+    background: #DDE1E6;
+    border: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    color: #6B7280;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    
+    &.active {
+      background: #fff;
+      color: #2563EB;
+      border-bottom-color: #2563EB;
     }
+
+    &:hover:not(.active) {
+      background: #d1d5db;
+    }
+
+    &:first-child {
+      border-top-left-radius: 8px;
+    }
+
+    &:last-child {
+      border-top-right-radius: 8px;
+    }
+  }
+}
+
+/* --- CONTENT BODY --- */
+.content-body {
+  padding: 0;
 }
 
 /* --- EMPTY STATE --- */
-.content-body {
-    padding: 1.5rem;
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  padding: 2rem;
+
+  svg {
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #6B7280;
+    margin: 0;
+  }
 }
 
-.empty-state {
+/* --- PAGINATION --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid #F3F4F6;
+
+  .page-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: white;
+    border: 1px solid #E5E7EB;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s ease;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 400px;
-    text-align: center;
-    color: #A0A1A5;
 
-    svg {
-        margin-bottom: 1rem;
-        transform: rotate(45deg); /* Pour ressembler à l'icône de l'image */
+    &:hover:not(:disabled) {
+      background: #F9FAFB;
+      border-color: #2563EB;
+      color: #2563EB;
+    }
+
+    &.active {
+      background: #2563EB;
+      color: white;
+      border-color: #2563EB;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* --- DETAIL HEADER --- */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #E5E7EB;
+
+  h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+  }
+
+  .close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    background: #F3F4F6;
+    color: #6B7280;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #E5E7EB;
+      color: #111827;
+    }
+  }
+}
+
+/* --- TAB CONTENT --- */
+.tab-content {
+  padding: 1rem 0;
+
+  .field-group {
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #6B7280;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     p {
-        font-size: 1rem;
-        font-weight: 500;
+      font-size: 0.95rem;
+      color: #111827;
+      margin: 0;
+      line-height: 1.6;
     }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #FEF3C7;
+      color: #92400E;
+
+      &.badge-treated {
+        background: #D1FAE5;
+        color: #065F46;
+      }
+    }
+
+    ul.sub-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #F3F4F6;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1280px) {
+  .split-layout.split-active {
+    grid-template-columns: 1fr;
+  }
+
+  .right-section {
+    position: relative;
+    top: 0;
+  }
 }

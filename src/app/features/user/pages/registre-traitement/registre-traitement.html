@@ -25,10 +25,12 @@
     </div>
 
     <!-- Partie droite : Header détails + Tabs -->
-    <div class="right-section" *ngIf="selectedTreatment">
+     @if(selectedTreatment) {
+    <div class="right-section" >
       <div class="detail-header">
         <div class="detail-title">
-          <h2>{{ selectedTreatment?.id }} - {{ selectedTreatment?.treatment }}</h2>
+          <h2>{{ selectedTreatment.id
+           }} - {{ selectedTreatment.treatment }}</h2>
         </div>
         <div class="detail-actions">
           <button class="icon-btn edit" title="Modifier">
@@ -53,5 +55,6 @@
 
           <app-tabs [treatment]="selectedTreatment"></app-tabs>
     </div>
+      }
   </div>
 </div>
