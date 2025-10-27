@@ -106,14 +106,15 @@ export const routes: Routes = [
     canActivate: [authGuard, clientGuard],
     children: [
       {
-        path: 'compte-client',
-        loadComponent: () => import('./features/user/pages/compte-client/compte-client')
-          .then(m => m.CompteClient)
-      },
-      {
         path: 'registre-traitement',
         loadComponent: () => import('./features/user/pages/registre-traitement/registre-traitement')
           .then(m => m.RegistreTraitement)
+      },
+      {
+        path: 'recueil-violation',
+        loadComponent: () => import('./features/user/pages/recueil-violation/recueil-violation')
+          .then(m => m.RecueilViolation)
+
       },
 
       {

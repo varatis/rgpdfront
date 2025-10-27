@@ -26,7 +26,7 @@ export const CLIENT_NAV_ITEMS: NavItem[] = [
     label: 'Compte Client',
     route: '/client/compte-client',
     icon: 'clients',
-    roles: ['client','user']
+    roles: ['client']
   },
   {
     label: 'Registre de traitement',
@@ -48,9 +48,9 @@ export const CLIENT_NAV_ITEMS: NavItem[] = [
   },
   {
     label: 'Recueil de violation',
-    route: '/recueil-violation',
+    route: '/user/recueil-violation',
     icon: 'violation',
-    roles: ['client']
+    roles: ['user']
   },
   {
     label: 'Sous-traitant DCP',

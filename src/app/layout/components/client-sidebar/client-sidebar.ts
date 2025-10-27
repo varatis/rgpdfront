@@ -17,7 +17,7 @@ export class ClientSidebar {
     const user = this.currentUser();
     if (!user) return [];
     
-    // User voit seulement 2 items, client voit tout
+  
     if (user.role === 'user') {
       return CLIENT_NAV_ITEMS.filter(item => item.roles.includes('user'));
     }
