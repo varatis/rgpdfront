@@ -4,11 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { TableItem, Table } from '../../../../shared/components/table/table';
 
 import { Pagination } from "../../../../shared/components/pagination/pagination";
-import { Tabs } from "../../../../shared/components/tabs/tabs";
+import { TreatmentTabsComponent } from "../../../../shared/components/tabs/treatmentTabs";
 
 @Component({
   selector: 'app-registre-traitement',
-  imports: [Header, Table, Pagination, Tabs],
+  imports: [Header, Table, Pagination, TreatmentTabsComponent],
   templateUrl: './registre-traitement.html',
   styleUrl: './registre-traitement.scss'
 })

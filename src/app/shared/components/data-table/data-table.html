@@ -1,24 +1,28 @@
-<div class="table-wrapper">
-  <table *ngIf="!loading">
+<div class="data-table-container">
+  <table class="data-table">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Traitement</th>
-        <th>Gestionnaire</th>
-        <th>Finalité principale</th>
+        <th *ngFor="let col of columns" [style.flex-grow]="col.width ? '0' : '1'" [style.flex-basis]="col.width || '0'">
+          <div class="header-content">
+            {{ col.label }}
+            </div>
+        </th>
+        <th class="detail-col"></th> 
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let t of data" (click)="onRowClick(t)">
-        <td>{{ t.id }}</td>
-        <td>{{ t.treatment }}</td>
-        <td>{{ t.manager }}</td>
-        <td>{{ t.purpose }}</td>
+      <tr *ngFor="let row of data; " (click)="onRowClick(row)">
+        
+        <td *ngFor="let col of columns" [style.flex-grow]="col.width ? '0' : '1'" [style.flex-basis]="col.width || '0'">
+          {{ row[col.key] }}
+        </td>
+        
+        <td class="detail-col">
+          <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </td>
       </tr>
     </tbody>
   </table>
-
-  <div class="loading" *ngIf="loading">
-    <div class="spinner"></div>
-  </div>
 </div>

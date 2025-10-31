@@ -1,0 +1,97 @@
+<app-master-detail-layout
+  [title]="pageTitle"
+  [iconSvg]="icon"
+  [actions]="actions"
+  [isDetailOpen]="!!selectedSousTraitant"
+  [detailTitle]="selectedSousTraitant ? selectedSousTraitant.nom : 'Détails'"
+  (actionClick)="onHeaderAction($event)"
+  (detailClose)="onCloseDetail()">
+
+  <!-- Table -->
+  <app-data-table
+    slot="list-items"
+    [columns]="tableColumns"
+    [data]="displayedSousTraitants"
+    (rowClick)="onSelectSousTraitant($event)">
+  </app-data-table>
+
+  <!-- État vide -->
+  @if(displayedSousTraitants.length === 0) {
+    <div slot="empty-state">
+      <div class="empty-state">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF">
+          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z" 
+                stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <p>Aucun sous-traitant trouvé</p>
+      </div>
+    </div>
+  }
+
+  <!-- Détails -->
+  @if(selectedSousTraitant) {
+    <div slot="detail-content">
+      <div class="detail-content">
+        <div class="field-group">
+          <label>Sous-traitant</label>
+          <p>{{ selectedSousTraitant.nom }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Coordonnées</label>
+          <p>{{ selectedSousTraitant.coordonnees }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Contact</label>
+          <p>{{ selectedSousTraitant.contact }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Rôle du contact</label>
+          <p>{{ selectedSousTraitant.roleContact }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Adresse mail</label>
+          <p>{{ selectedSousTraitant.adresseMail }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Téléphone</label>
+          <p>{{ selectedSousTraitant.telephone }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Prestation fournie</label>
+          <p>{{ selectedSousTraitant.prestationFournie }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Traitement effectué</label>
+          <p>{{ selectedSousTraitant.traitementEffectue }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Données traitées</label>
+          <p>{{ selectedSousTraitant.donneesTraitees }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Contrat associé</label>
+          <p>{{ selectedSousTraitant.contratAssocie }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Référence</label>
+          <p>{{ selectedSousTraitant.reference }}</p>
+        </div>
+
+        <div class="field-group">
+          <label>Commentaire</label>
+          <p>{{ selectedSousTraitant.commentaire }}</p>
+        </div>
+      </div>
+    </div>
+  }
+</app-master-detail-layout>

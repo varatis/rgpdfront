@@ -1,0 +1,44 @@
+<div class="page-container">
+  <!-- Header -->
+
+
+  <div class="split-layout" [class.split-active]="isDetailOpen">
+    <!-- Section gauche -->
+    <div class="left-section">
+        <app-header
+    [title]="title"
+    [icon]="iconSvg"
+    [actions]="actions"
+    (actionClick)="onHeaderAction($event)">
+  </app-header>
+      <div class="main-content-wrapper">
+        
+        <!-- Tabs -->
+        <ng-content select="[slot='tabs']"></ng-content>
+
+        <div class="content-body">
+          <!-- Liste/Table -->
+          <ng-content select="[slot='list-items']"></ng-content>
+
+          <!-- Pagination -->
+          <ng-content select="[slot='pagination']"></ng-content>
+
+          <!-- État vide -->
+          <ng-content select="[slot='empty-state']"></ng-content>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section droite : Détails -->
+     @if(isDetailOpen) {
+    <div class="right-section" >
+      <div class="detail-header">
+        <h2>{{ detailTitle }}</h2>
+        <button class="close-btn" (click)="onCloseDetail()">×</button>
+      </div>
+      
+      <ng-content select="[slot='detail-content']"></ng-content>
+    </div>
+  }
+  </div>
+</div>

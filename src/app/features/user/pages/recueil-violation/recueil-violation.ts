@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Header, HeaderAction } from '../../../../shared/components/header/header';
-import {  Table } from "../../../../shared/components/table/table";
+import {  HeaderAction } from '../../../../shared/components/header/header';
 import { Router } from '@angular/router';
-import { Tabs } from "../../../../shared/components/tabs/tabs";
+import { CommonModule } from '@angular/common';
+import { MasterDetailLayout } from "../../../../layout/master-detail-layout/master-detail-layout";
+import { PageTab, PageTabsComponent } from '../../../../shared/components/page-tabs/page-tab/page-tab';
+import { DataTable } from "../../../../shared/components/data-table/data-table";
 interface Violation {
   id: string;
   date: Date;
@@ -22,12 +24,12 @@ interface TableColumn {
 }
 @Component({
   selector: 'app-recueil-violation',
-  imports: [Header, Table, Tabs],
+  imports: [CommonModule, MasterDetailLayout, PageTabsComponent, DataTable],
   templateUrl: './recueil-violation.html',
   styleUrl: './recueil-violation.scss'
 })
 export class RecueilViolation implements OnInit {
-     title = 'Recueil de violation';
+     pageTitle = 'Recueil de violation';
   icon = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V13H11V15ZM11 11H9V5H11V11Z" fill="#161617"/>
   </svg>`;
@@ -73,6 +75,12 @@ export class RecueilViolation implements OnInit {
 
   violationsPending: Violation[] = [
   ];
+  get pageTabs(): PageTab[] {
+    return [
+      { key: 'pending', label: 'En cours de traitement', count: this.pendingCount },
+      { key: 'treated', label: 'Traité', count: this.treatedCount }
+    ];
+  }
 
   violationsTreated: Violation[] = [
     {
@@ -176,10 +184,16 @@ export class RecueilViolation implements OnInit {
     return new Intl.DateTimeFormat('fr-FR').format(date);
   }
 
-  setActiveTab(tab: 'pending' | 'treated'): void {
-    this.activeTab = tab;
-    this.currentPage = 1;
+ setActiveTab(key: string) {
+    this.activeTab = key as 'pending' | 'treated';
+    this.selectedViolation = null; 
+  }
+  onCloseDetail() {
     this.selectedViolation = null;
+  }
+  onHeaderAction(action: string) {
+    console.log('Action cliquée:', action);
+    // Logique pour filtrer ou déclarer une violation
   }
 
   goToPage(page: number): void {

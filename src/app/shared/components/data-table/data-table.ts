@@ -1,7 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TableAction, TableColumn } from '../../interfaces/table.interface';
 import { Treatment } from '../../interfaces/treatment.interface';
 import { CommonModule } from '@angular/common';
+
+export interface TableColumn {
+  key: string;     
+  label: string;   
+  width?: string;   
+  sortable?: boolean; 
+}
 @Component({
   selector: 'app-data-table',
   standalone: true,
@@ -10,11 +16,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './data-table.scss'
 })
 export class DataTable {
- @Input() data: Treatment[] = [];
-  @Input() loading = false;
-  @Output() rowClick = new EventEmitter<Treatment>();
+@Input() columns: TableColumn[] = [];
+  @Input() data: any[] = [];
+  @Input() trackKey: string = 'id';
+  
+  @Output() rowClick = new EventEmitter<any>();
 
-  onRowClick(item: Treatment) {
-    this.rowClick.emit(item);
+  onRowClick(row: any) {
+    this.rowClick.emit(row);
   }
 }

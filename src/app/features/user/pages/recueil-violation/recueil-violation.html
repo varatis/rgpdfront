@@ -1,81 +1,61 @@
-<div class="page-container">
-  <!-- Layout complet avec header et contenu -->
-  <div class="split-layout" [class.split-active]="selectedViolation">
-    <div class="left-section">
-      <!-- Header réutilisable -->
-      <app-header 
-        [title]="title" 
-        [icon]="icon" 
-        [actions]="actions"
-        (actionClick)="onActionClick($event)">
-      </app-header>
+<app-master-detail-layout
+  [title]="pageTitle"
+  [iconSvg]="icon"
+  [actions]="actions"
+  [tabs]="pageTabs"
+  [activeTabKey]="activeTab"
+  [isDetailOpen]="!!selectedViolation"
+  [detailTitle]="selectedViolation ? 'Violation #' + selectedViolation.id : 'Détails'"
+  (actionClick)="onHeaderAction($event)"
+  (tabChange)="setActiveTab($event)"
+  (detailClose)="onCloseDetail()">
 
-      <!-- Partie gauche : Tabs + Table + Pagination -->
-      <div class="main-content-wrapper">
-        <!-- Tabs de statut (En cours / Traité) -->
-        <div class="status-tabs-header">
-          <button
-            class="status-tab-btn"
-            [class.active]="activeTab === 'pending'"
-            (click)="setActiveTab('pending')"
-          >
-            En cours de traitement ({{ pendingCount }})
-          </button>
+  <!-- Tabs -->
+  <app-page-tabs
+    slot="tabs"
+    [tabs]="pageTabs"
+    [activeTabKey]="activeTab"
+    (tabChange)="setActiveTab($event)">
+  </app-page-tabs>
 
-          <button
-            class="status-tab-btn"
-            [class.active]="activeTab === 'treated'"
-            (click)="setActiveTab('treated')"
-          >
-            Traité ({{ treatedCount }})
-          </button>
-        </div>
+  <!-- Table -->
+  <app-data-table
+    slot="list-items"
+    [columns]="tableColumns"
+    [data]="displayedViolations"
+    (rowClick)="onSelectViolation($event)">
+  </app-data-table>
 
-        <div class="content-body">
-          <div class="table-container">
-  <div class="table-header">
-    <div class="header-cell sortable" >
-      
-      <svg class="sort-icon">...</svg>
+  <!-- État vide -->
+  <div slot="empty-state" *ngIf="displayedViolations.length === 0">
+    <div class="empty-state">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M72.584 63.167L66.667 57.25V26.667H36.167L22.834 13.333H32.334L39.001 20H66.667C68.501 20 70.07 20.653 71.376 21.958C72.681 23.264 73.334 24.833 73.334 26.667V60C73.334 60.611 73.278 61.181 73.167 61.708C73.056 62.236 72.862 62.722 72.584 63.167ZM68.251 77.667L57.251 66.667H13.334C11.501 66.667 9.931 66.014 8.626 64.708C7.32 63.403 6.667 61.833 6.667 60V20C6.667 18.167 7.32 16.597 8.626 15.292C9.931 13.986 11.501 13.333 13.334 13.333L20.001 20H13.334V60H50.584L2.334 11.667L7.001 7L73.001 73L68.251 77.667Z" fill="#A0A1A5"/>
+</svg>
+      <p>Aucune violation en cours de traitement</p>
     </div>
   </div>
-  <div class="table-body">
-    <div class="row" *ngFor="let item of sortedViolations"
-         (click)="onSelectViolation(item)">
-     
-    </div>
-  </div>
-</div>
-         
-          <!-- Empty State -->
-          <ng-template #emptyState>
-            <div class="empty-state">
-              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF">
-                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z" 
-                      stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <p>
-                @if(activeTab === 'pending') {
-                  Aucune violation en cours de traitement
-                } @else {
-                  Aucune violation traitée
-                }
-              </p>
-            </div>
-          </ng-template>
 
-          <!-- Pagination -->
-          <div class="pagination" *ngIf="displayedViolations.length > 0">
-            <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">«</button>
-            <button class="page-btn" [class.active]="currentPage === 1" (click)="goToPage(1)">1</button>
-            <button class="page-btn" [class.active]="currentPage === 2" (click)="goToPage(2)">2</button>
-            <button class="page-btn" [class.active]="currentPage === 3" (click)="goToPage(3)">3</button>
-            <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">»</button>
-          </div>
-        </div>
-      </div>
+  <!-- Détails -->
+  <div slot="detail-content" *ngIf="selectedViolation">
+    <div class="field-group">
+      <label>ID</label>
+      <p>{{ selectedViolation.id }}</p>
     </div>
 
-   
+    <div class="field-group">
+      <label>Nature</label>
+      <p>{{ selectedViolation.nature }}</p>
+    </div>
+
+    <div class="field-group">
+      <label>Date</label>
+      <p>{{ formatDate(selectedViolation.date) }}</p>
+    </div>
+
+    <div class="field-group">
+      <label>Description</label>
+      <p>{{ selectedViolation.description }}</p>
+    </div>
   </div>
-</div>
+</app-master-detail-layout>

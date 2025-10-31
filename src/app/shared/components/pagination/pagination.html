@@ -1,4 +1,5 @@
-<div class="pagination">
+<div class="pagination" *ngIf="totalPages > 1">
+  
   <button 
     class="page-btn nav" 
     [disabled]="currentPage === 1" 
@@ -6,6 +7,7 @@
     title="Première page">
     «
   </button>
+  
   <button 
     class="page-btn nav" 
     [disabled]="currentPage === 1" 
@@ -31,6 +33,7 @@
     title="Page suivante">
     ›
   </button>
+  
   <button 
     class="page-btn nav" 
     [disabled]="currentPage === totalPages" 

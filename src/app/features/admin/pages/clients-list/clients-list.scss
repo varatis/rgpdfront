@@ -1,271 +1,306 @@
-/* --- CONTAINER GLOBAL --- */
+// ===================================
+// VARIABLES
+// ===================================
+$color-primary: #2E63CD;
+$color-text-dark: #111827;
+$color-text-medium: #374151;
+$color-text-light: #4F4F4F;
+$color-icon: #A0A1A5;
+$color-border: #e5e7eb;
+$color-border-light: #f3f4f6;
+$color-bg-page: #F3F6FA;
+$color-bg-white: #fff;
+$color-bg-hover: #f9fafb;
+$color-bg-secondary: #f3f4f6;
+$color-bg-inactive: #DDE1E6;
+$color-danger: #ef4444;
+
+$border-radius: 8px;
+$border-radius-pill: 40px;
+$border-radius-sm: 6px;
+
+$transition-base: 0.15s ease;
+$transition-smooth: 0.3s ease;
+
+// ===================================
+// LAYOUT
+// ===================================
 .clients-layout {
-  background-color: #F3F6FA;
   display: flex;
-  position: relative;
-  width: 100%;
   min-height: 100vh;
-  transition: all 0.3s ease;
-
-}
-
-/* --- PAGE PRINCIPALE --- */
-.clients-page {
-  padding: 2rem;
   width: 100%;
-  transition: width 0.3s ease;
+  background-color: $color-bg-page;
+  transition: all $transition-smooth;
 }
-/* --- HEADER --- */
+
+.clients-page {
+  width: 100%;
+  padding: 2rem;
+  transition: width $transition-smooth;
+}
+
+// ===================================
+// HEADER
+// ===================================
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.75rem;
+}
 
-  .header-left {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .icon-wrapper {
     display: flex;
     align-items: center;
-    gap: 1rem;
-
-    .icon-wrapper {
-      width: 28px;
-      height: 28px;
-      top: 39px;
-      left: 304px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .page-title {
-      font-family: montserrat;
-      font-size: 1.25rem;
-      font-weight: bold;
-      color: #111827;
-      height: 100%;
-      letter-spacing: 0%;
-
-    }
+    justify-content: center;
+    width: 28px;
+    height: 28px;
   }
 
-  .header-actions {
-    display: flex;
-    gap: 0.75rem;
-
-    .btn-filter {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 40px;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      color: #374151;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: background 0.15s ease;
-
-      svg {
-        stroke-width: 2;
-      }
-
-      &:hover {
-        background: #f3f4f6;
-      }
-    }
-
-    .btn-primary {
-      background: #2E63CD;
-      color: white;
-      border: none;
-      border-radius: 40px;
-      padding: 0.5rem 1.25rem;
-      font-weight: 500;
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: background 0.2s ease;
-
-      &:hover {
-        background: #2E63CD;
-      }
-    }
+  .page-title {
+    font-family: montserrat, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $color-text-dark;
   }
 }
 
-/* --- ONGLET ACTUEL / ARCHIVÉ --- */
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: $color-bg-white;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-pill;
+  color: $color-text-medium;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background $transition-base;
+
+  svg {
+    stroke-width: 2;
+  }
+
+  &:hover {
+    background: $color-bg-secondary;
+  }
+}
+
+.btn-primary {
+  padding: 0.5rem 1.25rem;
+  background: $color-primary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-pill;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: darken($color-primary, 5%);
+  }
+}
+
+// ===================================
+// TABS
+// ===================================
 .tabs-header {
   display: flex;
-  .tab-btn {
-    width: 396px;
-    padding: 0.90rem 7rem;
-    background: #fff;
-    border: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    color: #4F4F4F;
-    border-bottom: 2px solid transparent;
-    transition: all 0.15s ease-in-out;
-    
+}
+
+.tab-btn {
+  flex: 1;
+  max-width: 396px;
+  padding: 0.90rem 2rem;
+  background: $color-bg-white;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $color-text-light;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:first-child {
+    border-top-left-radius: $border-radius;
+  }
+
+  &:last-child {
+    border-top-right-radius: $border-radius;
+  }
+
+  &:hover {
+    color: $color-text-dark;
+  }
+
+  &.active {
+    color: $color-primary;
+    border-bottom-color: $color-primary;
+    background: $color-bg-white;
+  }
+
+  &:not(.active) {
+    background: $color-bg-inactive;
+    color: $color-text-medium;
 
     &:hover {
-      color: #111827;
-    }
-
-    &.active {
-      
-    
-      color: #2E63CD;
-      border-bottom-color: #2E63CD;
-    }
-
-    &:not(.active) {
-
-   
-      background: #DDE1E6; 
-      color: #374151;
-
-      &:hover {
-        background: #e5e7eb;
-      }
-    }
-
-     &:first-child {
-      border-top-left-radius: 8px;
-    }
-    &:last-child {
-      border-top-right-radius: 8px;
+      background: $color-border;
     }
   }
 }
 
+// ===================================
+// COLLAPSE SECTION
+// ===================================
+.collapse-wrapper {
+  width: 100%;
+}
 
+.collapse-container {
+  max-height: 70vh;
+  overflow-y: auto;
+  transition: all $transition-smooth;
+}
+
+.collapse-header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: $color-bg-white;
+  border-bottom: 1px solid $color-border;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $color-text-dark;
+  cursor: default;
+  user-select: none;
+
+  .chevron {
+    margin-left: auto;
+    transition: transform $transition-base;
+
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// ===================================
+// CLIENTS LIST
+// ===================================
+.clients-list {
+  background: $color-bg-white;
+  border-top: 1px solid $color-border-light;
+}
+
+.clients-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid $color-border-light;
+  transition: background $transition-base;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-bg-hover;
+  }
+
+  &.selected {
+    background: lighten($color-primary, 45%);
+  }
+}
+
+.client-info {
+  flex: 1;
+  font-weight: 500;
+  color: $color-text-dark;
+
+  .client-name {
+    font-size: 0.95rem;
+  }
+}
+
+.client-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.action-btn,
+.view-btn {
+  padding: 0.35rem;
+  background: none;
+  border: none;
+  border-radius: $border-radius-sm;
+  color: $color-icon;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $color-bg-secondary;
+    color: $color-primary;
+  }
+
+  &.detail {
+    color: $color-primary;
+  }
+
+  &.delete:hover {
+    color: $color-danger;
+  }
+}
+
+// ===================================
+// PAGINATION
+// ===================================
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.4rem;
   padding: 0.75rem 1rem;
-  
-
-  .page-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: none;
-    border: none;
-     align-items: center;
-  justify-content: center;
-    font-size: 0.85rem;
-    color: #374151;
-    cursor: pointer;
-    transition: all 0.15s ease;
-
-    &:hover {
-      background: #f3f4f6;
-    }
-
-    &.active {
-      border: 1px solid #d1d5db;
-      background: #2E63CD;
-      color: white;
-      border-color: #2E63CD;
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-  }
 }
 
-
-/* --- COLLAPSIBLE "CLIENT" --- */
-.collapse-wrapper {
-  width: 100%;
-
-  .collapse-container {
-    transition: all 0.3s ease;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-
-  .clients-list {
-    background: white;
-    border-top: 1px solid #f3f4f6;
-
-    .clients-list-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.85rem 1rem;
-      border-bottom: 1px solid #f3f4f6;
-      transition: background 0.15s ease;
-
-      &:hover {
-        background: #f9fafb;
-      }
-
-      .client-info {
-        font-weight: 500;
-        color: #111827;
-        flex: 1;
-        cursor: pointer;
-      }
-
-      .client-actions {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        flex-shrink: 0; 
-
-        .action-btn,
-        .view-btn {
-          border: none;
-          background: none;
-          padding: 0.35rem;
-          cursor: pointer;
-          border-radius: 6px;
-           color: #A0A1A5;
-          transition: all 0.15s ease;
-
-          &:hover {
-            background: #f3f4f6;
-            color: #2E63CD;
-          }
-          
-        }
-          .view-btn.detail { 
-        
-        color: #2E63CD; 
-    }
-        .delete:hover {
-          color: #ef4444;
-        }
-      }
-    }
-  }
-}
-.collapse-header {
+.page-btn {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #111827;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  color: $color-text-medium;
+  cursor: pointer;
+  transition: all $transition-base;
 
- 
-  cursor: default;
-  user-select: none;
-
-  .collapse-title {
-    font-weight: 600;
+  &:hover:not(:disabled) {
+    background: $color-bg-secondary;
   }
 
-  
+  &.active {
+    background: $color-primary;
+    color: white;
+    border: 1px solid $color-primary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
-
-

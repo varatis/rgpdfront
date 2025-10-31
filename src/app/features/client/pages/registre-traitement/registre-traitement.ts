@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
   import { Header, HeaderAction } from '../../../../shared/components/header/header';
 import { Table, TableItem } from '../../../../shared/components/table/table';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
-import { Tabs } from '../../../../shared/components/tabs/tabs';
+import { TreatmentTabsComponent } from '../../../../shared/components/tabs/treatmentTabs';
 
 @Component({
   selector: 'app-registre-traitement',
   standalone: true,
-  imports: [CommonModule, Header, Table, Pagination, Tabs],
+  imports: [CommonModule, Header, Table, Pagination, TreatmentTabsComponent],
   templateUrl: './registre-traitement.html',
   styleUrls: ['./registre-traitement.scss'],
 })

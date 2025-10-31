@@ -47,11 +47,11 @@ export class Login {
           const role = this.authService.getUserRole();
           
           if (role === 'admin') {
-            this.router.navigate(['admin/clients']);
+            this.router.navigate(['/admin/clients']);
           } else if (role === 'client') {
-            this.router.navigate(['/client/compte-client']);
+            this.router.navigate(['/app/compte-client']);
           } else if (role === 'user') {
-            this.router.navigate(['user/registre-traitement']);
+            this.router.navigate(['/app/registre-traitement']);
           }
         } else {
           this.errorMessage = 'Identifiants invalides';

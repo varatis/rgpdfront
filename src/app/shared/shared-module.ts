@@ -7,12 +7,13 @@ import { IconLink } from './components/icon-link/icon-link';
 import { Loader } from './components/loader/loader';
 import { Modal } from './components/modal/modal';
 import { Table } from './components/table/table';
-import { Tabs } from './components/tabs/tabs';
+import { TreatmentTabsComponent } from './components/tabs/treatmentTabs';
 import { DataTable } from './components/data-table/data-table';
 import { FilterPanel } from './components/filter-panel/filter-panel';
 
 import { Pagination } from './components/pagination/pagination';
 import { Header } from './components/header/header';
+import {  PageTabsComponent } from './components/page-tabs/page-tab/page-tab';
 
 const COMPONENTS = [
   Button,
@@ -22,12 +23,13 @@ const COMPONENTS = [
   Card,
   IconLink,
   Table,
-  Tabs,
+  TreatmentTabsComponent,
   DataTable,
   DataView,
   FilterPanel,
   Pagination,
-  Header
+  Header,
+  PageTabsComponent
 ];
 
 @NgModule({
