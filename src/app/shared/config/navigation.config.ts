@@ -3,19 +3,19 @@ import { NavItem } from '../interfaces/navigation.interface';
 export const ADMIN_NAV_ITEMS: NavItem[] = [
   {
     label: 'Clients',
-    route: '/admin/clients',
+    route: '/clients',
     icon: 'clients',
     roles: ['admin']
   },
   {
     label: 'Administrateurs',
-    route: '/admin/administrators',
+    route: '/administrators',
     icon: 'administrators',
     roles: ['admin']
   },
   {
     label: 'Gestion des préconisations',
-    route: '/admin/preconisations',
+    route: '/preconisations',
     icon: 'preconisations',
     roles: ['admin']
   }
@@ -24,38 +24,38 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
 export const CLIENT_NAV_ITEMS: NavItem[] = [
 {
     label: 'Compte Client',
-    route: '/client/compte-client',
+    route: 'compte-client',
     icon: 'clients',
     roles: ['client']
   },
   {
     label: 'Registre de traitement',
-    route: '/client/registre-traitement',
+    route: 'registre-traitement',
     icon: 'registre',
     roles: ['client', 'user']
   },
   {
     label: 'Suivi des préconisations',
-    route: '/client/suivi-preconisations',
+    route: 'suivi-preconisations',
     icon: 'suivi',
     roles: ['client', 'user']
   },
   {
     label: 'Registre des demandes',
-    route: '/client/registre-demandes',
+    route: 'registre-demandes',
     icon: 'demandes',
-    roles: ['client']
+    roles: ['client','user']
   },
   {
     label: 'Recueil de violation',
-    route: '/user/recueil-violation',
+    route: 'recueil-violation',
     icon: 'violation',
     roles: ['user']
   },
   {
     label: 'Sous-traitant DCP',
-    route: '/sous-traitant-dcp',
+    route: 'sous-traitant-dcp',
     icon: 'sous-traitant',
-    roles: ['client']
+    roles: ['client', 'user']
   }
 ];

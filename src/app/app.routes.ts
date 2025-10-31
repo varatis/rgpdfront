@@ -3,43 +3,6 @@ import { adminGuard, authGuard, clientGuard } from './core/guards/auth-guard';
 import { AdminLayout } from './layout/admin-layout/admin-layout';
 import { ClientLayout } from './layout/client-layout/client-layout';
 
-/*export const routes: Routes = [
- {
-    path: 'auth',
-    loadChildren: () => import('./features/auth/auth-module').then(m => m.AuthModule)
-  },
-  {
-    path: '',
-    component: MainLayout,
-    canActivate: [authGuard],
-    children: [
-      {
-        path: 'clients',
-        loadChildren: () => import('./features/clients/clients-module').then(m => m.ClientsModule)
-      },
-      {
-        path: 'administrators',
-        loadChildren: () => import('./features/administrators/administrators-module').then(m => m.AdministratorsModule)
-      },
-      {
-        path: 'preconisations',
-        loadChildren: () => import('./features/preconisations/preconisations-module').then(m => m.PreconisationsModule)
-      },
-      {
-        path: '',
-        redirectTo: 'clients',
-        pathMatch: 'full'
-      }
-    ]
-  },
-  {
-    path: '**',
-    redirectTo: 'auth'
-  }
-
-  
-];*/
-
 export const routes: Routes = [
   // Auth
   {
@@ -79,7 +42,7 @@ export const routes: Routes = [
 
   // Routes CLIENT/USER avec ClientLayout
   {
-    path: 'client',
+    path: 'app',
     component: ClientLayout,
     canActivate: [authGuard, clientGuard],
     children: [
@@ -93,18 +56,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/client/pages/registre-traitement/registre-traitement')
           .then(m => m.RegistreTraitement)
       },
-
-      {
-        path: '',
-        redirectTo: 'compte',
-        pathMatch: 'full'
-      }
-    ]
-  },{
-    path: 'user',
-    component: ClientLayout,
-    canActivate: [authGuard, clientGuard],
-    children: [
       {
         path: 'registre-traitement',
         loadComponent: () => import('./features/user/pages/registre-traitement/registre-traitement')
@@ -116,16 +67,33 @@ export const routes: Routes = [
           .then(m => m.RecueilViolation)
 
       },
+      {
+        path: 'registre-demandes',  
+        loadComponent: () => import('./features/user/pages/registre-demandes/registre-demandes')
+          .then(m => m.RegistreDemandes)
+      },
+      {
+        path: 'sous-traitant-dcp',  
+        loadComponent: () => import('./features/user/pages/sous-traitant-dcp/sous-traitant-dcp')
+          .then(m => m.SousTraitantDcp)
+
+      },
+      {
+        path:'suivi-preconisations',
+        loadComponent: () => import('./features/user/pages/suivi-preconisations/suivi-preconisations')
+          .then(m => m.SuiviPreconisations)
+
+      },
 
       {
         path: '',
-        redirectTo: 'compte',
+        redirectTo: 'registre-traitement',
         pathMatch: 'full'
       }
     ]
   },
 
-  // Redirection par défaut
+
   {
     path: '',
     redirectTo: 'auth',

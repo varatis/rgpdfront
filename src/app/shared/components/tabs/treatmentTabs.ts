@@ -2,13 +2,13 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-tabs',
+  selector: 'app-treatment-tabs',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './tabs.html',
-  styleUrls: ['./tabs.scss']
+  templateUrl: './treatmentTabs.html',
+  styleUrls: ['./treatmentTabs.scss']
 })
-export class Tabs {
+export class TreatmentTabsComponent {
   @Input() treatment: any;
   @Input() userRole: 'client' | 'user' = 'client';
   activeTab = 'Identification du traitement';

@@ -14,12 +14,13 @@
     border: none;
      align-items: center;
   justify-content: center;
+  display: flex;
     font-size: 0.85rem;
     color: #374151;
     cursor: pointer;
     transition: all 0.15s ease;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: #f3f4f6;
     }
 
@@ -33,6 +34,17 @@
     &:disabled {
       opacity: 0.5;
       cursor: default;
+    }
+
+    &.dots {
+      background: none;
+      cursor: default;
+      opacity: 1;
+      border: none;
+      
+      &:hover {
+        background: none;
+      }
     }
   }
 }

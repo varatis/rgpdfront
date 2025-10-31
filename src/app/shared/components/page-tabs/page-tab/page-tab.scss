@@ -1,0 +1,143 @@
+/* --- CONTAINER GLOBAL --- */
+.page-container {
+  padding: 2rem;
+  background-color: #F3F6FA;
+  min-height: 100vh;
+}
+
+/* --- LAYOUT SPLITTÉ --- */
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  transition: grid-template-columns 0.3s ease;
+
+  // Classe activée quand le détail est ouvert
+  &.split-active {
+    grid-template-columns: 1fr 450px; // 450px ou 500px, à votre choix
+  }
+}
+
+.left-section {
+  width: 100%;
+}
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  
+  .tab-btn {
+    flex: 1;
+    padding: 1rem 2rem;
+    background: #DDE1E6;
+    border: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    color: #6B7280;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    
+    &.active {
+      background: #fff;
+      color: #2563EB;
+      border-bottom-color: #2563EB;
+    }
+
+    &:hover:not(.active) {
+      background: #D1D5DB;
+    }
+
+    &:first-child {
+      border-top-left-radius: 8px;
+    }
+
+    &:last-child {
+      border-top-right-radius: 8px;
+    }
+  }
+}
+
+/* --- BOÎTE DE CONTENU PRINCIPALE (GAUCHE) --- */
+.main-content-wrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.content-body {
+  /* Les slots sont des conteneurs simples */
+  .list-header-slot {
+    /* Le CSS de .collapse-header ou .table-header ira
+       dans le composant parent (ex: clients-list.scss) */
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .list-items-slot {
+    /* Le CSS de .clients-list ou .table-body ira
+       dans le composant parent */
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  .pagination-slot {
+    border-top: 1px solid #F3F4F6;
+  }
+  
+  .empty-state-slot {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* --- PANNEAU DE DROITE (DÉTAIL) --- */
+.right-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+
+  .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #E5E7EB;
+
+    h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .close-btn {
+      // Style simple pour le bouton fermer
+      background: #f3f4f6;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 32px;
+      &:hover { background: #e5e7eb; }
+    }
+  }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1280px) {
+  .split-layout.split-active {
+    grid-template-columns: 1fr;
+  }
+  .right-section {
+    position: relative;
+    top: 0;
+  }
+}
