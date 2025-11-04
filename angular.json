@@ -85,7 +85,15 @@
             ],
             "styles": [
               "src/styles.scss"
-            ]
+            ],
+            "codeCoverage": true, 
+            "browsers": "Chrome",
+            "karmaConfig": "karma.conf.js", 
+            "reporters": [
+             "progress",
+              "kjhtml",
+              "coverage"
+          ]
           }
         }
       }
