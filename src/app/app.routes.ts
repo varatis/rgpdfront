@@ -17,10 +17,15 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard],
     children: [
       {
+        path: 'hello-world',
+        loadComponent: () => import('./features/hello-world/hello-world')
+          .then(m => m.HelloWorld)
+      },
+      {
         path: 'clients',
         loadComponent: () => import('./features/admin/pages/clients-list/clients-list')
           .then(m => m.ClientsList)
-          
+
       },
       {
         path: 'administrators',
@@ -47,6 +52,11 @@ export const routes: Routes = [
     canActivate: [authGuard, clientGuard],
     children: [
       {
+        path: 'hello-world',
+        loadComponent: () => import('./features/hello-world/hello-world')
+          .then(m => m.HelloWorld)
+      },
+      {
         path: 'compte-client',
         loadComponent: () => import('./features/client/pages/compte-client/compte-client')
           .then(m => m.CompteClient)
@@ -68,18 +78,18 @@ export const routes: Routes = [
 
       },
       {
-        path: 'registre-demandes',  
+        path: 'registre-demandes',
         loadComponent: () => import('./features/user/pages/registre-demandes/registre-demandes')
           .then(m => m.RegistreDemandes)
       },
       {
-        path: 'sous-traitant-dcp',  
+        path: 'sous-traitant-dcp',
         loadComponent: () => import('./features/user/pages/sous-traitant-dcp/sous-traitant-dcp')
           .then(m => m.SousTraitantDcp)
 
       },
       {
-        path:'suivi-preconisations',
+        path: 'suivi-preconisations',
         loadComponent: () => import('./features/user/pages/suivi-preconisations/suivi-preconisations')
           .then(m => m.SuiviPreconisations)
 

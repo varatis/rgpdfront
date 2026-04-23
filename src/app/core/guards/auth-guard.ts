@@ -1,9 +1,9 @@
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../../features/auth/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { inject } from '@angular/core';
 
 export const authGuard: CanActivateFn = (route, state) => {
- const authService = inject(AuthService);
+  const authService = inject(AuthService);
   const router = inject(Router);
 
   if (authService.isAuthenticated()) {
@@ -33,7 +33,7 @@ export const clientGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const role = authService.getUserRole();
-  
+
   if (authService.isAuthenticated() && (role === 'client' || role === 'user')) {
     return true;
   }

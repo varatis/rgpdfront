@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../features/auth/services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { Location } from '@angular/common';
 import { computed } from '@angular/core';
 import { CLIENT_NAV_ITEMS } from '../../../shared/config/navigation.config';
@@ -12,12 +12,12 @@ import { CLIENT_NAV_ITEMS } from '../../../shared/config/navigation.config';
   styleUrl: './client-sidebar.scss'
 })
 export class ClientSidebar {
-  currentUser:any;
+  currentUser: any;
   navItems = computed(() => {
     const user = this.currentUser();
     if (!user) return [];
-    
-  
+
+
     if (user.role === 'user') {
       return CLIENT_NAV_ITEMS.filter(item => item.roles.includes('user'));
     }
@@ -62,6 +62,6 @@ export class ClientSidebar {
     this.authService.logout();
   }
 
- 
+
 
 }

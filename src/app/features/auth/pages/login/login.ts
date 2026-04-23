@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.scss'
 })
 export class Login {
- loginForm: FormGroup;
+  loginForm: FormGroup;
   isLoading = false;
   errorMessage: string | null = null;
   showPassword = false;
@@ -41,17 +41,17 @@ export class Login {
 
       try {
         const success = this.authService.login(email, password);
-        
+
         if (await success) {
-         
+
           const role = this.authService.getUserRole();
-          
+
           if (role === 'admin') {
-            this.router.navigate(['/admin/clients']);
+            this.router.navigate(['/admin/hello-world']);
           } else if (role === 'client') {
-            this.router.navigate(['/app/compte-client']);
+            this.router.navigate(['/app/hello-world']);
           } else if (role === 'user') {
-            this.router.navigate(['/app/registre-traitement']);
+            this.router.navigate(['/app/hello-world']);
           }
         } else {
           this.errorMessage = 'Identifiants invalides';
