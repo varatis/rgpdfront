@@ -1,7 +1,7 @@
 import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../features/auth/services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { ADMIN_NAV_ITEMS } from '../../../shared/config/navigation.config';
 
 @Component({
@@ -12,7 +12,7 @@ import { ADMIN_NAV_ITEMS } from '../../../shared/config/navigation.config';
   styleUrl: './admin-sidebar.scss'
 })
 export class AdminSidebar {
-  currentUser:any;
+  currentUser: any;
   navItems = ADMIN_NAV_ITEMS;
 
   logo = computed(() => 'assets/images/creative_logo.png');

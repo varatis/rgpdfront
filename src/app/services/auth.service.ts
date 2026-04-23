@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { signal, computed } from '@angular/core';
-import { UserProfile, UserRole } from '../../../shared/interfaces/navigation.interface';
+import { UserProfile, UserRole } from '../shared/interfaces/navigation.interface';
 
 
 
