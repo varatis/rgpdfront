@@ -1,0 +1,16 @@
+app:
+  name: minds-rgpd-front-ng-prod
+  env: prod
+  apiurl: "https://minds-rgpd.intra.groupe-creative.fr/apims"
+  ingress:
+    interne:
+      host: minds-rgpd.intra.groupe-creative.fr
+  nextAuthUrl: https://minds-rgpd.intra.groupe-creative.fr
+  keycloak:
+    url: https://sso.groupe-creative.fr
+    issuer: https://sso.groupe-creative.fr/auth/realms/creative
+    grant_type: "password"
+    client_id: "minds-rgpd"
+    realm: "creative"
+  secret: minds-rgpd/k8s/config
+  publicca: true

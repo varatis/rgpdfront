@@ -1,0 +1,18 @@
+app:
+  name: minds-rgpd-front-ng-demo
+  env: demo
+  apiurl: "https://demo.minds-rgpd.minds.k8s/apims"
+  ingress:
+    interne:
+      host: demo.minds-rgpd.minds.k8s
+  keycloak:
+    grant_type: "password"
+    client_id: "minds-rgpd"
+    realm: "creative"
+  secret: rgpd/k8s/demo
+  nextAuthUrl: https://demo.minds-rgpd.minds.k8s
+  tracing:
+    endpoint: "http://jaeger-collector:4317"
+    sampler: "always_on"
+    samplerArg: "1.0"
+    serviceName: "minds-rgpd-front-ng-demo"

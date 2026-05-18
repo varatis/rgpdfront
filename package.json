@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build:dev": "node git-version.js && ng build --configuration development",
+    "build:valid": "node git-version.js && ng build --configuration valid",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false --code-coverage",
     "sonar": "dotenv -e .env -- sonar-scanner",
@@ -50,6 +51,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "sonarqube-scanner": "^4.3.2",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "git-commit-info": "^2.0.2"
   }
 }

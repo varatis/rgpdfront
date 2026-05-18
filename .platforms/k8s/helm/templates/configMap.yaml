@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.app.name }}-conf
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    meta.helm.sh/release-name: {{ .Values.app.name }}
+data:
+  # FIXME: Used ?
+  env.js: |
+    (function (window) {
+      window.__env = window.__env || {};
+      window.__env.version = "{{ .Values.app.image.tag }}";
+      window.__env.apiUrl = "{{ .Values.app.apiurl }}";
+      window.__env.keycloak = {
+        url: "{{ .Values.app.keycloak.url }}",
+        grant_type: "{{ .Values.app.keycloak.grant_type }}",
+        client_id: "{{ .Values.app.keycloak.client_id }}",
+        realm: "{{ .Values.app.keycloak.realm }}"
+      };
+
+    }(this));

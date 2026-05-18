@@ -1,0 +1,34 @@
+app:
+  name: minds-rgpd-front-ng
+  replica: 1
+  apiurl: "http://localhost:8080"
+  image:
+    name: "srv-nexus.domaine.local:18444/projets/minds-rgpd/minds-rgpd-front-ng"
+    tag: "xxx"
+    pullPolicy: Always
+  ingress:
+    enabled: true
+    interne:
+      enabled: true
+      host: xxx.minds-rgpd-front-ng.minds.k8s
+    externe:
+      enabled: false
+      host: xxxx
+  keycloak:
+    url: "https://sso.minds.k8s"
+  service:
+    port: 3000
+    targetPort: 80
+
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  nextAuthUrl: http://localhost:3000
+
+volume:
+  claimname: minds-pv-claim
+  subpath: minds/minds-rgpd/demo
