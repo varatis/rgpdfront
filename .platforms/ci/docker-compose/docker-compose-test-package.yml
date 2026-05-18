@@ -1,0 +1,11 @@
+# Use root/example as user/password credentials
+version: "3.4"
+
+services:
+  front:
+    image: "srv-nexus.domaine.local:18444/projets/minds/minds-rgpd/minds-rgpd-front-ng:${PROJECT_VERSION}"
+    container_name: minds-rgpd-front-ng
+    ports:
+      - "4200:80"
+    volumes:
+      - ${WORKSPACE}/src/env.js:/usr/share/nginx/html/env.js

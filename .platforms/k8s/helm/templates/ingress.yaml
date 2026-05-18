@@ -1,0 +1,40 @@
+{{- if .Values.app.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    cert-manager.io/cluster-issuer: "ca-issuer"
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.app.ingress.interne.host }}
+      secretName: tls-{{ .Values.app.name }}-cert
+  rules:
+    {{- if .Values.app.ingress.interne.enabled }}
+    - host: {{ .Values.app.ingress.interne.host }}
+      http:
+        paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ .Values.app.name }}
+                  port:
+                    number: {{ .Values.app.service.port }}
+    {{- end }}
+    {{- if .Values.app.ingress.externe.enabled }}
+    - host: {{ .Values.app.ingress.externe.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.app.name }}
+                port:
+                  number: {{ .Values.app.service.port }}
+    {{- end }}
+{{- end }}

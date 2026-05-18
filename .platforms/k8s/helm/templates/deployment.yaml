@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.app.name }}
+spec:
+  replicas: {{ .Values.app.replica }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.app.name }}
+    spec:
+      volumes:
+        # - name: {{ .Values.volume.claimname }}
+        #   persistentVolumeClaim:
+        #     claimName: {{ .Values.volume.claimname }}
+        - name: {{ .Values.app.name }}-conf
+          configMap:
+            name: "{{ .Values.app.name }}-conf"
+            items:
+              - key: env.js
+                path: env.js
+      containers:
+        - name: {{ .Values.app.name }}
+          image:  "{{ .Values.app.image.name }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          env:
+            - name: NEXTAUTH_URL
+              value: {{ .Values.app.nextAuthUrl }}
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ .Values.app.keycloak.client_id }}
+            - name: KEYCLOAK_ISSUER
+              value: {{ .Values.app.keycloak.issuer }}
+            {{- if .Values.app.publicca }}
+            - name: SSO_PUBLIC_CA
+              value: "true"
+            {{- end }}
+            - name: API_URL
+              value: {{ .Values.app.apiurl }}
+            {{- if .Values.app.tracing }}
+            # OpenTelemetry Configuration
+            - name: OTEL_SERVICE_NAME
+              value: "{{ .Values.app.tracing.serviceName | default .Values.app.name }}"
+            - name: OTEL_SERVICE_VERSION
+              value: "{{ .Values.app.image.tag }}"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "{{ .Values.app.tracing.endpoint | default "http://jaeger-collector.outillage.svc.cluster.local:4317" }}"
+            - name: OTEL_TRACES_SAMPLER
+              value: "{{ .Values.app.tracing.sampler | default "always_on" }}"
+            - name: OTEL_TRACES_SAMPLER_ARG
+              value: "{{ .Values.app.tracing.samplerArg | default "1.0" }}"
+            - name: OTEL_LOGS_EXPORTER
+              value: none
+            - name: OTEL_TRACES_EXPORTER
+              value: otlp
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "grpc"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.namespace={{ .Release.Namespace }},deployment.environment={{ .Values.environment | default "dev" }}"
+            - name: OTEL_SDK_DISABLED
+              value: "false"
+            {{- end }}
+          ports:
+            - containerPort: {{ .Values.app.service.targetPort }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.app.service.targetPort }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.app.service.targetPort }}
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            failureThreshold: 5
+          resources:
+            requests:
+              memory: {{ .Values.app.resources.requests.memory }}
+              cpu: {{ .Values.app.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.app.resources.limits.memory }}
+              cpu: {{ .Values.app.resources.limits.cpu }}
+          volumeMounts:
+            - name: {{ .Values.app.name }}-conf
+              mountPath: "/usr/share/nginx/html/env.js"
+              subPath: env.js
