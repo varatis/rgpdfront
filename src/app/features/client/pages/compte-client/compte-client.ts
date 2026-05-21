@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from '../../../../services/api.service';
-import { InfoFichier } from '../../../../core/models/info-fichier.model';
 
 @Component({
   selector: 'app-compte-client',
@@ -23,11 +22,20 @@ export class CompteClient {
 
     const file = input.files[0];
 
-    const allowedExtensions = ['xlsx', 'xls', 'csv'];
+    const allowedExtensions = ['xlsx', 'xls'];
     const extension = file.name.split('.').pop()?.toLowerCase();
 
     if (!extension || !allowedExtensions.includes(extension)) {
-      alert('Veuillez sélectionner un fichier Excel ou CSV (.xlsx, .xls, .csv)');
+      this.snackBar.open(
+        'Veuillez sélectionner un fichier Excel (.xlsx, .xls)',
+        'Fermer',
+        {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        }
+      );
       input.value = '';
       this.selectedFile = undefined;
       return;
@@ -42,7 +50,7 @@ export class CompteClient {
     }
 
     this.apiService.uploadRgpdFile(this.selectedFile).subscribe({
-    
+
       next: (response) => {
 
         const isOk = response.statusFichier === 'OK';

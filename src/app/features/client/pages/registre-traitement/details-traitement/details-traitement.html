@@ -12,7 +12,7 @@
     <div *ngIf="activeTab === 'Identification du traitement'" class="tab-content">
       <div class="field-group">
         <label>ID</label>
-        <p>{{ traitement.id }}</p>
+        <p>{{ traitementDetails?.id }}</p>
       </div>
 
       <div class="field-group">
@@ -27,7 +27,7 @@
 
       <div class="field-group">
         <label>Nom du traitement</label>
-        <p>{{ traitement.nom }}</p>
+        <p>{{ traitementDetails?.nom }}</p>
       </div>
 
       <div class="field-group">
@@ -57,12 +57,12 @@
 
       <div class="field-group">
         <label>Gestionnaire de la mise en œuvre du traitement</label>
-        <p>{{ traitement.gestionnaire }}</p>
+        <p>{{ traitementDetails?.gestionnaire }}</p>
       </div>
 
       <div class="field-group">
         <label>Finalité principale</label>
-        <p>{{ traitement.finalite }}</p>
+        <p>{{ traitementDetails?.finalite }}</p>
       </div>
 
       <div class="field-group">

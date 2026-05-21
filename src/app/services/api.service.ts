@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { InfoFichier } from '../core/models/info-fichier.model';
-import { Traitement } from '../core/models/traitement.model';
+import { Traitement, TraitementDetails } from '../core/models/traitement.model';
 import { PageResponse } from '../core/models/page-response.model';
 
 @Injectable({
@@ -14,10 +14,6 @@ export class ApiService {
 
 
   constructor(private http: HttpClient) { }
-
-  getHelloMessage(): Observable<string> {
-    return this.http.get(this.apiUrl + "helloworld", { responseType: 'text' });
-  }
 
   uploadRgpdFile(file: File) {
     const formData = new FormData();
@@ -37,6 +33,11 @@ export class ApiService {
       this.apiUrl + "traitements",
       { params }
     );
+  }
+
+  getTraitementDetails(traitementId: number | undefined): Observable<TraitementDetails> {
+    return this.http.get<TraitementDetails>(
+      this.apiUrl + "traitements/" + traitementId);
   }
 
 

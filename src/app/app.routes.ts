@@ -17,11 +17,6 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard],
     children: [
       {
-        path: 'hello-world',
-        loadComponent: () => import('./features/hello-world/hello-world')
-          .then(m => m.HelloWorld)
-      },
-      {
         path: 'clients',
         loadComponent: () => import('./features/admin/pages/clients-list/clients-list')
           .then(m => m.ClientsList)
@@ -51,11 +46,6 @@ export const routes: Routes = [
     component: ClientLayout,
     canActivate: [authGuard, clientGuard],
     children: [
-      {
-        path: 'hello-world',
-        loadComponent: () => import('./features/hello-world/hello-world')
-          .then(m => m.HelloWorld)
-      },
       {
         path: 'compte-client',
         loadComponent: () => import('./features/client/pages/compte-client/compte-client')

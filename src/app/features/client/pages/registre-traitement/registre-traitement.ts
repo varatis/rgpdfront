@@ -37,81 +37,8 @@ export class RegistreTraitement implements OnInit {
     { label: 'Ajouter un traitement', icon: '+', action: 'add', color: 'primary' },
   ];
 
-  currentPage = 2;
+  currentPage = 1;
   traitementSelectionne?: Traitement;
-  //  data: Traitement[] = [
-  //   {
-  //     id: 1,
-  //     nom: 'Pré inscription',
-  //     gestionnaire: 'Chefs de service et directeurs & psychologue',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'inscrire les demandeurs sur liste d'attente.",
-  //   },
-  //   {
-  //     id: 2,
-  //     nom: 'Admission',
-  //     gestionnaire: 'Chefs de service et directeurs',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-  //   },
-  //   {
-  //     id: 3,
-  //     nom: 'Admission',
-  //     gestionnaire: 'Chefs de service et directeurs',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-  //   },
-  //   {
-  //     id: 4,
-  //     nom: 'Admission',
-  //     gestionnaire: 'Chefs de service et directeurs',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-  //   },
-  //   {
-  //     id: 5,
-  //     nom: 'Admission',
-  //     gestionnaire: 'Chefs de service et directeurs',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-  //   },
-  //   {
-  //     id: 6,
-  //     nom: 'Admission',
-  //     gestionnaire: 'Secrétaire',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-  //   },
-  //   {
-  //     id: 7,
-  //     nom: 'Admission',
-  //     gestionnaire: 'Chefs de service et directeurs',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-  //   },
-  //   {
-  //     id: 8,
-  //     nom: 'Admission',
-  //     gestionnaire: 'Chefs de service et directeurs',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-  //   },
-  //   {
-  //     id: 9,
-  //     nom: 'Admission',
-  //     gestionnaire: 'Chefs de service et directeurs',
-  //     finalite:
-  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-  //   },
-  //   {
-  //     id: 10,
-  //     nom: 'Accompagnement des usagers - Partie non médicale',
-  //     gestionnaire: 'Chef de service',
-  //     finalite:
-  //       "Collecter et utiliser des données permettant de construire le projet d'accompagnement personnalisé des usagers et d'organiser et tracer l'accompagnement à apporter",
-  //   },
-  // ];
-
   data: Traitement[] = [];
   page = 0;
   size = 10;

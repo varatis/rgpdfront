@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../../../../../services/api.service';
+import { TraitementDetails } from '../../../../../core/models/traitement.model';
 
 @Component({
   selector: 'app-details-traitement',
@@ -9,11 +11,13 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./details-traitement.scss']
 })
 export class DetailsTraitementComponent {
-  @Input() traitement: any;
+  constructor(private apiService: ApiService) { }
+  @Input() traitementId: number | undefined;
   @Input() userRole: 'client' | 'user' = 'client';
+  traitementDetails: TraitementDetails | undefined;
   activeTab = 'Identification du traitement';
-  
-  tabs: string[] = []; 
+
+  tabs: string[] = [];
 
   private readonly clientTabs = [
     'Identification du traitement',
@@ -29,18 +33,30 @@ export class DetailsTraitementComponent {
   ];
 
   ngOnInit() {
-    
+
+    this.loadTraitementDetails(this.traitementId);
+
     if (this.userRole === 'user') {
       this.tabs = this.userTabs;
     } else {
-      
+
       this.tabs = this.clientTabs;
     }
-    
-   
+
+
     if (!this.tabs.includes(this.activeTab)) {
       this.activeTab = this.tabs[0];
     }
+  }
+
+  loadTraitementDetails(traitementId: number | undefined): void {
+    this.apiService.getTraitementDetails(traitementId)
+      .subscribe({
+        next: (res) => {
+          this.traitementDetails = res;
+        },
+        error: (err) => console.error(err)
+      });
   }
 
   selectTab(tab: string) {

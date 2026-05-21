@@ -2,12 +2,6 @@ import { NavItem } from '../interfaces/navigation.interface';
 
 export const ADMIN_NAV_ITEMS: NavItem[] = [
   {
-    label: 'Connexion front et back',
-    route: 'hello-world',
-    icon: 'preconisations',
-    roles: ['admin']
-  },
-  {
     label: 'Clients',
     route: 'clients',
     icon: 'clients',
@@ -28,12 +22,6 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
 ];
 
 export const CLIENT_NAV_ITEMS: NavItem[] = [
-  {
-    label: 'Connexion front et back',
-    route: 'hello-world',
-    icon: 'registre',
-    roles: ['admin', 'client', 'user']
-  },
   {
     label: 'Compte Client',
     route: 'compte-client',
