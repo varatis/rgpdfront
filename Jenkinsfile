@@ -1,4 +1,4 @@
-@Library("jenkins-pipeline-library@fix/set_projectBranch")
+@Library("jenkins-pipeline-library")
 
 import fr.creative.jenkins.BuildContextHolder
 import fr.creative.jenkins.config.ConfigUtils
@@ -91,7 +91,7 @@ node() {
 
         stage('Prepare') {
             sh("chmod 777 -R .platforms/ci/")
-            sh("find . -type f -print0 | xargs -0 dos2unix")
+            sh("find . -type f -print0 | xargs -0 dos2unix -q")
             env.TARGET_ENV=deployTo 
 
             // def config = jsonParse(new File("${env.WORKSPACE}/package.json").getText())
@@ -135,10 +135,9 @@ node() {
                     trivyError=true
                 } finally {
                     // Publication du rapport HTML
-                    JenkinsService.instance().publishHtml("./.trivy/", "TrivyReport")
+                    JenkinsService.instance().publishHtml("./.trivy/", "triby.html", "Trivy Report",true)
                     archiveArtifacts artifacts: '.trivy/trivy.html', excludes: null
                     if (trivyError) {
-                        qualityWarningStage += " TRIVY |"
                         String url = JenkinsService.instance().getJobUrl() + "/TrivyReport/"
                         JenkinsService.instance().setStageAsUnstable("Trivy - Niveau de sécurité insuffisant > ${url}")
                     }
@@ -157,7 +156,7 @@ node() {
                   def sonarproject = new Sonar()
                    println("Analysing minds-rgpd-front-ng")
                    sonarproject.key = "minds-rgpd-front-ng"
-                  SonarService.instance().checkProjectStatus(sonarproject, projectBranch, true)
+                  SonarService.instance().checkProjectStatus(sonarproject, "main", true)
                 }
             }
         }
