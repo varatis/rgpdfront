@@ -1,0 +1,103 @@
+<div class="tabs-container">
+  <div class="tabs">
+    <button 
+      *ngFor="let tab of tabs"
+      [class.active]="activeTab === tab"
+      (click)="selectTab(tab)">
+      {{ tab }}
+    </button>
+  </div>
+
+  <div class="content">
+    <div *ngIf="activeTab === 'Identification du traitement'" class="tab-content">
+      <div class="field-group">
+        <label>ID</label>
+        <p>{{ traitement.id }}</p>
+      </div>
+
+      <div class="field-group">
+        <label>Etablissement(s)</label>
+        <p>IME Rennes</p>
+      </div>
+
+      <div class="field-group">
+        <label>Données concernées</label>
+        <p>Famille ou proches des demandeurs</p>
+      </div>
+
+      <div class="field-group">
+        <label>Nom du traitement</label>
+        <p>{{ traitement.nom }}</p>
+      </div>
+
+      <div class="field-group">
+        <label>Date d'identification du traitement</label>
+        <p>22/03/2021</p>
+      </div>
+
+      <div class="field-group">
+        <label>Date de mise à jour</label>
+        <p>-</p>
+      </div>
+
+      <div class="field-group">
+        <label>Historique des modifications</label>
+        <p>-</p>
+      </div>
+
+      <div class="field-group">
+        <label>Data Protection Officer</label>
+        <p>Groupe CREATIVE</p>
+      </div>
+
+      <div class="field-group">
+        <label>Responsable de traitement</label>
+        <p>Directeur de l'organisme</p>
+      </div>
+
+      <div class="field-group">
+        <label>Gestionnaire de la mise en œuvre du traitement</label>
+        <p>{{ traitement.gestionnaire }}</p>
+      </div>
+
+      <div class="field-group">
+        <label>Finalité principale</label>
+        <p>{{ traitement.finalite }}</p>
+      </div>
+
+      <div class="field-group">
+        <label>Sous-finalités</label>
+        <ul class="sub-list">
+          <li>Gestion de l'admission</li>
+          <li>État des présences</li>
+          <li>Gestion des outils statistiques ou de listes pour répondre à des besoins de gestion administrative</li>
+          <li>Gestion des élections des représentants CVS</li>
+          <li>Gestion des outils ANAP : ENFA[...]</li>
+          <li>Rapport d'activité</li>
+          <li>Gestion des mutuelles</li>
+          <li>Gestion des contacts en cas d'urgence et de la personne de confiance</li>
+          <li>Gestion décès</li>
+          <li>Gestion de la situation des usagers</li>
+          <li>Gestion du courrier</li>
+          <li>Gestion du linge</li>
+          <li>Gestion des repas</li>
+          <li>Gestion du droit à l'image</li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'Données personnelles traitées'" class="tab-content">
+      <div class="field-group">
+        <label>Données personnelles</label>
+        <p>Informations relatives au traitement...</p>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'Description du traitement'" class="tab-content">
+      <div class="field-group">
+        <label>Description</label>
+        <p>Description détaillée du traitement...</p>
+      </div>
+    </div>
+  </div>
+</div>

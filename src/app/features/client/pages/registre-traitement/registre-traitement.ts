@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-  import { Header, HeaderAction } from '../../../../shared/components/header/header';
-import { Table, TableItem } from '../../../../shared/components/table/table';
+import { Header, HeaderAction } from '../../../../shared/components/header/header';
+import { TableTraitement } from '../registre-traitement/table-traitement/table-traitement';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
-import { TreatmentTabsComponent } from '../../../../shared/components/tabs/treatmentTabs';
+import { DetailsTraitementComponent } from '../registre-traitement/details-traitement/details-traitement';
+import { ApiService } from '../../../../services/api.service';
+import { Traitement } from '../../../../core/models/traitement.model';
 
 @Component({
   selector: 'app-registre-traitement',
   standalone: true,
-  imports: [CommonModule, Header, Table, Pagination, TreatmentTabsComponent],
+  imports: [CommonModule, Header, TableTraitement, Pagination, DetailsTraitementComponent],
   templateUrl: './registre-traitement.html',
   styleUrls: ['./registre-traitement.scss'],
 })
-export class RegistreTraitement {
+export class RegistreTraitement implements OnInit {
+  constructor(private apiService: ApiService) { }
   title = 'Registre des activités de traitement';
   icon = `
     <svg viewBox="0 0 28 28" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
@@ -35,81 +38,103 @@ export class RegistreTraitement {
   ];
 
   currentPage = 2;
-  totalPages = 7;
-  selectedTreatment?: TableItem;
+  traitementSelectionne?: Traitement;
+  //  data: Traitement[] = [
+  //   {
+  //     id: 1,
+  //     nom: 'Pré inscription',
+  //     gestionnaire: 'Chefs de service et directeurs & psychologue',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'inscrire les demandeurs sur liste d'attente.",
+  //   },
+  //   {
+  //     id: 2,
+  //     nom: 'Admission',
+  //     gestionnaire: 'Chefs de service et directeurs',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
+  //   },
+  //   {
+  //     id: 3,
+  //     nom: 'Admission',
+  //     gestionnaire: 'Chefs de service et directeurs',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
+  //   },
+  //   {
+  //     id: 4,
+  //     nom: 'Admission',
+  //     gestionnaire: 'Chefs de service et directeurs',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
+  //   },
+  //   {
+  //     id: 5,
+  //     nom: 'Admission',
+  //     gestionnaire: 'Chefs de service et directeurs',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
+  //   },
+  //   {
+  //     id: 6,
+  //     nom: 'Admission',
+  //     gestionnaire: 'Secrétaire',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
+  //   },
+  //   {
+  //     id: 7,
+  //     nom: 'Admission',
+  //     gestionnaire: 'Chefs de service et directeurs',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
+  //   },
+  //   {
+  //     id: 8,
+  //     nom: 'Admission',
+  //     gestionnaire: 'Chefs de service et directeurs',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
+  //   },
+  //   {
+  //     id: 9,
+  //     nom: 'Admission',
+  //     gestionnaire: 'Chefs de service et directeurs',
+  //     finalite:
+  //       "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
+  //   },
+  //   {
+  //     id: 10,
+  //     nom: 'Accompagnement des usagers - Partie non médicale',
+  //     gestionnaire: 'Chef de service',
+  //     finalite:
+  //       "Collecter et utiliser des données permettant de construire le projet d'accompagnement personnalisé des usagers et d'organiser et tracer l'accompagnement à apporter",
+  //   },
+  // ];
 
-  data: TableItem[] = [
-    {
-      id: 1,
-      treatment: 'Pré inscription',
-      manager: 'Chefs de service et directeurs & psychologue',
-      purpose:
-        "Collecter les informations personnelles permettant d'inscrire les demandeurs sur liste d'attente.",
-    },
-    {
-      id: 2,
-      treatment: 'Admission',
-      manager: 'Chefs de service et directeurs',
-      purpose:
-        "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-    },
-    {
-      id: 3,
-      treatment: 'Admission',
-      manager: 'Chefs de service et directeurs',
-      purpose:
-        "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-    },
-    {
-      id: 4,
-      treatment: 'Admission',
-      manager: 'Chefs de service et directeurs',
-      purpose:
-        "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-    },
-    {
-      id: 5,
-      treatment: 'Admission',
-      manager: 'Chefs de service et directeurs',
-      purpose:
-        "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-    },
-    {
-      id: 6,
-      treatment: 'Admission',
-      manager: 'Secrétaire',
-      purpose:
-        "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-    },
-    {
-      id: 7,
-      treatment: 'Admission',
-      manager: 'Chefs de service et directeurs',
-      purpose:
-        "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-    },
-    {
-      id: 8,
-      treatment: 'Admission',
-      manager: 'Chefs de service et directeurs',
-      purpose:
-        "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-    },
-    {
-      id: 9,
-      treatment: 'Admission',
-      manager: 'Chefs de service et directeurs',
-      purpose:
-        "Collecter les informations personnelles permettant d'enregistrer administrativement le nouvel usager",
-    },
-    {
-      id: 10,
-      treatment: 'Accompagnement des usagers - Partie non médicale',
-      manager: 'Chef de service',
-      purpose:
-        "Collecter et utiliser des données permettant de construire le projet d'accompagnement personnalisé des usagers et d'organiser et tracer l'accompagnement à apporter",
-    },
-  ];
+  data: Traitement[] = [];
+  page = 0;
+  size = 10;
+  totalElements = 0;
+  totalPages = 0;
+
+  ngOnInit(): void {
+    this.loadTraitements(0);
+  }
+
+  loadTraitements(page: number): void {
+    this.apiService.getTraitements(page, this.size)
+      .subscribe({
+        next: (res) => {
+          this.data = res.content;
+          this.page = res.number;
+          this.size = res.size;
+          this.totalElements = res.totalElements;
+          this.totalPages = res.totalPages;
+        },
+        error: (err) => console.error(err)
+      });
+  }
 
   onActionClick(action: string) {
     if (action === 'export') {
@@ -119,20 +144,23 @@ export class RegistreTraitement {
     }
   }
 
-  onSelectTreatment(item: TableItem) {
-    if (this.selectedTreatment?.id === item.id) {
-      this.selectedTreatment = undefined;
+  onSelectTraitement(item: Traitement) {
+    if (this.traitementSelectionne?.id === item.id) {
+      this.traitementSelectionne = undefined;
     } else {
-      this.selectedTreatment = item;
+      this.traitementSelectionne = item;
     }
   }
 
   onPageChange(page: number) {
     this.currentPage = page;
     console.log('Page changed to:', page);
+    if (page > 0) {
+      this.loadTraitements(page - 1);
+    }
   }
 
   closeDetail() {
-    this.selectedTreatment = undefined;
+    this.traitementSelectionne = undefined;
   }
 }

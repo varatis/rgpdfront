@@ -9,19 +9,19 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
   },
   {
     label: 'Clients',
-    route: '/clients',
+    route: 'clients',
     icon: 'clients',
     roles: ['admin']
   },
   {
     label: 'Administrateurs',
-    route: '/administrators',
+    route: 'administrators',
     icon: 'administrators',
     roles: ['admin']
   },
   {
     label: 'Gestion des préconisations',
-    route: '/preconisations',
+    route: 'preconisations',
     icon: 'preconisations',
     roles: ['admin']
   }
