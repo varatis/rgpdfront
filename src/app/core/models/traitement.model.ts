@@ -2,11 +2,10 @@ export interface Traitement {
     id: number,
     nom: string,
     gestionnaire: string,
-    finalite: string
+    finalitePrincipale: string
 }
 
 export interface TraitementDetails extends Traitement {
-    finalitePrincipale: string,
     version: number
     dateIdentification: Date,
     dateMiseAJour: Date,
