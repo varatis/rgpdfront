@@ -61,5 +61,6 @@ export class DetailsTraitementComponent {
 
   selectTab(tab: string) {
     this.activeTab = tab;
+    console.log(tab);
   }
 }

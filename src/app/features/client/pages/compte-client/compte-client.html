@@ -28,12 +28,12 @@
                     <span class="browse-text">Sélectionner un fichier</span>
                 </div>
 
-                <input #fileInput type="file" hidden accept=".xlsx,.xls,.csv" (change)="onFileSelected($event)" />
+                <input #fileInput type="file" hidden accept=".xlsx,.xls" (change)="onFileSelected($event)" />
             </div>
 
             <div class="upload-bottom">
                 <div class="upload-infos">
-                    <small>Formats acceptés : .xlsx, .xls, .csv</small>
+                    <small>Formats acceptés : .xlsx, .xls</small>
 
                     @if (selectedFile) {
                     <div class="selected-file">
