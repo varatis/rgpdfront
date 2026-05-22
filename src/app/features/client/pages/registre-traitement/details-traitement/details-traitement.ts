@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../../../services/api.service';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
@@ -10,7 +10,7 @@ import { TraitementDetails } from '../../../../../core/models/traitement.model';
   templateUrl: './details-traitement.html',
   styleUrls: ['./details-traitement.scss']
 })
-export class DetailsTraitementComponent {
+export class DetailsTraitementComponent implements OnChanges {
   constructor(private apiService: ApiService) { }
   @Input() traitementId: number | undefined;
   @Input() userRole: 'client' | 'user' = 'client';
@@ -32,9 +32,10 @@ export class DetailsTraitementComponent {
     'Description du traitement'
   ];
 
-  ngOnInit() {
-
-    this.loadTraitementDetails(this.traitementId);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['traitementId'] && this.traitementId) {
+      this.loadTraitementDetails(this.traitementId);
+    }
 
     if (this.userRole === 'user') {
       this.tabs = this.userTabs;
@@ -61,6 +62,5 @@ export class DetailsTraitementComponent {
 
   selectTab(tab: string) {
     this.activeTab = tab;
-    console.log(tab);
   }
 }
