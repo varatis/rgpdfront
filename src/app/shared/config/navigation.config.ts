@@ -2,38 +2,26 @@ import { NavItem } from '../interfaces/navigation.interface';
 
 export const ADMIN_NAV_ITEMS: NavItem[] = [
   {
-    label: 'Connexion front et back',
-    route: 'hello-world',
-    icon: 'preconisations',
-    roles: ['admin']
-  },
-  {
     label: 'Clients',
-    route: '/clients',
+    route: 'clients',
     icon: 'clients',
     roles: ['admin']
   },
   {
     label: 'Administrateurs',
-    route: '/administrators',
+    route: 'administrators',
     icon: 'administrators',
     roles: ['admin']
   },
   {
     label: 'Gestion des préconisations',
-    route: '/preconisations',
+    route: 'preconisations',
     icon: 'preconisations',
     roles: ['admin']
   }
 ];
 
 export const CLIENT_NAV_ITEMS: NavItem[] = [
-  {
-    label: 'Connexion front et back',
-    route: 'hello-world',
-    icon: 'registre',
-    roles: ['admin', 'client', 'user']
-  },
   {
     label: 'Compte Client',
     route: 'compte-client',

@@ -1,6 +1,6 @@
 <div class="page-container">
   <!-- Layout complet avec header et contenu -->
-  <div class="split-layout" [class.split-active]="selectedTreatment">
+  <div class="split-layout" [class.split-active]="traitementSelectionne">
     
     <!-- Partie gauche : Header + Table + Pagination -->
     <div class="left-section">
@@ -11,11 +11,11 @@
         (actionClick)="onActionClick($event)">
       </app-header>
 
-      <app-table 
+      <app-table-traitement 
         [data]="data" 
-        [selectedId]="selectedTreatment?.id"
-        (select)="onSelectTreatment($event)">
-      </app-table>
+        [selectedId]="traitementSelectionne?.id"
+        (select)="onSelectTraitement($event)">
+      </app-table-traitement>
 
       <app-pagination 
         [currentPage]="currentPage" 
@@ -25,11 +25,11 @@
     </div>
 
     <!-- Partie droite : Header détails + Tabs -->
-     @if(selectedTreatment) {
+     @if(traitementSelectionne) {
     <div class="right-section" >
       <div class="detail-header">
         <div class="detail-title">
-          <h2>{{ selectedTreatment.id }} - {{ selectedTreatment.treatment }}</h2>
+          <h2>{{ traitementSelectionne.id }} - {{ traitementSelectionne.nom }}</h2>
         </div>
         <div class="detail-actions">
           <button class="icon-btn edit" title="Modifier">
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <app-treatment-tabs [treatment]="selectedTreatment"></app-treatment-tabs>
+      <app-details-traitement [traitementId]="traitementSelectionne.id"></app-details-traitement>
     </div>
     }
   </div>
