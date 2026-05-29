@@ -1,6 +1,6 @@
 <div class="tabs-container">
   <div class="tabs">
-    <button *ngFor="let tab of tabs" [class.active]="activeTab === tab" (click)="selectTab(tab)">
+    <button *ngFor="let tab of tabs" [class.active]="activeTab === tab" (click)="selectTab(tab, $event)">
       {{ tab }}
     </button>
   </div>
@@ -9,58 +9,58 @@
     <div *ngIf="activeTab === 'Identification du traitement'" class="tab-content">
       <div class="field-group">
         <label>ID</label>
-        <p>{{ traitementDetails?.id ? traitementDetails?.id : '-' }}</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:5%">{{ traitementDetails?.id ? traitementDetails?.id : '-' }}</p>
       </div>
 
       <div class="field-group">
         <label>Etablissement(s)</label>
-        <p>-</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">-</p>
       </div>
 
       <div class="field-group">
         <label>Données concernées</label>
-        <p>{{ traitementDetails?.categoriesPersonnesConcernees ? traitementDetails?.categoriesPersonnesConcernees : '-' }}
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.categoriesPersonnesConcernees ? traitementDetails?.categoriesPersonnesConcernees : '-' }}
         </p>
       </div>
 
       <div class="field-group">
         <label>Nom du traitement</label>
-        <p>{{ traitementDetails?.nom ? traitementDetails?.nom : '-' }}</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.nom ? traitementDetails?.nom : '-' }}</p>
       </div>
 
       <div class="field-group">
         <label>Date d'identification du traitement</label>
-        <p>{{ traitementDetails?.dateIdentification ? traitementDetails?.dateIdentification : '-' }}</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:20%">{{ traitementDetails?.dateIdentification ? traitementDetails?.dateIdentification : '-' }}</p>
       </div>
 
       <div class="field-group">
         <label>Date de mise à jour</label>
-        <p> {{ traitementDetails?.dateMiseAJour ? traitementDetails?.dateMiseAJour : '-' }}</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:20%"> {{ traitementDetails?.dateMiseAJour ? traitementDetails?.dateMiseAJour : '-' }}</p>
       </div>
 
       <div class="field-group">
         <label>Historique des modifications</label>
-        <p>{{ traitementDetails?.historiqueModifications ? traitementDetails?.historiqueModifications : '-' }} </p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.historiqueModifications ? traitementDetails?.historiqueModifications : '-' }} </p>
       </div>
 
       <div class="field-group">
         <label>Data Protection Officer</label>
-        <p>{{ traitementDetails?.dataProtectionOfficer ? traitementDetails?.dataProtectionOfficer : '-' }}</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.dataProtectionOfficer ? traitementDetails?.dataProtectionOfficer : '-' }}</p>
       </div>
 
       <div class="field-group">
         <label>Responsable de traitement</label>
-        <p> {{ traitementDetails?.responsableTraitement ? traitementDetails?.responsableTraitement : '-' }}</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%"> {{ traitementDetails?.responsableTraitement ? traitementDetails?.responsableTraitement : '-' }}</p>
       </div>
 
       <div class="field-group">
         <label>Gestionnaire de la mise en œuvre du traitement</label>
-        <p>{{ traitementDetails?.gestionnaire ? traitementDetails?.gestionnaire : '-' }}</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.gestionnaire ? traitementDetails?.gestionnaire : '-' }}</p>
       </div>
 
       <div class="field-group">
         <label>Finalité principale</label>
-        <p>{{ traitementDetails?.finalitePrincipale ? traitementDetails?.finalitePrincipale : '-' }}</p>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{ traitementDetails?.finalitePrincipale ? traitementDetails?.finalitePrincipale : '-' }}</p>
       </div>
 
       <div class="field-group">
@@ -73,15 +73,135 @@
 
     <div *ngIf="activeTab === 'Données personnelles traitées'" class="tab-content">
       <div class="field-group">
-        <label>Données personnelles</label>
-        <p>Informations relatives au traitement...</p>
+        <label>Catégories de personnes concernées par le traitement</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.categoriesPersonnesConcernees}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Données d'identification</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 3">{{traitementDetails?.donneesIdentification}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Données de connexion</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesConnexion}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Données de localisation</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesLocalisation}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Données sur le comportement et la vie personnelle</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.donneesComportementViePerso}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Données économiques et financières</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesEconomiquesFinancieres}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Données professionnelles</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesProfessionnelles}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Catégories particulières de données (NIR, santé par exemple)</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.categoriesParticulieresDonnees}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Sensibilité</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 40%">{{traitementDetails?.sensibilite}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Etude d'impact (PIA)</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%">{{traitementDetails?.etudeImpact}} </p>
       </div>
     </div>
 
     <div *ngIf="activeTab === 'Description du traitement'" class="tab-content">
       <div class="field-group">
-        <label>Description</label>
-        <p>Description détaillée du traitement...</p>
+        <label>Canaux de collecte des données</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.canauxCollecteDonnees}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Licéité du traitement</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.licieteTraitement}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Recours au traitements automatisés (y compris profilage) ? (Oui / Non)</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.recoursTraitementAutomatises}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Emplacement physique du traitement</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 60%">{{traitementDetails?.emplacementPhysique}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Dispositions existantes pour assurer la sécurité des données</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.dispositionsSecuriteDonnees}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Emplacement numérique du traitement</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.emplacementNumerique}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Dispositions existantes pour assurer la sécurité des données</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.dispositionsSecuriteDonnees}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Hébergement</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 30%">{{traitementDetails?.hebergement}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Durée de conservation</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.dureeConservation}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Archivage ? (Oui / Non)</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.archivage}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Durée d'archivage</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.dureeArchivage}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Catégories de destinataires</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.categoriesDestinataires}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Raisons du transfert vers les catégories de destinataires</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.raisonsTransfertDestinataires}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Transferts hors UE (Oui / Non)</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.transfertsHorsUE}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Pays destinataires</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.paysDestinataires}} </p>
+      </div>
+
+      <div class="field-group">
+        <label>Commentaires</label>
+        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.commentaires}} </p>
       </div>
     </div>
   </div>

@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../../../services/api.service';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-details-traitement',
@@ -51,6 +52,7 @@ export class DetailsTraitementComponent implements OnChanges {
   }
 
   loadTraitementDetails(traitementId: number | undefined): void {
+    this.traitementDetails = undefined;
     this.apiService.getTraitementDetails(traitementId)
       .subscribe({
         next: (res) => {
@@ -60,7 +62,12 @@ export class DetailsTraitementComponent implements OnChanges {
       });
   }
 
-  selectTab(tab: string) {
+  selectTab(tab: string, event: MouseEvent) {
     this.activeTab = tab;
+    (event.target as HTMLElement).scrollIntoView({
+      behavior: 'smooth',
+      inline: 'nearest',
+      block:'nearest'
+    });
   }
 }
