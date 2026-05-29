@@ -44,3 +44,51 @@ h1 {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// loading animation
+@keyframes shimmer {
+  0%   { background-position: -400px 0, 0 0; }
+  100% { background-position: 400px 0, 0 0; }
+}
+.skeleton {
+  color: transparent !important;
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+  min-height: calc((var(--skeleton-lines, 1) * 20px) - 8px);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: var(--skeleton-width, 30%);
+    // 1 line = 12px, 2 lines = 32px (12+8+12), 3 lines = 52px (12+8+12+8+12)
+    height: calc((var(--skeleton-lines, 1) * 20px) - 8px);
+    border-radius: 4px;
+    background-image:
+      linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%),
+      repeating-linear-gradient(to bottom, #e0e0e0 0px, #e0e0e0 12px, transparent 12px, transparent 20px);
+    background-size: 400px 100%, 100% 100%;
+    animation: shimmer 1.6s infinite linear;
+  }
+}
+
+// scrollbars
+* {
+  &::-webkit-scrollbar {
+    width: 4px;   // vertical
+    height: 6px;  // horizontal
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background: #bdbdbd;
+  }
+}
