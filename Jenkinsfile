@@ -26,7 +26,8 @@ node() {
         booleanParam(name:'skipTrivy', defaultValue: false),
         booleanParam(name:'skipPackage', defaultValue: false),
         booleanParam(name:'skipDeploy', defaultValue: false),
-        booleanParam(name:'skipTest', defaultValue: false)
+        booleanParam(name:'skipTest', defaultValue: false),
+        booleanParam(name:'skipSonarQualityCheck', defaultValue: false)
     ])
 ])
     // Nom du Projet Gitlab
@@ -47,7 +48,7 @@ node() {
     // Skip Sonarqube
     boolean skipSonarqube = params.skipSonarqube
     // set critical Sonarqube behaviour
-    boolean isSonarqubeCritical = true
+    boolean isSonarqubeCritical = !params.skipSonarQualityCheck
     // Skip Deploy
     boolean skipPackage = params.skipPackage
      // Skip Trivy
@@ -149,7 +150,7 @@ node() {
             if (!skipSonarqube) {
                 println "Qualimetry Sonarqube"
                 HttpService.instance().waitForService("https://sonarqube.tools.k8s/")
-                sh "bash ./.platforms/ci/sonar.sh --git-branch ${projectBranch}"
+                sh "bash ./.platforms/ci/sonar.sh --git-branch ${projectBranch} ${isSonarqubeCritical}"
 
                 // Validation de l'analyse sonar (blocage si bug critique)
                 if (isSonarqubeCritical) {
