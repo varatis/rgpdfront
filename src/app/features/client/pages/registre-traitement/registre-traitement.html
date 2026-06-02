@@ -1,31 +1,33 @@
 <div class="page-container">
   <!-- Layout complet avec header et contenu -->
   <div class="split-layout" [class.split-active]="traitementSelectionne">
-    
+
     <!-- Partie gauche : Header + Table + Pagination -->
     <div class="left-section">
-      <app-header 
-        [title]="title" 
-        [icon]="icon" 
+      <app-header
+        [title]="title"
+        [icon]="icon"
         [actions]="actions"
         (actionClick)="onActionClick($event)">
       </app-header>
 
-      <app-table-traitement 
-        [data]="data" 
+      <app-table-traitement
+        [data]="data"
+        [loading]="loading"
         [selectedId]="traitementSelectionne?.id"
-        (select)="onSelectTraitement($event)">
+        (select)="onSelectTraitement($event)"
+        (sortChange)="onSortChange($event)">
       </app-table-traitement>
 
-      <app-pagination 
-        [currentPage]="currentPage" 
+      <app-pagination
+        [currentPage]="currentPage"
         [totalPages]="totalPages"
         (pageChange)="onPageChange($event)">
       </app-pagination>
     </div>
 
     <!-- Partie droite : Header détails + Tabs -->
-     @if(traitementSelectionne) {
+    @if(traitementSelectionne) {
       <div class="right-section">
         <div class="detail-header">
           <div class="detail-title">
@@ -33,18 +35,11 @@
           </div>
           <div class="detail-actions">
             <button class="icon-btn edit" title="Modifier">
-              <span class="material-icons">   <svg
-                    class="icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M5 19H6.425L16.2 9.225L14.775 7.8L5 17.575V19ZM3 21V16.75L16.2 3.575C16.4 3.39167 16.6208 3.25 16.8625 3.15C17.1042 3.05 17.3583 3 17.625 3C17.8917 3 18.15 3.05 18.4 3.15C18.65 3.25 18.8667 3.4 19.05 3.6L20.425 5C20.625 5.18333 20.7708 5.4 20.8625 5.65C20.9542 5.9 21 6.15 21 6.4C21 6.66667 20.9542 6.92083 20.8625 7.1625C20.7708 7.40417 20.625 7.625 20.425 7.825L7.25 21H3ZM15.475 8.525L14.775 7.8L16.2 9.225L15.475 8.525Z"
-                    />
-                  </svg></span>
+              <span class="material-icons"><svg
+                class="icon" width="24" height="24" viewBox="0 0 24 24"
+                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 19H6.425L16.2 9.225L14.775 7.8L5 17.575V19ZM3 21V16.75L16.2 3.575C16.4 3.39167 16.6208 3.25 16.8625 3.15C17.1042 3.05 17.3583 3 17.625 3C17.8917 3 18.15 3.05 18.4 3.15C18.65 3.25 18.8667 3.4 19.05 3.6L20.425 5C20.625 5.18333 20.7708 5.4 20.8625 5.65C20.9542 5.9 21 6.15 21 6.4C21 6.66667 20.9542 6.92083 20.8625 7.1625C20.7708 7.40417 20.625 7.625 20.425 7.825L7.25 21H3ZM15.475 8.525L14.775 7.8L16.2 9.225L15.475 8.525Z"/>
+              </svg></span>
             </button>
             <button class="icon-btn close" (click)="closeDetail()" title="Fermer">
               <span class="material-icons">X</span>

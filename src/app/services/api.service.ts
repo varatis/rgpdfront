@@ -23,11 +23,12 @@ export class ApiService {
   }
 
 
-  getTraitements(page: number, size: number): Observable<PageResponse<Traitement>> {
+  getTraitements(page: number, size: number, sortField: string = 'id', 
+      sortDirection: 'asc' | 'desc' = 'asc'): Observable<PageResponse<Traitement>> {
     const params = new HttpParams()
       .set('page', page)
       .set('size', size)
-      .set('sort', 'id,asc');
+      .set('sort', `${sortField},${sortDirection}`);
 
     return this.http.get<PageResponse<Traitement>>(
       this.apiUrl + "traitements",

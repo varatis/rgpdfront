@@ -26,7 +26,7 @@
     </div>
 
     <div
-      class="header-cell sortable"
+      class="header-cell sortable col-gestionnaire"
       [class.asc]="sortColumn === 'gestionnaire' && sortDirection === 'asc'"
       [class.desc]="sortColumn === 'gestionnaire' && sortDirection === 'desc'"
       (click)="toggleSort('gestionnaire')"
@@ -38,10 +38,10 @@
     </div>
 
     <div
-      class="header-cell sortable"
+      class="header-cell sortable col-finalite"
       [class.asc]="sortColumn === 'finalite' && sortDirection === 'asc'"
       [class.desc]="sortColumn === 'finalite' && sortDirection === 'desc'"
-      (click)="toggleSort('finalite')"
+      (click)="toggleSort('finalitePrincipale')"
     >
       FINALITÉ PRINCIPALE
        <svg class="sort-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -53,9 +53,15 @@
   </div>
 
   <div class="table-body">
+
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+
+    <ng-container *ngIf="!loading">
     <div
       class="row"
-      *ngFor="let item of sortedData"
+      *ngFor="let item of data"
       (click)="onSelect(item)"
       [class.selected]="item.id === selectedId"
     >
@@ -67,9 +73,10 @@
         {{ item.id }}
       </div>
       <div class="cell name">{{ item.nom }}</div>
-      <div class="cell">{{ item.gestionnaire }}</div>
-      <div class="cell">{{ item.finalitePrincipale }}</div>
+      <div class="cell col-gestionnaire">{{ item.gestionnaire }}</div>
+      <div class="cell col-finalite">{{ item.finalitePrincipale }}</div>
       <div class="arrow">›</div>
     </div>
+    </ng-container>
   </div>
 </div>

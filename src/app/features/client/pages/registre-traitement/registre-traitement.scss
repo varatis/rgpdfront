@@ -17,6 +17,18 @@
   background: white;
   transition: width 0.3s ease;
   overflow: hidden;
+
+  app-table-traitement {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  app-pagination {
+    flex-shrink: 0;
+  }
 }
 
 .split-layout.split-active .left-section {

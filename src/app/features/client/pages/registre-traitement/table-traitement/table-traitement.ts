@@ -12,24 +12,11 @@ import { Traitement } from '../../../../../core/models/traitement.model';
 export class TableTraitement {
   @Input() data: Traitement[] = [];
   @Input() selectedId?: number;
+  @Input() loading = false;
   @Output() select = new EventEmitter<Traitement>();
+  @Output() sortChange = new EventEmitter<{ field: string; direction: 'asc' | 'desc' }>();
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
-
-
-    get sortedData(): Traitement[] {
-    if (!this.sortColumn) return this.data;
-    return [...this.data].sort((a, b) => {
-      const valA = (a as any)[this.sortColumn];
-      const valB = (b as any)[this.sortColumn];
-      if (this.sortColumn === 'id') {
-        return this.sortDirection === 'asc' ? valA - valB : valB - valA;
-      }
-      
-      const compare = valA.toString().localeCompare(valB.toString());
-      return this.sortDirection === 'asc' ? compare : -compare;
-    });
-  }
 
   toggleSort(column: string) {
     if (this.sortColumn === column) {
@@ -38,6 +25,7 @@ export class TableTraitement {
       this.sortColumn = column;
       this.sortDirection = 'asc';
     }
+    this.sortChange.emit({ field: this.sortColumn, direction: this.sortDirection });
   }
   onSelect(item: Traitement) {
     this.select.emit(item);
