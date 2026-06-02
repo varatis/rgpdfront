@@ -1,52 +1,58 @@
 <div class="clients-layout" [class.details-open]="'client'">
-    <div class="clients-page">
+  <div class="clients-page">
 
-        <!-- HEADER -->
-        <div class="page-header">
-            <div class="header-left">
-                <div class="icon-wrapper">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M0 20V3.75L5 0L10 3.75V6H20V20H0ZM2 18H4V16H2V18ZM2 14H4V12H2V14ZM2 10H4V8H2V10ZM2 6H4V4H2V6ZM6 6H8V4H6V6ZM6 18H18V8H6V18ZM12 12V10H16V12H12ZM12 16V14H16V16H12ZM8 12V10H10V12H8ZM8 16V14H10V16H8Z"
-                            fill="currentColor" />
-                    </svg>
-                </div>
-
-                <h1 class="page-title">Nom du client</h1>
-            </div>
+    <!-- HEADER -->
+    <div class="page-header">
+      <div class="header-left">
+        <div class="icon-wrapper">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 20V3.75L5 0L10 3.75V6H20V20H0ZM2 18H4V16H2V18ZM2 14H4V12H2V14ZM2 10H4V8H2V10ZM2 6H4V4H2V6ZM6 6H8V4H6V6ZM6 18H18V8H6V18ZM12 12V10H16V12H12ZM12 16V14H16V16H12ZM8 12V10H10V12H8ZM8 16V14H10V16H8Z" fill="currentColor" />
+          </svg>
         </div>
-        
-        <!-- UPLOAD -->
-        <p>Importer le registre RGPD</p>
-        <div class="upload-card">
+        <h1 class="page-title" data-testid="_lib_titre_compte_client">Nom du client</h1>
+      </div>
+    </div>
 
-            <div class="upload-box" (click)="fileInput.click()">
-                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+    <!-- UPLOAD -->
+    <p data-testid="_lib_titre_import">Importer le registre RGPD</p>
+    <div class="upload-card">
 
-                <div class="upload-text">
-                    <span>Glisser déposer le fichier ici ou</span>
-                    <span class="browse-text">Sélectionner un fichier</span>
-                </div>
-
-                <input #fileInput type="file" hidden accept=".xlsx,.xls" (change)="onFileSelected($event)" />
-            </div>
-
-            <div class="upload-bottom">
-                <div class="upload-infos">
-                    <small>Formats acceptés : .xlsx, .xls</small>
-
-                    @if (selectedFile) {
-                    <div class="selected-file">
-                        Fichier sélectionné : {{ selectedFile.name }}
-                    </div>
-                    }
-                </div>
-
-                <button class="btn-primary" type="button" [disabled]="!selectedFile" (click)="uploadFile()">
-                    Importer le fichier
-                </button>
-            </div>
+      <div class="upload-box" (click)="fileInput.click()">
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        <div class="upload-text">
+          <span>Glisser déposer le fichier ici ou</span>
+          <span class="browse-text">Sélectionner un fichier</span>
         </div>
+        <input
+          #fileInput
+          data-testid="_inp_fichier_import"
+          type="file"
+          hidden
+          accept=".xlsx,.xls"
+          (change)="onFileSelected($event)"
+        />
+      </div>
+
+      <div class="upload-bottom">
+        <div class="upload-infos">
+          <small data-testid="_lib_formats_acceptes">Formats acceptés : .xlsx, .xls</small>
+          @if (selectedFile) {
+            <div class="selected-file" data-testid="_val_fichier_selectionne">
+              Fichier sélectionné : {{ selectedFile.name }}
+            </div>
+          }
+        </div>
+        <button
+          data-testid="_btn_importer_fichier"
+          class="btn-primary"
+          type="button"
+          [disabled]="!selectedFile"
+          (click)="uploadFile()"
+        >
+          Importer le fichier
+        </button>
+      </div>
 
     </div>
+  </div>
 </div>

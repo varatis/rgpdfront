@@ -1,6 +1,5 @@
 <div class="login-container">
   <div class="login-left">
-    <!-- Zone bleue avec logo -->
     <div class="logo-section">
       <div class="logo">
         <img src="assets/images/embleme_b.png" alt="Emblème" width="60" height="60" />
@@ -15,10 +14,12 @@
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
         <!-- Champ Email -->
         <div class="form-group">
-          <label for="email">Adresse e-mail</label>
+          <label for="email" data-testid="_lib_label_email">Adresse e-mail</label>
           <input
+            data-testid="_inp_email"
             type="email"
             id="email"
             formControlName="email"
@@ -26,21 +27,22 @@
             [class.error]="isFieldInvalid('email')"
             placeholder="Entrez votre email"
           />
-          @if(isFieldInvalid('email') ){
-          <span class="error-message" >
-            Email requis et doit être valide
-          </span>
-        }
+          @if(isFieldInvalid('email')) {
+            <span class="error-message" data-testid="_lib_error_email">
+              Email requis et doit être valide
+            </span>
+          }
         </div>
 
         <!-- Champ Mot de passe -->
         <div class="form-group">
           <div class="password-header">
-            <label for="password">Mot de passe</label>
-            <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+            <label for="password" data-testid="_lib_label_password">Mot de passe</label>
+            <a href="#" class="forgot-password" data-testid="_btn_mot_de_passe_oublie">Mot de passe oublié ?</a>
           </div>
           <div class="password-input-wrapper">
             <input
+              data-testid="_inp_password"
               [type]="showPassword ? 'text' : 'password'"
               id="password"
               formControlName="password"
@@ -49,6 +51,7 @@
               placeholder="Entrez votre mot de passe"
             />
             <button
+              data-testid="_btn_toggle_password"
               type="button"
               class="toggle-password"
               (click)="togglePasswordVisibility()"
@@ -56,48 +59,50 @@
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 @if (!showPassword) {
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>}
-                 @if (!showPassword) {
-                <circle  cx="12" cy="12" r="3"/>
-                 }
-                  @if (showPassword) {
-                <path  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                  }
-                   @if (showPassword) {
-                <line  x1="1" y1="1" x2="23" y2="23"/>
-                   }
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                }
+                @if (!showPassword) {
+                  <circle cx="12" cy="12" r="3"/>
+                }
+                @if (showPassword) {
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                }
+                @if (showPassword) {
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                }
               </svg>
             </button>
           </div>
-          @if ((isFieldInvalid('password'))) {
-          <span class="error-message" >
-            Mot de passe requis (min. 6 caractères)
-          </span>
+          @if (isFieldInvalid('password')) {
+            <span class="error-message" data-testid="_lib_error_password">
+              Mot de passe requis (min. 6 caractères)
+            </span>
           }
         </div>
 
         <!-- Message d'erreur global -->
-         @if(errorMessage) {  
-        <div class="alert alert-error" >
-          {{ errorMessage }}
-        </div>
-      }
+        @if(errorMessage) {
+          <div class="alert alert-error" data-testid="_lib_error_global">
+            {{ errorMessage }}
+          </div>
+        }
 
         <!-- Bouton de connexion -->
         <button
+          data-testid="_btn_connexion"
           type="submit"
           class="btn-submit"
           [disabled]="isLoading"
         >
-        @if(!isLoading) {
-          <span >→ Se connecter</span>
+          @if(!isLoading) {
+            <span>→ Se connecter</span>
           }
-          @if (isLoading) {
-          <span >Connexion en cours...</span>
+          @if(isLoading) {
+            <span>Connexion en cours...</span>
           }
         </button>
-      </form>
 
+      </form>
     </div>
   </div>
 </div>

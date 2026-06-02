@@ -14,8 +14,8 @@
     (tabChange)="setActiveTab($event)">
   </app-page-tabs>
 
-  <div slot="list-header" class="collapse-header" (click)="toggleClientsList()">
-    <span class="collapse-title">Client</span>
+  <div slot="list-header" class="collapse-header" data-testid="_btn_toggle_clients_list" (click)="toggleClientsList()">
+    <span class="collapse-title" data-testid="_lib_clients_list_titre">Client</span>
     <svg
       class="chevron"
       [class.open]="clientsListOpen"
@@ -27,50 +27,65 @@
       <polyline points="6 9 12 15 18 9"></polyline>
     </svg>
   </div>
-  
-  <div slot="list-items" class="clients-list" *ngIf="clientsListOpen">
-    @for (c of displayedClients; track c.id) {
-    <div class="clients-list-item" (click)="onSelectClient(c)" [class.selected]="c.id === selectedClient?.id">
-      <div class="client-info">
-        <div class="client-name">{{ c.name }}</div>
-      </div>
 
-      <div class="client-actions">
-        <button class="action-btn" title="Modifier" (click)="$event.stopPropagation(); onEditClient(c)">...</button>
-        <button class="view-btn detail" title="Détails" (click)="$event.stopPropagation(); onSelectClient(c)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
+  <div slot="list-items" class="clients-list" data-testid="_lst_clients_list" *ngIf="clientsListOpen">
+    @for (c of displayedClients; track c.id) {
+      <div
+        class="clients-list-item"
+        [attr.data-testid]="'_lst_clients_row_' + c.id"
+        (click)="onSelectClient(c)"
+        [class.selected]="c.id === selectedClient?.id"
+      >
+        <div class="client-info">
+          <div class="client-name" data-testid="_val_client_nom">{{ c.name }}</div>
+        </div>
+
+        <div class="client-actions">
+          <button
+            class="action-btn"
+            data-testid="_btn_modifier_client"
+            title="Modifier"
+            (click)="$event.stopPropagation(); onEditClient(c)"
+          >...</button>
+          <button
+            class="view-btn detail"
+            data-testid="_btn_detail_client"
+            title="Détails"
+            (click)="$event.stopPropagation(); onSelectClient(c)"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
     }
-    
-    <div slot="pagination" class="pagination">
-      </div>
+
+    <div slot="pagination" class="pagination"></div>
   </div>
-  
+
   <div slot="detail-content">
-    <h3>Détails pour {{ selectedClient?.name }}</h3>
+    <h3 data-testid="_lib_detail_client_titre">Détails pour {{ selectedClient?.name }}</h3>
     <div class="detail-content">
       <div class="field-group">
-        <label>Nom du client</label>
-        <p>{{ selectedClient?.name }}</p>
+        <label data-testid="_lib_label_client_nom">Nom du client</label>
+        <p data-testid="_val_client_nom_detail">{{ selectedClient?.name }}</p>
       </div>
 
       <div class="field-group">
-        <label>Description</label>
-        <p>{{ selectedClient?.description }}</p>
+        <label data-testid="_lib_label_client_description">Description</label>
+        <p data-testid="_val_client_description">{{ selectedClient?.description }}</p>
       </div>
 
       <div class="field-group">
-        <label>UpdatedAt</label>
-        <p>{{ selectedClient?.updatedAt }}</p>
+        <label data-testid="_lib_label_client_updated_at">UpdatedAt</label>
+        <p data-testid="_val_client_updated_at">{{ selectedClient?.updatedAt }}</p>
       </div>
-    
-      
+    </div>
   </div>
-  
+
   <div slot="empty-state">
     <!-- <p>Aucun client trouvé pour l'onglet **{{ pageTabs.find(t => t.key === activeTab)?.label }}**.</p> -->
   </div>
+
+</app-master-detail-layout>
