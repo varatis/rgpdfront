@@ -18,7 +18,7 @@ def jsonParse(def json) {
 node() {
     properties([
     parameters([
-        choice(name:'deployTo', choices: ['','valid','demo'], defaultValue: '', description: 'Environnement sur lequel deployer, laisser vide pour ne pas déployer.'),
+        choice(name:'deployTo', choices: ['','int','valid','demo'], defaultValue: '', description: 'Environnement sur lequel deployer, laisser vide pour ne pas déployer.'),
         booleanParam(name:'skipBuild', defaultValue: false),
         booleanParam(name:'skipLicense', defaultValue: false),
         booleanParam(name:'skipSonarqube', defaultValue: false),
@@ -93,13 +93,11 @@ node() {
         stage('Prepare') {
             sh("chmod 777 -R .platforms/ci/")
             sh("find . -type f -print0 | xargs -0 dos2unix -q")
-            env.TARGET_ENV=deployTo 
-
-            // def config = jsonParse(new File("${env.WORKSPACE}/package.json").getText())
-            // version = config.version
-            // PropertiesUtils.updateValue(".env", "PROJECT_VERSION", version)
-            
-
+            if(deployTo == "") {
+                env.TARGET_ENV="dev"
+            } else {
+                env.TARGET_ENV=deployTo 
+            }
         }
 
         stage("Check Licenses") {
