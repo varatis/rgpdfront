@@ -24,76 +24,71 @@
   </app-data-table>
 
   <!-- État vide -->
-   @if(displayedDemandes.length === 0) {
-  <div slot="empty-state" >
-    <div class="empty-state">
-      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M72.584 63.167L66.667 57.25V26.667H36.167L22.834 13.333H32.334L39.001 20H66.667C68.501 20 70.07 20.653 71.376 21.958C72.681 23.264 73.334 24.833 73.334 26.667V60C73.334 60.611 73.278 61.181 73.167 61.708C73.056 62.236 72.862 62.722 72.584 63.167ZM68.251 77.667L57.251 66.667H13.334C11.501 66.667 9.931 66.014 8.626 64.708C7.32 63.403 6.667 61.833 6.667 60V20C6.667 18.167 7.32 16.597 8.626 15.292C9.931 13.986 11.501 13.333 13.334 13.333L20.001 20H13.334V60H50.584L2.334 11.667L7.001 7L73.001 73L68.251 77.667Z" fill="#A0A1A5"/>
-</svg>
-      <p>
-        {{ activeTab === 'pending' ? 'Aucune demande non traitée' : 'Aucune demande traitée' }}
-      </p>
+  @if(displayedDemandes.length === 0) {
+    <div slot="empty-state">
+      <div class="empty-state">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M72.584 63.167L66.667 57.25V26.667H36.167L22.834 13.333H32.334L39.001 20H66.667C68.501 20 70.07 20.653 71.376 21.958C72.681 23.264 73.334 24.833 73.334 26.667V60C73.334 60.611 73.278 61.181 73.167 61.708C73.056 62.236 72.862 62.722 72.584 63.167ZM68.251 77.667L57.251 66.667H13.334C11.501 66.667 9.931 66.014 8.626 64.708C7.32 63.403 6.667 61.833 6.667 60V20C6.667 18.167 7.32 16.597 8.626 15.292C9.931 13.986 11.501 13.333 13.334 13.333L20.001 20H13.334V60H50.584L2.334 11.667L7.001 7L73.001 73L68.251 77.667Z" fill="#A0A1A5"/>
+        </svg>
+        <p data-testid="_lib_empty_demandes">
+          {{ activeTab === 'pending' ? 'Aucune demande non traitée' : 'Aucune demande traitée' }}
+        </p>
+      </div>
     </div>
-  </div>
-}
+  }
 
   <!-- Détails -->
-   @if(selectedDemande) {
-  <div slot="detail-content" >
-    <div class="detail-content">
-      <div class="field-group">
-        <label>Type de demande</label>
-        <p>{{ selectedDemande.typeDemande }}</p>
-      </div>
-
-      <div class="field-group">
-        <label>Description synthétique de la demande</label>
-        <p>{{ selectedDemande.descriptionSynthetique }}</p>
-      </div>
-
-      <div class="field-group">
-        <label>Origine de la demande</label>
-        <p>{{ selectedDemande.origine }}</p>
-      </div>
-    
-      <div class="field-group" >
-        <label>Date de réception de la demande</label>
-        <p>{{ formatDate(selectedDemande.dateReception) }}</p>
-      </div>
-     
-
-      <div class="field-group">
-        <label>Services et traitement concernés par la demande</label>
-        <p>{{ selectedDemande.servicesConcernes }}</p>
-      </div>
-
-      <div class="field-group">
-        <label>Détail de traitement de la demande</label>
-        <p>{{ selectedDemande.detailTraitement }}</p>
-      </div>
-
-      <div class="field-group">
-        <label>Services impliqués dans le traitement de la demande</label>
-        <p>{{ selectedDemande.servicesImpliques }}</p>
-      </div>
-
-      <div class="field-group">
-        <label>Réponse à la demande</label>
-        <p>{{ selectedDemande.reponse }}</p>
-      </div>
-
-      <div class="field-group">
-        <label>Alerte du RT</label>
-        <p>{{ selectedDemande.alerteRT }}</p>
-      </div>
-
-      <div class="field-group">
-        <label>Statut de la demande</label>
-        <span class="badge" [class.badge-success]="selectedDemande.statut === 'treated'">
-          {{ selectedDemande.statut === 'treated' ? 'Traité' : 'Non traité' }}
-        </span>
+  @if(selectedDemande) {
+    <div slot="detail-content">
+      <div class="detail-content">
+        <div class="field-group">
+          <label data-testid="_lib_label_type_demande">Type de demande</label>
+          <p data-testid="_val_demande_type">{{ selectedDemande.typeDemande }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_description_synthetique">Description synthétique de la demande</label>
+          <p data-testid="_val_demande_description">{{ selectedDemande.descriptionSynthetique }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_origine">Origine de la demande</label>
+          <p data-testid="_val_demande_origine">{{ selectedDemande.origine }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_date_reception">Date de réception de la demande</label>
+          <p data-testid="_val_demande_date_reception">{{ formatDate(selectedDemande.dateReception) }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_services_concernes">Services et traitement concernés par la demande</label>
+          <p data-testid="_val_demande_services_concernes">{{ selectedDemande.servicesConcernes }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_detail_traitement">Détail de traitement de la demande</label>
+          <p data-testid="_val_demande_detail_traitement">{{ selectedDemande.detailTraitement }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_services_impliques">Services impliqués dans le traitement de la demande</label>
+          <p data-testid="_val_demande_services_impliques">{{ selectedDemande.servicesImpliques }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_reponse">Réponse à la demande</label>
+          <p data-testid="_val_demande_reponse">{{ selectedDemande.reponse }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_alerte_rt">Alerte du RT</label>
+          <p data-testid="_val_demande_alerte_rt">{{ selectedDemande.alerteRT }}</p>
+        </div>
+        <div class="field-group">
+          <label data-testid="_lib_label_statut">Statut de la demande</label>
+          <span
+            data-testid="_val_demande_statut"
+            class="badge"
+            [class.badge-success]="selectedDemande.statut === 'treated'"
+          >
+            {{ selectedDemande.statut === 'treated' ? 'Traité' : 'Non traité' }}
+          </span>
+        </div>
       </div>
     </div>
-  </div>
-}
+  }
+
 </app-master-detail-layout>

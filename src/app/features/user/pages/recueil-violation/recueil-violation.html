@@ -30,32 +30,30 @@
   <div slot="empty-state" *ngIf="displayedViolations.length === 0">
     <div class="empty-state">
       <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M72.584 63.167L66.667 57.25V26.667H36.167L22.834 13.333H32.334L39.001 20H66.667C68.501 20 70.07 20.653 71.376 21.958C72.681 23.264 73.334 24.833 73.334 26.667V60C73.334 60.611 73.278 61.181 73.167 61.708C73.056 62.236 72.862 62.722 72.584 63.167ZM68.251 77.667L57.251 66.667H13.334C11.501 66.667 9.931 66.014 8.626 64.708C7.32 63.403 6.667 61.833 6.667 60V20C6.667 18.167 7.32 16.597 8.626 15.292C9.931 13.986 11.501 13.333 13.334 13.333L20.001 20H13.334V60H50.584L2.334 11.667L7.001 7L73.001 73L68.251 77.667Z" fill="#A0A1A5"/>
-</svg>
-      <p>Aucune violation en cours de traitement</p>
+        <path d="M72.584 63.167L66.667 57.25V26.667H36.167L22.834 13.333H32.334L39.001 20H66.667C68.501 20 70.07 20.653 71.376 21.958C72.681 23.264 73.334 24.833 73.334 26.667V60C73.334 60.611 73.278 61.181 73.167 61.708C73.056 62.236 72.862 62.722 72.584 63.167ZM68.251 77.667L57.251 66.667H13.334C11.501 66.667 9.931 66.014 8.626 64.708C7.32 63.403 6.667 61.833 6.667 60V20C6.667 18.167 7.32 16.597 8.626 15.292C9.931 13.986 11.501 13.333 13.334 13.333L20.001 20H13.334V60H50.584L2.334 11.667L7.001 7L73.001 73L68.251 77.667Z" fill="#A0A1A5"/>
+      </svg>
+      <p data-testid="_lib_empty_violations">Aucune violation en cours de traitement</p>
     </div>
   </div>
 
   <!-- Détails -->
   <div slot="detail-content" *ngIf="selectedViolation">
     <div class="field-group">
-      <label>ID</label>
-      <p>{{ selectedViolation.id }}</p>
+      <label data-testid="_lib_label_violation_id">ID</label>
+      <p data-testid="_val_violation_id">{{ selectedViolation.id }}</p>
     </div>
-
     <div class="field-group">
-      <label>Nature</label>
-      <p>{{ selectedViolation.nature }}</p>
+      <label data-testid="_lib_label_violation_nature">Nature</label>
+      <p data-testid="_val_violation_nature">{{ selectedViolation.nature }}</p>
     </div>
-
     <div class="field-group">
-      <label>Date</label>
-      <p>{{ formatDate(selectedViolation.date) }}</p>
+      <label data-testid="_lib_label_violation_date">Date</label>
+      <p data-testid="_val_violation_date">{{ formatDate(selectedViolation.date) }}</p>
     </div>
-
     <div class="field-group">
-      <label>Description</label>
-      <p>{{ selectedViolation.description }}</p>
+      <label data-testid="_lib_label_violation_description">Description</label>
+      <p data-testid="_val_violation_description">{{ selectedViolation.description }}</p>
     </div>
   </div>
+
 </app-master-detail-layout>

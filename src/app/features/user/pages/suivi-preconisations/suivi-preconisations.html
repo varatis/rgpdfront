@@ -27,10 +27,10 @@
     <div slot="empty-state">
       <div class="empty-state">
         <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF">
-          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z" 
+          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"
                 stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <p>Aucune préconisation trouvée</p>
+        <p data-testid="_lib_empty_preconisations">Aucune préconisation trouvée</p>
       </div>
     </div>
   }
@@ -39,58 +39,47 @@
   @if(selectedPreconisation) {
     <div slot="detail-content">
       <div class="detail-content">
-        <!-- Description -->
         <div class="field-group">
-          <label>Description</label>
-          <p>{{ selectedPreconisation.description }}</p>
+          <label data-testid="_lib_label_selected_preco_description">Description</label>
+          <p data-testid="_val_selected_preco_description">{{ selectedPreconisation.description }}</p>
         </div>
-
-        
-
-        <!-- Risque encouru -->
         <div class="field-group">
-          <label>Risque encouru</label>
-          <p>{{ selectedPreconisation.risqueEncouru }}</p>
+          <label data-testid="_lib_label_selected_preco_risque">Risque encouru</label>
+          <p data-testid="_val_selected_preco_risque">{{ selectedPreconisation.risqueEncouru }}</p>
         </div>
-
-        <!-- Contrainte -->
         <div class="field-group">
-          <label>Contrainte</label>
-          <p>{{ selectedPreconisation.contrainte }}</p>
+          <label data-testid="_lib_label_selected_preco_contrainte">Contrainte</label>
+          <p data-testid="_val_selected_preco_contrainte">{{ selectedPreconisation.contrainte }}</p>
         </div>
-
-        <!-- Coût -->
         <div class="field-group">
-          <label>Coût</label>
-          <p>{{ selectedPreconisation.cout }}</p>
+          <label data-testid="_lib_label_selected_preco_cout">Coût</label>
+          <p data-testid="_val_selected_preco_cout">{{ selectedPreconisation.cout }}</p>
         </div>
-        <!-- Badges de statut -->
         <div class="status-badges">
           <div class="badge-item">
-            <label>Priorité</label>
-            <span class="badge" [ngClass]="getPrioriteClass(selectedPreconisation.priorite)">
+            <label data-testid="_lib_label_selected_selected_preco_priorite">Priorité</label>
+            <span data-testid="_val_selected_selected_preco_priorite" class="badge" [ngClass]="getPrioriteClass(selectedPreconisation.priorite)">
               {{ selectedPreconisation.prioriteLabel }}
             </span>
           </div>
-
           <div class="badge-item">
-            <label>Complexité</label>
-            <span class="badge" [ngClass]="getComplexiteClass(selectedPreconisation.complexite)">
+            <label data-testid="_lib_label_selected_preco_complexite">Complexité</label>
+            <span data-testid="_val_selected_preco_complexite" class="badge" [ngClass]="getComplexiteClass(selectedPreconisation.complexite)">
               {{ selectedPreconisation.complexiteLabel }}
             </span>
           </div>
-
           <div class="badge-item">
-            <label>Avancement</label>
+            <label data-testid="_lib_label_selected_preco_avancement">Avancement</label>
             <div class="progress-container">
               <div class="progress-bar">
                 <div class="progress-fill" [style.width.%]="selectedPreconisation.avancement"></div>
               </div>
-              <span class="progress-text">{{ selectedPreconisation.avancement }}%</span>
+              <span data-testid="_val_selected_preco_avancement" class="progress-text">{{ selectedPreconisation.avancement }}%</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   }
+
 </app-master-detail-layout>

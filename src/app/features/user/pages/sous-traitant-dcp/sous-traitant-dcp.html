@@ -20,10 +20,10 @@
     <div slot="empty-state">
       <div class="empty-state">
         <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF">
-          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z" 
+          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"
                 stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <p>Aucun sous-traitant trouvé</p>
+        <p data-testid="_lib_empty_sous_traitants">Aucun sous-traitant trouvé</p>
       </div>
     </div>
   }
@@ -33,65 +33,55 @@
     <div slot="detail-content">
       <div class="detail-content">
         <div class="field-group">
-          <label>Sous-traitant</label>
-          <p>{{ selectedSousTraitant.nom }}</p>
+          <label data-testid="_lib_label_st_nom">Sous-traitant</label>
+          <p data-testid="_val_st_nom">{{ selectedSousTraitant.nom }}</p>
         </div>
-
         <div class="field-group">
-          <label>Coordonnées</label>
-          <p>{{ selectedSousTraitant.coordonnees }}</p>
+          <label data-testid="_lib_label_st_coordonnees">Coordonnées</label>
+          <p data-testid="_val_st_coordonnees">{{ selectedSousTraitant.coordonnees }}</p>
         </div>
-
         <div class="field-group">
-          <label>Contact</label>
-          <p>{{ selectedSousTraitant.contact }}</p>
+          <label data-testid="_lib_label_st_contact">Contact</label>
+          <p data-testid="_val_st_contact">{{ selectedSousTraitant.contact }}</p>
         </div>
-
         <div class="field-group">
-          <label>Rôle du contact</label>
-          <p>{{ selectedSousTraitant.roleContact }}</p>
+          <label data-testid="_lib_label_st_role_contact">Rôle du contact</label>
+          <p data-testid="_val_st_role_contact">{{ selectedSousTraitant.roleContact }}</p>
         </div>
-
         <div class="field-group">
-          <label>Adresse mail</label>
-          <p>{{ selectedSousTraitant.adresseMail }}</p>
+          <label data-testid="_lib_label_st_adresse_mail">Adresse mail</label>
+          <p data-testid="_val_st_adresse_mail">{{ selectedSousTraitant.adresseMail }}</p>
         </div>
-
         <div class="field-group">
-          <label>Téléphone</label>
-          <p>{{ selectedSousTraitant.telephone }}</p>
+          <label data-testid="_lib_label_st_telephone">Téléphone</label>
+          <p data-testid="_val_st_telephone">{{ selectedSousTraitant.telephone }}</p>
         </div>
-
         <div class="field-group">
-          <label>Prestation fournie</label>
-          <p>{{ selectedSousTraitant.prestationFournie }}</p>
+          <label data-testid="_lib_label_st_prestation">Prestation fournie</label>
+          <p data-testid="_val_st_prestation">{{ selectedSousTraitant.prestationFournie }}</p>
         </div>
-
         <div class="field-group">
-          <label>Traitement effectué</label>
-          <p>{{ selectedSousTraitant.traitementEffectue }}</p>
+          <label data-testid="_lib_label_st_traitement_effectue">Traitement effectué</label>
+          <p data-testid="_val_st_traitement_effectue">{{ selectedSousTraitant.traitementEffectue }}</p>
         </div>
-
         <div class="field-group">
-          <label>Données traitées</label>
-          <p>{{ selectedSousTraitant.donneesTraitees }}</p>
+          <label data-testid="_lib_label_st_donnees_traitees">Données traitées</label>
+          <p data-testid="_val_st_donnees_traitees">{{ selectedSousTraitant.donneesTraitees }}</p>
         </div>
-
         <div class="field-group">
-          <label>Contrat associé</label>
-          <p>{{ selectedSousTraitant.contratAssocie }}</p>
+          <label data-testid="_lib_label_st_contrat">Contrat associé</label>
+          <p data-testid="_val_st_contrat">{{ selectedSousTraitant.contratAssocie }}</p>
         </div>
-
         <div class="field-group">
-          <label>Référence</label>
-          <p>{{ selectedSousTraitant.reference }}</p>
+          <label data-testid="_lib_label_st_reference">Référence</label>
+          <p data-testid="_val_st_reference">{{ selectedSousTraitant.reference }}</p>
         </div>
-
         <div class="field-group">
-          <label>Commentaire</label>
-          <p>{{ selectedSousTraitant.commentaire }}</p>
+          <label data-testid="_lib_label_st_commentaire">Commentaire</label>
+          <p data-testid="_val_st_commentaire">{{ selectedSousTraitant.commentaire }}</p>
         </div>
       </div>
     </div>
   }
+
 </app-master-detail-layout>

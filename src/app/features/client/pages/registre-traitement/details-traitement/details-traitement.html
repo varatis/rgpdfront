@@ -1,208 +1,222 @@
-<div class="tabs-container">
+<div class="tabs-container" data-testid="_lst_tabs_traitement">
   <div class="tabs">
-    <button *ngFor="let tab of tabs" [class.active]="activeTab === tab" (click)="selectTab(tab, $event)">
+    <button
+      *ngFor="let tab of tabs; let i = index"
+      [attr.data-testid]="'_btn_tab_' + i"
+      [class.active]="activeTab === tab"
+      (click)="selectTab(tab, $event)"
+    >
       {{ tab }}
     </button>
   </div>
 
   <div class="content">
+
+    <!-- Tab 1 : Identification du traitement -->
     <div *ngIf="activeTab === 'Identification du traitement'" class="tab-content">
+
       <div class="field-group">
-        <label>ID</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:5%">{{ traitementDetails?.id ? traitementDetails?.id : '-' }}</p>
+        <label data-testid="_lib_label_id">ID</label>
+        <p data-testid="_val_detail_id" [class.skeleton]="!traitementDetails" style="--skeleton-width:5%">{{ traitementDetails?.id ? traitementDetails?.id : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Etablissement(s)</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">-</p>
+        <label data-testid="_lib_label_etablissements">Etablissement(s)</label>
+        <p data-testid="_val_detail_etablissements" [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">-</p>
       </div>
 
       <div class="field-group">
-        <label>Données concernées</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.categoriesPersonnesConcernees ? traitementDetails?.categoriesPersonnesConcernees : '-' }}
-        </p>
+        <label data-testid="_lib_label_donnees_concernees">Données concernées</label>
+        <p data-testid="_val_detail_donnees_concernees" [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.categoriesPersonnesConcernees ? traitementDetails?.categoriesPersonnesConcernees : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Nom du traitement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.nom ? traitementDetails?.nom : '-' }}</p>
+        <label data-testid="_lib_label_nom">Nom du traitement</label>
+        <p data-testid="_val_detail_nom" [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.nom ? traitementDetails?.nom : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Date d'identification du traitement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:20%">{{ traitementDetails?.dateIdentification ? traitementDetails?.dateIdentification : '-' }}</p>
+        <label data-testid="_lib_label_date_identification">Date d'identification du traitement</label>
+        <p data-testid="_val_detail_date_identification" [class.skeleton]="!traitementDetails" style="--skeleton-width:20%">{{ traitementDetails?.dateIdentification ? traitementDetails?.dateIdentification : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Date de mise à jour</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:20%"> {{ traitementDetails?.dateMiseAJour ? traitementDetails?.dateMiseAJour : '-' }}</p>
+        <label data-testid="_lib_label_date_maj">Date de mise à jour</label>
+        <p data-testid="_val_detail_date_maj" [class.skeleton]="!traitementDetails" style="--skeleton-width:20%">{{ traitementDetails?.dateMiseAJour ? traitementDetails?.dateMiseAJour : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Historique des modifications</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.historiqueModifications ? traitementDetails?.historiqueModifications : '-' }} </p>
+        <label data-testid="_lib_label_historique">Historique des modifications</label>
+        <p data-testid="_val_detail_historique" [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.historiqueModifications ? traitementDetails?.historiqueModifications : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Data Protection Officer</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.dataProtectionOfficer ? traitementDetails?.dataProtectionOfficer : '-' }}</p>
+        <label data-testid="_lib_label_dpo">Data Protection Officer</label>
+        <p data-testid="_val_detail_dpo" [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.dataProtectionOfficer ? traitementDetails?.dataProtectionOfficer : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Responsable de traitement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%"> {{ traitementDetails?.responsableTraitement ? traitementDetails?.responsableTraitement : '-' }}</p>
+        <label data-testid="_lib_label_responsable_traitement">Responsable de traitement</label>
+        <p data-testid="_val_detail_responsable_traitement" [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.responsableTraitement ? traitementDetails?.responsableTraitement : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Gestionnaire de la mise en œuvre du traitement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.gestionnaire ? traitementDetails?.gestionnaire : '-' }}</p>
+        <label data-testid="_lib_label_gestionnaire">Gestionnaire de la mise en œuvre du traitement</label>
+        <p data-testid="_val_detail_gestionnaire" [class.skeleton]="!traitementDetails" style="--skeleton-width:40%">{{ traitementDetails?.gestionnaire ? traitementDetails?.gestionnaire : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Finalité principale</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{ traitementDetails?.finalitePrincipale ? traitementDetails?.finalitePrincipale : '-' }}</p>
+        <label data-testid="_lib_label_finalite_principale">Finalité principale</label>
+        <p data-testid="_val_detail_finalite_principale" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{ traitementDetails?.finalitePrincipale ? traitementDetails?.finalitePrincipale : '-' }}</p>
       </div>
 
       <div class="field-group">
-        <label>Sous-finalités</label>
-        <ul class="sub-list">
+        <label data-testid="_lib_label_sous_finalites">Sous-finalités</label>
+        <ul class="sub-list" data-testid="_lst_sous_finalites">
           <li>{{ traitementDetails?.sousFinalites ? traitementDetails?.sousFinalites : '-' }}</li>
         </ul>
       </div>
+
     </div>
 
+    <!-- Tab 2 : Données personnelles traitées -->
     <div *ngIf="activeTab === 'Données personnelles traitées'" class="tab-content">
+
       <div class="field-group">
-        <label>Catégories de personnes concernées par le traitement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.categoriesPersonnesConcernees}} </p>
+        <label data-testid="_lib_label_categories_personnes_concernees">Catégories de personnes concernées par le traitement</label>
+        <p data-testid="_val_detail_categories_personnes_concernees" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.categoriesPersonnesConcernees}}</p>
       </div>
 
       <div class="field-group">
-        <label>Données d'identification</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 3">{{traitementDetails?.donneesIdentification}} </p>
+        <label data-testid="_lib_label_donnees_identification">Données d'identification</label>
+        <p data-testid="_val_detail_donnees_identification" [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 3">{{traitementDetails?.donneesIdentification}}</p>
       </div>
 
       <div class="field-group">
-        <label>Données de connexion</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesConnexion}} </p>
+        <label data-testid="_lib_label_donnees_connexion">Données de connexion</label>
+        <p data-testid="_val_detail_donnees_connexion" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesConnexion}}</p>
       </div>
 
       <div class="field-group">
-        <label>Données de localisation</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesLocalisation}} </p>
+        <label data-testid="_lib_label_donnees_localisation">Données de localisation</label>
+        <p data-testid="_val_detail_donnees_localisation" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesLocalisation}}</p>
       </div>
 
       <div class="field-group">
-        <label>Données sur le comportement et la vie personnelle</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.donneesComportementViePerso}} </p>
+        <label data-testid="_lib_label_donnees_comportement">Données sur le comportement et la vie personnelle</label>
+        <p data-testid="_val_detail_donnees_comportement" [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.donneesComportementViePerso}}</p>
       </div>
 
       <div class="field-group">
-        <label>Données économiques et financières</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesEconomiquesFinancieres}} </p>
+        <label data-testid="_lib_label_donnees_economiques">Données économiques et financières</label>
+        <p data-testid="_val_detail_donnees_economiques" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesEconomiquesFinancieres}}</p>
       </div>
 
       <div class="field-group">
-        <label>Données professionnelles</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesProfessionnelles}} </p>
+        <label data-testid="_lib_label_donnees_professionnelles">Données professionnelles</label>
+        <p data-testid="_val_detail_donnees_professionnelles" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.donneesProfessionnelles}}</p>
       </div>
 
       <div class="field-group">
-        <label>Catégories particulières de données (NIR, santé par exemple)</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.categoriesParticulieresDonnees}} </p>
+        <label data-testid="_lib_label_categories_particulieres">Catégories particulières de données (NIR, santé par exemple)</label>
+        <p data-testid="_val_detail_categories_particulieres" [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.categoriesParticulieresDonnees}}</p>
       </div>
 
       <div class="field-group">
-        <label>Sensibilité</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 40%">{{traitementDetails?.sensibilite}} </p>
+        <label data-testid="_lib_label_sensibilite">Sensibilité</label>
+        <p data-testid="_val_detail_sensibilite" [class.skeleton]="!traitementDetails" style="--skeleton-width: 40%">{{traitementDetails?.sensibilite}}</p>
       </div>
 
       <div class="field-group">
-        <label>Etude d'impact (PIA)</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%">{{traitementDetails?.etudeImpact}} </p>
+        <label data-testid="_lib_label_etude_impact">Etude d'impact (PIA)</label>
+        <p data-testid="_val_detail_etude_impact" [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%">{{traitementDetails?.etudeImpact}}</p>
       </div>
+
     </div>
 
+    <!-- Tab 3 : Description du traitement -->
     <div *ngIf="activeTab === 'Description du traitement'" class="tab-content">
+
       <div class="field-group">
-        <label>Canaux de collecte des données</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.canauxCollecteDonnees}} </p>
+        <label data-testid="_lib_label_canaux_collecte">Canaux de collecte des données</label>
+        <p data-testid="_val_detail_canaux_collecte" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.canauxCollecteDonnees}}</p>
       </div>
 
       <div class="field-group">
-        <label>Licéité du traitement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.licieteTraitement}} </p>
+        <label data-testid="_lib_label_liceite">Licéité du traitement</label>
+        <p data-testid="_val_detail_liceite" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.licieteTraitement}}</p>
       </div>
 
       <div class="field-group">
-        <label>Recours au traitements automatisés (y compris profilage) ? (Oui / Non)</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.recoursTraitementAutomatises}} </p>
+        <label data-testid="_lib_label_traitements_automatises">Recours au traitements automatisés (y compris profilage) ? (Oui / Non)</label>
+        <p data-testid="_val_detail_traitements_automatises" [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.recoursTraitementAutomatises}}</p>
       </div>
 
       <div class="field-group">
-        <label>Emplacement physique du traitement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 60%">{{traitementDetails?.emplacementPhysique}} </p>
+        <label data-testid="_lib_label_emplacement_physique">Emplacement physique du traitement</label>
+        <p data-testid="_val_detail_emplacement_physique" [class.skeleton]="!traitementDetails" style="--skeleton-width: 60%">{{traitementDetails?.emplacementPhysique}}</p>
       </div>
 
       <div class="field-group">
-        <label>Dispositions existantes pour assurer la sécurité des données</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.dispositionsSecuriteDonnees}} </p>
+        <label data-testid="_lib_label_dispositions_securite_physique">Dispositions existantes pour assurer la sécurité des données (physique)</label>
+        <p data-testid="_val_detail_dispositions_securite_physique" [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.dispositionsSecuriteDonnees}}</p>
       </div>
 
       <div class="field-group">
-        <label>Emplacement numérique du traitement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.emplacementNumerique}} </p>
+        <label data-testid="_lib_label_emplacement_numerique">Emplacement numérique du traitement</label>
+        <p data-testid="_val_detail_emplacement_numerique" [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.emplacementNumerique}}</p>
       </div>
 
       <div class="field-group">
-        <label>Dispositions existantes pour assurer la sécurité des données</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.dispositionsSecuriteDonnees}} </p>
+        <label data-testid="_lib_label_dispositions_securite_numerique">Dispositions existantes pour assurer la sécurité des données (numérique)</label>
+        <p data-testid="_val_detail_dispositions_securite_numerique" [class.skeleton]="!traitementDetails" style="--skeleton-width: 90%; --skeleton-lines: 2">{{traitementDetails?.dispositionsSecuriteDonnees}}</p>
       </div>
 
       <div class="field-group">
-        <label>Hébergement</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 30%">{{traitementDetails?.hebergement}} </p>
+        <label data-testid="_lib_label_hebergement">Hébergement</label>
+        <p data-testid="_val_detail_hebergement" [class.skeleton]="!traitementDetails" style="--skeleton-width: 30%">{{traitementDetails?.hebergement}}</p>
       </div>
 
       <div class="field-group">
-        <label>Durée de conservation</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.dureeConservation}} </p>
+        <label data-testid="_lib_label_duree_conservation">Durée de conservation</label>
+        <p data-testid="_val_detail_duree_conservation" [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.dureeConservation}}</p>
       </div>
 
       <div class="field-group">
-        <label>Archivage ? (Oui / Non)</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.archivage}} </p>
+        <label data-testid="_lib_label_archivage">Archivage ? (Oui / Non)</label>
+        <p data-testid="_val_detail_archivage" [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.archivage}}</p>
       </div>
 
       <div class="field-group">
-        <label>Durée d'archivage</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.dureeArchivage}} </p>
+        <label data-testid="_lib_label_duree_archivage">Durée d'archivage</label>
+        <p data-testid="_val_detail_duree_archivage" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.dureeArchivage}}</p>
       </div>
 
       <div class="field-group">
-        <label>Catégories de destinataires</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.categoriesDestinataires}} </p>
+        <label data-testid="_lib_label_categories_destinataires">Catégories de destinataires</label>
+        <p data-testid="_val_detail_categories_destinataires" [class.skeleton]="!traitementDetails" style="--skeleton-width: 20%">{{traitementDetails?.categoriesDestinataires}}</p>
       </div>
 
       <div class="field-group">
-        <label>Raisons du transfert vers les catégories de destinataires</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.raisonsTransfertDestinataires}} </p>
+        <label data-testid="_lib_label_raisons_transfert">Raisons du transfert vers les catégories de destinataires</label>
+        <p data-testid="_val_detail_raisons_transfert" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.raisonsTransfertDestinataires}}</p>
       </div>
 
       <div class="field-group">
-        <label>Transferts hors UE (Oui / Non)</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.transfertsHorsUE}} </p>
+        <label data-testid="_lib_label_transferts_hors_ue">Transferts hors UE (Oui / Non)</label>
+        <p data-testid="_val_detail_transferts_hors_ue" [class.skeleton]="!traitementDetails" style="--skeleton-width: 10%">{{traitementDetails?.transfertsHorsUE}}</p>
       </div>
 
       <div class="field-group">
-        <label>Pays destinataires</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.paysDestinataires}} </p>
+        <label data-testid="_lib_label_pays_destinataires">Pays destinataires</label>
+        <p data-testid="_val_detail_pays_destinataires" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.paysDestinataires}}</p>
       </div>
 
       <div class="field-group">
-        <label>Commentaires</label>
-        <p [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.commentaires}} </p>
+        <label data-testid="_lib_label_commentaires">Commentaires</label>
+        <p data-testid="_val_detail_commentaires" [class.skeleton]="!traitementDetails" style="--skeleton-width: 80%">{{traitementDetails?.commentaires}}</p>
       </div>
+
     </div>
   </div>
 </div>

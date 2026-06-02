@@ -47,7 +47,7 @@ export class Login {
           const role = this.authService.getUserRole();
 
           if (role === 'admin') {
-            this.router.navigate(['/app/compte-client']);
+            this.router.navigate(['/admin/clients']);
           } else if (role === 'client') {
             this.router.navigate(['/app/compte-client']);
           } else if (role === 'user') {

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../../../services/api.service';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-details-traitement',
