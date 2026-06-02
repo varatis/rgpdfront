@@ -44,13 +44,17 @@ export class RegistreTraitement implements OnInit {
   size = 10;
   totalElements = 0;
   totalPages = 0;
+  sortField: string = 'id';
+  sortDirection: 'asc' | 'desc' = 'asc';
+  loading = false;
 
   ngOnInit(): void {
     this.loadTraitements(0);
   }
 
   loadTraitements(page: number): void {
-    this.apiService.getTraitements(page, this.size)
+    this.loading = true;
+    this.apiService.getTraitements(page, this.size, this.sortField, this.sortDirection)
       .subscribe({
         next: (res) => {
           this.data = res.content;
@@ -58,8 +62,12 @@ export class RegistreTraitement implements OnInit {
           this.size = res.size;
           this.totalElements = res.totalElements;
           this.totalPages = res.totalPages;
+          this.loading = false;
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        }
       });
   }
 
@@ -77,6 +85,13 @@ export class RegistreTraitement implements OnInit {
     } else {
       this.traitementSelectionne = item;
     }
+  }
+
+  onSortChange(sort: { field: string; direction: 'asc' | 'desc' }) {
+    this.sortField = sort.field;
+    this.sortDirection = sort.direction;
+    this.currentPage = 1;
+    this.loadTraitements(0);
   }
 
   onPageChange(page: number) {
