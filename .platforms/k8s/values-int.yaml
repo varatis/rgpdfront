@@ -1,0 +1,20 @@
+app:
+  name: minds-rgpd-front-ng-int
+  env: int
+  apiurl: "https://int.minds-rgpd.minds.k8s/apims"
+  ingress:
+    interne:
+      host: int.minds-rgpd.minds.k8s
+  keycloak:
+    issuer: https://sso.minds.k8s/auth/realms/creative
+    grant_type: "password"
+    client_id: "minds-rgpd"
+    realm: "creative"
+  secret:
+    path: saas_rgpd/int/k8s
+  nextAuthUrl: https://int.minds-rgpd.minds.k8s
+  tracing:
+    endpoint: "http://jaeger-collector:4317"
+    sampler: "always_on"
+    samplerArg: "1.0"
+    serviceName: "minds-rgpd-front-ng-int"

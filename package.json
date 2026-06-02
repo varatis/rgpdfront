@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build:dev": "node git-version.js && ng build --configuration development",
+    "build:int": "node git-version.js && ng build --configuration int",
     "build:valid": "node git-version.js && ng build --configuration valid",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false --code-coverage",
