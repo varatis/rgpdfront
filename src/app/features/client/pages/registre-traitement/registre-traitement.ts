@@ -6,6 +6,7 @@ import { Pagination } from '../../../../shared/components/pagination/pagination'
 import { DetailsTraitementComponent } from '../registre-traitement/details-traitement/details-traitement';
 import { CreateTraitementModal } from '../registre-traitement/create-traitement-modal/create-traitement-modal';
 import { ApiService } from '../../../../services/api.service';
+import { AuthService } from '../../../../services/auth.service';
 import { Traitement, TraitementDetails } from '../../../../core/models/traitement.model';
 
 @Component({
@@ -16,7 +17,7 @@ import { Traitement, TraitementDetails } from '../../../../core/models/traitemen
   styleUrls: ['./registre-traitement.scss'],
 })
 export class RegistreTraitement implements OnInit {
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private authService: AuthService) {}
 
   title = 'Registre des activités de traitement';
   icon = `
@@ -25,19 +26,30 @@ export class RegistreTraitement implements OnInit {
     </svg>
   `;
 
-  actions: HeaderAction[] = [
-    {
-      label: 'Filtres',
-      icon: `
+  private readonly filterAction: HeaderAction = {
+    label: 'Filtres',
+    icon: `
     <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path d="M7 12V10H11V12H7ZM3 7V5H15V7H3ZM0 2V0H18V2H0Z" fill="currentColor" />
       </svg>
   `,
-      action: 'filter',
-      color: 'default',
-    },
-    { label: 'Ajouter un traitement', icon: '+', action: 'add', color: 'primary' },
-  ];
+    action: 'filter',
+    color: 'default',
+  };
+
+  private readonly addAction: HeaderAction = {
+    label: 'Ajouter un traitement', icon: '+', action: 'add', color: 'primary'
+  };
+
+  get isClient(): boolean {
+    return this.authService.getUserRole() === 'client';
+  }
+
+  get actions(): HeaderAction[] {
+    return this.isClient
+      ? [this.filterAction, this.addAction]
+      : [this.filterAction];
+  }
 
   currentPage = 1;
   traitementSelectionne?: Traitement;
