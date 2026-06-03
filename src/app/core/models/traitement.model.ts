@@ -1,8 +1,13 @@
+import { Client } from "./client.model";
+import { Etablissement } from "./etablissement.model";
+
 export interface CreateTraitementPayload {
     // Required — Tab 1
     nom: string;
     gestionnaire: string;
     finalitePrincipale: string;
+    client : Client;
+    etablissements: Array<Etablissement>;
     // Optional — Tab 1 : Identification
     dateIdentification?: string;
     dateMiseAJour?: string;
