@@ -80,5 +80,6 @@ export interface TraitementDetails extends Traitement {
     raisonsTransfertDestinataires: string,
     transfertsHorsUE: boolean,
     paysDestinataires: string,
-    commentaires: string
+    commentaires: string,
+    etablissements: Array<Etablissement>
 }

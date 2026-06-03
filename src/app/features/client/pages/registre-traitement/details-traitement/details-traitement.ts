@@ -62,6 +62,11 @@ export class DetailsTraitementComponent implements OnChanges {
       });
   }
 
+  get etablissementsDisplay(): string {
+    const list = this.traitementDetails?.etablissements;
+    return list?.length ? list.map(e => e.nom).join(' - ') : '-';
+  }
+
   selectTab(tab: string, event: MouseEvent) {
     this.activeTab = tab;
     (event.target as HTMLElement).scrollIntoView({
