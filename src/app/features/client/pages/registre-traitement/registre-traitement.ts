@@ -6,7 +6,7 @@ import { Pagination } from '../../../../shared/components/pagination/pagination'
 import { DetailsTraitementComponent } from '../registre-traitement/details-traitement/details-traitement';
 import { CreateTraitementModal } from '../registre-traitement/create-traitement-modal/create-traitement-modal';
 import { ApiService } from '../../../../services/api.service';
-import { Traitement } from '../../../../core/models/traitement.model';
+import { Traitement, TraitementDetails } from '../../../../core/models/traitement.model';
 
 @Component({
   selector: 'app-registre-traitement',
@@ -50,6 +50,8 @@ export class RegistreTraitement implements OnInit {
   sortDirection: 'asc' | 'desc' = 'asc';
   loading = false;
   showCreateModal = false;
+  showEditModal = false;
+  currentTraitementDetails: TraitementDetails | undefined;
 
   ngOnInit(): void {
     this.loadTraitements(0);
@@ -105,7 +107,20 @@ export class RegistreTraitement implements OnInit {
     }
   }
 
+  onDetailsLoaded(details: TraitementDetails): void {
+    this.currentTraitementDetails = details;
+  }
+
+  onModifyClick(): void {
+    this.showEditModal = true;
+  }
+
+  onTraitementUpdated(): void {
+    this.loadTraitements(this.page);
+  }
+
   closeDetail() {
     this.traitementSelectionne = undefined;
+    this.currentTraitementDetails = undefined;
   }
 }

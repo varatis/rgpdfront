@@ -3,7 +3,7 @@
 
     <!-- Header -->
     <div class="modal-header">
-      <h2 data-testid="_lib_modal_title">Ajouter un traitement</h2>
+      <h2 data-testid="_lib_modal_title">{{ isEditMode ? 'Modifier le traitement' : 'Ajouter un traitement' }}</h2>
       <button class="modal-close-btn" data-testid="_btn_modal_close" type="button" (click)="close()" title="Fermer">✕</button>
     </div>
 
@@ -284,7 +284,7 @@
             <span class="btn-spinner"></span>
             Enregistrement…
           } @else {
-            Ajouter
+            {{ isEditMode ? 'Enregistrer' : 'Ajouter' }}
           }
         </button>
       </div>

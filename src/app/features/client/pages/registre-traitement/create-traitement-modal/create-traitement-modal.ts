@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../../../../services/api.service';
+import { TraitementDetails } from '../../../../../core/models/traitement.model';
 
 @Component({
   selector: 'app-create-traitement-modal',
@@ -10,14 +11,20 @@ import { ApiService } from '../../../../../services/api.service';
   templateUrl: './create-traitement-modal.html',
   styleUrls: ['./create-traitement-modal.scss'],
 })
-export class CreateTraitementModal {
+export class CreateTraitementModal implements OnInit {
+  @Input() traitementToEdit: TraitementDetails | undefined;
   @Output() closed  = new EventEmitter<void>();
   @Output() created = new EventEmitter<void>();
+  @Output() updated = new EventEmitter<void>();
 
   isSubmitting = false;
   submitError: string | null = null;
   activeTab = 0;
   form: FormGroup;
+
+  get isEditMode(): boolean {
+    return !!this.traitementToEdit;
+  }
 
   readonly tabs = [
     'Identification du traitement',
@@ -27,6 +34,7 @@ export class CreateTraitementModal {
 
   constructor(private apiService: ApiService, private fb: FormBuilder) {
     this.form = this.fb.group({
+      id:                       [0],
       // Tab 1 — Identification
       nom:                      ['', [Validators.required, Validators.maxLength(255)]],
       dateIdentification:       ['', Validators.required],
@@ -68,6 +76,22 @@ export class CreateTraitementModal {
     });
   }
 
+  ngOnInit(): void {
+    if (this.traitementToEdit) {
+      this.form.patchValue({
+        ...this.traitementToEdit,
+        dateIdentification: this.toDateString(this.traitementToEdit.dateIdentification),
+        dateMiseAJour:      this.toDateString(this.traitementToEdit.dateMiseAJour),
+      });
+    }
+  }
+
+  private toDateString(date: Date | string | undefined): string {
+    if (!date) return '';
+    const d = new Date(date);
+    return isNaN(d.getTime()) ? '' : d.toISOString().substring(0, 10);
+  }
+
   close(): void {
     this.closed.emit();
   }
@@ -80,10 +104,19 @@ export class CreateTraitementModal {
     }
     this.isSubmitting = true;
     this.submitError = null;
-    this.apiService.createTraitement(this.form.value).subscribe({
+
+    const call$ = this.isEditMode
+      ? this.apiService.updateTraitement(this.traitementToEdit!.id, this.form.value)
+      : this.apiService.createTraitement(this.form.value);
+
+    call$.subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.created.emit();
+        if (this.isEditMode) {
+          this.updated.emit();
+        } else {
+          this.created.emit();
+        }
         this.closed.emit();
       },
       error: (err) => {

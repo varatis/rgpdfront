@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../../../services/api.service';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
-import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-details-traitement',
@@ -15,6 +14,7 @@ export class DetailsTraitementComponent implements OnChanges {
   constructor(private apiService: ApiService) { }
   @Input() traitementId: number | undefined;
   @Input() userRole: 'client' | 'user' = 'client';
+  @Output() detailsLoaded = new EventEmitter<TraitementDetails>();
   traitementDetails: TraitementDetails | undefined;
   activeTab = 'Identification du traitement';
 
@@ -57,6 +57,7 @@ export class DetailsTraitementComponent implements OnChanges {
       .subscribe({
         next: (res) => {
           this.traitementDetails = res;
+          this.detailsLoaded.emit(res);
         },
         error: (err) => console.error(err)
       });

@@ -44,4 +44,8 @@ export class ApiService {
   createTraitement(payload: CreateTraitementPayload): Observable<Traitement> {
     return this.http.post<Traitement>(this.apiUrl + "traitements", payload);
   }
+
+  updateTraitement(id: number, payload: CreateTraitementPayload): Observable<TraitementDetails> {
+    return this.http.put<TraitementDetails>(this.apiUrl + "traitements/" + id, payload);
+  }
 }
