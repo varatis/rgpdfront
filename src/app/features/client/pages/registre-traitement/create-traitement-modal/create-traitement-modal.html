@@ -1,0 +1,294 @@
+<div class="modal-backdrop" data-testid="_lst_modal_create_traitement" (click)="close()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 data-testid="_lib_modal_title">Ajouter un traitement</h2>
+      <button class="modal-close-btn" data-testid="_btn_modal_close" type="button" (click)="close()" title="Fermer">✕</button>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="modal-tabs" data-testid="_lst_modal_tabs">
+      @for (tab of tabs; track tab; let i = $index) {
+        <button
+          class="modal-tab-btn"
+          [class.active]="activeTab === i"
+          [attr.data-testid]="'_btn_modal_tab_' + i"
+          type="button"
+          (click)="activeTab = i"
+        >{{ tab }}</button>
+      }
+    </div>
+
+    <!-- Form -->
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- ── Tab 1 : Identification ──────────────────────────────── -->
+      @if (activeTab === 0) {
+        <div class="tab-content" data-testid="_lst_modal_tab_identification">
+
+          <div class="form-field" [class.invalid]="isFieldInvalid('nom')">
+            <label data-testid="_lib_inp_nom" for="inp_nom">Nom du traitement <span class="required">*</span></label>
+            <input id="inp_nom" data-testid="_inp_nom" type="text" formControlName="nom"
+                   placeholder="Ex : Gestion des ressources humaines" autocomplete="off"/>
+            @if (isFieldInvalid('nom')) {
+              <span class="field-error" data-testid="_val_error_nom">Ce champ est requis.</span>
+            }
+          </div>
+
+          <div class="form-field" [class.invalid]="isFieldInvalid('dateIdentification')">
+            <label data-testid="_lib_inp_date_identification" for="inp_date_identification">Date d'identification <span class="required">*</span></label>
+            <input id="inp_date_identification" data-testid="_inp_date_identification" type="date" formControlName="dateIdentification"/>
+            @if (isFieldInvalid('dateIdentification')) {
+              <span class="field-error" data-testid="_val_error_date_identification">Ce champ est requis.</span>
+            }
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_gestionnaire" for="inp_gestionnaire">Gestionnaire</label>
+            <input id="inp_gestionnaire" data-testid="_inp_gestionnaire" type="text" formControlName="gestionnaire"
+                   placeholder="Ex : Direction des RH" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_finalite" for="inp_finalite">Finalité principale</label>
+            <textarea id="inp_finalite" data-testid="_inp_finalite" formControlName="finalitePrincipale" rows="2"
+                      placeholder="Ex : Gestion administrative du personnel"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_date_maj" for="inp_date_maj">Date de mise à jour</label>
+            <input id="inp_date_maj" data-testid="_inp_date_maj" type="date" formControlName="dateMiseAJour"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_dpo" for="inp_dpo">Data Protection Officer</label>
+            <input id="inp_dpo" data-testid="_inp_dpo" type="text" formControlName="dataProtectionOfficer"
+                   placeholder="Ex : Jean Dupont" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_responsable_traitement" for="inp_responsable_traitement">Responsable de traitement</label>
+            <input id="inp_responsable_traitement" data-testid="_inp_responsable_traitement" type="text"
+                   formControlName="responsableTraitement" placeholder="Ex : Marie Martin" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_gestionnaire_meo" for="inp_gestionnaire_meo">Gestionnaire de la mise en œuvre</label>
+            <input id="inp_gestionnaire_meo" data-testid="_inp_gestionnaire_meo" type="text"
+                   formControlName="gestionnaireMiseEnOeuvre" placeholder="Ex : Service informatique" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_sous_finalites" for="inp_sous_finalites">Sous-finalités</label>
+            <textarea id="inp_sous_finalites" data-testid="_inp_sous_finalites" formControlName="sousFinalites" rows="2"
+                      placeholder="Ex : Paie, congés, évaluations…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_historique" for="inp_historique">Historique des modifications</label>
+            <textarea id="inp_historique" data-testid="_inp_historique" formControlName="historiqueModifications" rows="2"
+                      placeholder="Ex : v1.0 - création initiale"></textarea>
+          </div>
+
+        </div>
+      }
+
+      <!-- ── Tab 2 : Données personnelles ───────────────────────── -->
+      @if (activeTab === 1) {
+        <div class="tab-content" data-testid="_lst_modal_tab_donnees">
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_categories_personnes" for="inp_categories_personnes">Catégories de personnes concernées</label>
+            <textarea id="inp_categories_personnes" data-testid="_inp_categories_personnes"
+                      formControlName="categoriesPersonnesConcernees" rows="2"
+                      placeholder="Ex : Employés, prestataires…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_donnees_identification" for="inp_donnees_identification">Données d'identification</label>
+            <textarea id="inp_donnees_identification" data-testid="_inp_donnees_identification"
+                      formControlName="donneesIdentification" rows="3"
+                      placeholder="Ex : Nom, prénom, date de naissance, numéro de sécurité sociale…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_donnees_connexion" for="inp_donnees_connexion">Données de connexion</label>
+            <textarea id="inp_donnees_connexion" data-testid="_inp_donnees_connexion"
+                      formControlName="donneesConnexion" rows="2"
+                      placeholder="Ex : Adresse IP, logs de connexion…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_donnees_localisation" for="inp_donnees_localisation">Données de localisation</label>
+            <textarea id="inp_donnees_localisation" data-testid="_inp_donnees_localisation"
+                      formControlName="donneesLocalisation" rows="2"
+                      placeholder="Ex : Adresse postale, géolocalisation…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_donnees_comportement" for="inp_donnees_comportement">Données comportement / vie personnelle</label>
+            <textarea id="inp_donnees_comportement" data-testid="_inp_donnees_comportement"
+                      formControlName="donneesComportementViePerso" rows="2"
+                      placeholder="Ex : Habitudes d'achat, centres d'intérêt…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_donnees_economiques" for="inp_donnees_economiques">Données économiques et financières</label>
+            <textarea id="inp_donnees_economiques" data-testid="_inp_donnees_economiques"
+                      formControlName="donneesEconomiquesFinancieres" rows="2"
+                      placeholder="Ex : Salaire, coordonnées bancaires…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_donnees_professionnelles" for="inp_donnees_professionnelles">Données professionnelles</label>
+            <textarea id="inp_donnees_professionnelles" data-testid="_inp_donnees_professionnelles"
+                      formControlName="donneesProfessionnelles" rows="2"
+                      placeholder="Ex : Poste, évaluations, contrat…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_categories_particulieres" for="inp_categories_particulieres">Catégories particulières (NIR, santé…)</label>
+            <textarea id="inp_categories_particulieres" data-testid="_inp_categories_particulieres"
+                      formControlName="categoriesParticulieresDonnees" rows="2"
+                      placeholder="Ex : Données de santé, opinions politiques…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_sensibilite" for="inp_sensibilite">Sensibilité</label>
+            <input id="inp_sensibilite" data-testid="_inp_sensibilite" type="text"
+                   formControlName="sensibilite" placeholder="Ex : Haute, Moyenne, Faible" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_etude_impact" for="inp_etude_impact">Étude d'impact (PIA)</label>
+            <textarea id="inp_etude_impact" data-testid="_inp_etude_impact"
+                      formControlName="etudeImpact" rows="2"
+                      placeholder="Ex : PIA réalisé le 01/01/2024…"></textarea>
+          </div>
+
+        </div>
+      }
+
+      <!-- ── Tab 3 : Description ─────────────────────────────────── -->
+      @if (activeTab === 2) {
+        <div class="tab-content" data-testid="_lst_modal_tab_description">
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_canaux_collecte" for="inp_canaux_collecte">Canaux de collecte des données</label>
+            <textarea id="inp_canaux_collecte" data-testid="_inp_canaux_collecte"
+                      formControlName="canauxCollecteDonnees" rows="2"
+                      placeholder="Ex : Formulaire web, papier, API…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_liceite" for="inp_liceite">Licéité du traitement</label>
+            <input id="inp_liceite" data-testid="_inp_liceite" type="text"
+                   formControlName="licieteTraitement" placeholder="Ex : Consentement, obligation légale…" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_emplacement_physique" for="inp_emplacement_physique">Emplacement physique</label>
+            <input id="inp_emplacement_physique" data-testid="_inp_emplacement_physique" type="text"
+                   formControlName="emplacementPhysique" placeholder="Ex : Datacenter Paris 8" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_emplacement_numerique" for="inp_emplacement_numerique">Emplacement numérique</label>
+            <input id="inp_emplacement_numerique" data-testid="_inp_emplacement_numerique" type="text"
+                   formControlName="emplacementNumerique" placeholder="Ex : AWS eu-west-1" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_dispositions_securite" for="inp_dispositions_securite">Dispositions de sécurité</label>
+            <textarea id="inp_dispositions_securite" data-testid="_inp_dispositions_securite"
+                      formControlName="dispositionsSecuriteDonnees" rows="2"
+                      placeholder="Ex : Chiffrement AES-256, accès restreint…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_hebergement" for="inp_hebergement">Hébergement</label>
+            <input id="inp_hebergement" data-testid="_inp_hebergement" type="text"
+                   formControlName="hebergement" placeholder="Ex : OVH, AWS, on-premise…" autocomplete="off"/>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label data-testid="_lib_inp_duree_conservation" for="inp_duree_conservation">Durée de conservation (mois)</label>
+              <input id="inp_duree_conservation" data-testid="_inp_duree_conservation" type="number"
+                     formControlName="dureeConservation" placeholder="Ex : 36" min="0"/>
+            </div>
+            <div class="form-field">
+              <label data-testid="_lib_inp_duree_archivage" for="inp_duree_archivage">Durée d'archivage (mois)</label>
+              <input id="inp_duree_archivage" data-testid="_inp_duree_archivage" type="number"
+                     formControlName="dureeArchivage" placeholder="Ex : 60" min="0"/>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_categories_destinataires" for="inp_categories_destinataires">Catégories de destinataires</label>
+            <textarea id="inp_categories_destinataires" data-testid="_inp_categories_destinataires"
+                      formControlName="categoriesDestinataires" rows="2"
+                      placeholder="Ex : Service RH, organismes sociaux…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_raisons_transfert" for="inp_raisons_transfert">Raisons du transfert vers les destinataires</label>
+            <textarea id="inp_raisons_transfert" data-testid="_inp_raisons_transfert"
+                      formControlName="raisonsTransfertDestinataires" rows="2"
+                      placeholder="Ex : Obligations légales, exécution du contrat…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_pays_destinataires" for="inp_pays_destinataires">Pays destinataires</label>
+            <input id="inp_pays_destinataires" data-testid="_inp_pays_destinataires" type="text"
+                   formControlName="paysDestinataires" placeholder="Ex : France, Allemagne…" autocomplete="off"/>
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_commentaires" for="inp_commentaires">Commentaires</label>
+            <textarea id="inp_commentaires" data-testid="_inp_commentaires"
+                      formControlName="commentaires" rows="3"
+                      placeholder="Informations complémentaires…"></textarea>
+          </div>
+
+          <div class="form-checkboxes">
+            <label class="checkbox-field" data-testid="_lib_inp_recours_automatises">
+              <input type="checkbox" data-testid="_inp_recours_automatises" formControlName="recoursTraitementAutomatises"/>
+              Recours à des traitements automatisés (profilage)
+            </label>
+            <label class="checkbox-field" data-testid="_lib_inp_archivage">
+              <input type="checkbox" data-testid="_inp_archivage" formControlName="archivage"/>
+              Archivage
+            </label>
+            <label class="checkbox-field" data-testid="_lib_inp_transferts_hors_ue">
+              <input type="checkbox" data-testid="_inp_transferts_hors_ue" formControlName="transfertsHorsUE"/>
+              Transferts hors UE
+            </label>
+          </div>
+
+        </div>
+      }
+
+      @if (submitError) {
+        <p class="submit-error" data-testid="_val_submit_error">{{ submitError }}</p>
+      }
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" data-testid="_btn_modal_cancel"
+                (click)="close()" [disabled]="isSubmitting">
+          Annuler
+        </button>
+        <button type="submit" class="btn-primary" data-testid="_btn_modal_submit" [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            <span class="btn-spinner"></span>
+            Enregistrement…
+          } @else {
+            Ajouter
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
