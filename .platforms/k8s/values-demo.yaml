@@ -6,10 +6,12 @@ app:
     interne:
       host: demo.minds-rgpd.minds.k8s
   keycloak:
+    issuer: https://sso.minds.k8s/auth/realms/creative
     grant_type: "password"
     client_id: "minds-rgpd"
     realm: "creative"
-  secret: rgpd/k8s/demo
+  secret:
+    path: saas_rgpd/demo/k8s
   nextAuthUrl: https://demo.minds-rgpd.minds.k8s
   tracing:
     endpoint: "http://jaeger-collector:4317"
