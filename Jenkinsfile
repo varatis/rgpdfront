@@ -174,13 +174,13 @@ node() {
 
         stage("Deploy") {
             if (!skipDeploy && deployTo != '') {
-              // def config = jsonParse(new File("${env.WORKSPACE}/git-version.json").getText())
-              // version = config.imageversion
-              // PropertiesUtils.updateValue("${env.WORKSPACE}/.env", "PROJECT_VERSION", version)
+                JenkinsService.instance().appendBuildDescription("'${projectName}': Deploy to '${deployTo}'")
                 withKubeConfig([credentialsId: 'kubeconfig-minds-admin']) {
                     println "Deploying project using generated version ${version}"
                     sh "bash ./.platforms/k8s/deploy.sh ${deployTo}"
                 }
+            } else {
+                JenkinsService.instance().appendBuildDescription("No Deploy")
             }
         }
 

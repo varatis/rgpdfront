@@ -7,6 +7,7 @@
     "build:dev": "node git-version.js && ng build --configuration development",
     "build:int": "node git-version.js && ng build --configuration int",
     "build:valid": "node git-version.js && ng build --configuration valid",
+    "build:demo": "node git-version.js && ng build --configuration demo",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false --code-coverage",
     "sonar": "dotenv -e .env -- sonar-scanner",
