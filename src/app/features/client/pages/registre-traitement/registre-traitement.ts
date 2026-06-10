@@ -44,7 +44,7 @@ export class RegistreTraitement implements OnInit {
   size = 10;
   totalElements = 0;
   totalPages = 0;
-  sortField: string = 'id';
+  sortField: string = 'idFonctionnel';
   sortDirection: 'asc' | 'desc' = 'asc';
   loading = false;
 
@@ -80,7 +80,7 @@ export class RegistreTraitement implements OnInit {
   }
 
   onSelectTraitement(item: Traitement) {
-    if (this.traitementSelectionne?.id === item.id) {
+    if (this.traitementSelectionne?.idFonctionnel === item.idFonctionnel) {
       this.traitementSelectionne = undefined;
     } else {
       this.traitementSelectionne = item;

@@ -1,5 +1,5 @@
 export interface Traitement {
-    id: number,
+    idFonctionnel: number,
     nom: string,
     gestionnaire: string,
     finalitePrincipale: string

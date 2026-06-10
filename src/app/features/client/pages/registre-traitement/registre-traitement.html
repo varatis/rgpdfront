@@ -14,7 +14,7 @@
       <app-table-traitement
         [data]="data"
         [loading]="loading"
-        [selectedId]="traitementSelectionne?.id"
+        [selectedId]="traitementSelectionne?.idFonctionnel"
         (select)="onSelectTraitement($event)"
         (sortChange)="onSortChange($event)">
       </app-table-traitement>
@@ -31,7 +31,7 @@
       <div class="right-section">
         <div class="detail-header">
           <div class="detail-title">
-            <h2 data-testid="_lib_titre_detail_traitement">{{ traitementSelectionne.id }} - {{ traitementSelectionne.nom }}</h2>
+            <h2 data-testid="_lib_titre_detail_traitement">{{ traitementSelectionne.idFonctionnel }} - {{ traitementSelectionne.nom }}</h2>
           </div>
           <div class="detail-actions">
             <button data-testid="_btn_modifier_traitement" class="icon-btn edit" title="Modifier">
@@ -47,7 +47,7 @@
           </div>
         </div>
 
-        <app-details-traitement [traitementId]="traitementSelectionne.id"></app-details-traitement>
+        <app-details-traitement [traitementId]="traitementSelectionne.idFonctionnel"></app-details-traitement>
       </div>
     }
   </div>
