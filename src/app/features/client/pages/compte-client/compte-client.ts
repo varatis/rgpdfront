@@ -59,7 +59,7 @@ export class CompteClient {
 
           isOk
             ? `Fichier importé avec succès : ${response.nomFichier}`
-            : `Import rejeté : ${response.nomFichier}`,
+            : response.statusFichier,
 
           'Fermer',
 
