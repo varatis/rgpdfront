@@ -92,3 +92,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background: #bdbdbd;
   }
 }
+
+/* Erreur */
+.snackbar-error .mat-mdc-snack-bar-surface,
+.snackbar-error .mdc-snackbar__surface {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+/* Succès */
+.snackbar-success .mat-mdc-snack-bar-surface,
+.snackbar-success .mdc-snackbar__surface {
+  background-color: #16a34a !important;
+  color: #ffffff !important;
+}
+
+/* Couleur du bouton "Fermer" */
+.snackbar-error .mat-mdc-button,
+.snackbar-success .mat-mdc-button {
+  color: #ffffff !important;
+}

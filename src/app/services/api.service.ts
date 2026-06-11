@@ -48,4 +48,8 @@ export class ApiService {
   updateTraitement(id: number, payload: CreateTraitementPayload): Observable<TraitementDetails> {
     return this.http.put<TraitementDetails>(this.apiUrl + "traitements/" + id, payload);
   }
+
+  getNextTraitementId(): Observable<Number> {
+    return this.http.get<Number>(this.apiUrl + "traitements/nextId");
+  }
 }
