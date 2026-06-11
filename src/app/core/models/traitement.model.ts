@@ -1,3 +1,50 @@
+import { Client } from "./client.model";
+import { Etablissement } from "./etablissement.model";
+
+export interface CreateTraitementPayload {
+    id: number;
+    client : Client;
+    // Required — Tab 1
+    nom: string;
+    dateIdentification?: string;
+    etablissements: Array<Etablissement>;
+    // Optional — Tab 1 : Identification
+    finalitePrincipale: string;
+    dateMiseAJour?: string;
+    historiqueModifications?: string;
+    dataProtectionOfficer?: string;
+    responsableTraitement?: string;
+    gestionnaireMiseEnOeuvre?: string;
+    sousFinalites?: string;
+    // Optional — Tab 2 : Données personnelles
+    categoriesPersonnesConcernees?: string;
+    donneesIdentification?: string;
+    donneesConnexion?: string;
+    donneesLocalisation?: string;
+    donneesComportementViePerso?: string;
+    donneesEconomiquesFinancieres?: string;
+    donneesProfessionnelles?: string;
+    categoriesParticulieresDonnees?: string;
+    sensibilite?: string;
+    etudeImpact?: string;
+    // Optional — Tab 3 : Description
+    canauxCollecteDonnees?: string;
+    licieteTraitement?: string;
+    recoursTraitementAutomatises?: boolean;
+    emplacementPhysique?: string;
+    dispositionsSecuriteDonnees?: string;
+    emplacementNumerique?: string;
+    hebergement?: string;
+    dureeConservation?: number | null;
+    archivage?: boolean;
+    dureeArchivage?: number | null;
+    categoriesDestinataires?: string;
+    raisonsTransfertDestinataires?: string;
+    transfertsHorsUE?: boolean;
+    paysDestinataires?: string;
+    commentaires?: string;
+}
+
 export interface Traitement {
     idFonctionnel: number,
     nom: string,
@@ -38,5 +85,6 @@ export interface TraitementDetails extends Traitement {
     raisonsTransfertDestinataires: string,
     transfertsHorsUE: boolean,
     paysDestinataires: string,
-    commentaires: string
+    commentaires: string,
+    etablissements: Array<Etablissement>
 }

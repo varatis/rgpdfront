@@ -4,18 +4,21 @@ import { Header, HeaderAction } from '../../../../shared/components/header/heade
 import { TableTraitement } from '../registre-traitement/table-traitement/table-traitement';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
 import { DetailsTraitementComponent } from '../registre-traitement/details-traitement/details-traitement';
+import { CreateTraitementModal } from '../registre-traitement/create-traitement-modal/create-traitement-modal';
 import { ApiService } from '../../../../services/api.service';
-import { Traitement } from '../../../../core/models/traitement.model';
+import { AuthService } from '../../../../services/auth.service';
+import { Traitement, TraitementDetails } from '../../../../core/models/traitement.model';
 
 @Component({
   selector: 'app-registre-traitement',
   standalone: true,
-  imports: [CommonModule, Header, TableTraitement, Pagination, DetailsTraitementComponent],
+  imports: [CommonModule, Header, TableTraitement, Pagination, DetailsTraitementComponent, CreateTraitementModal],
   templateUrl: './registre-traitement.html',
   styleUrls: ['./registre-traitement.scss'],
 })
 export class RegistreTraitement implements OnInit {
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private authService: AuthService) {}
+
   title = 'Registre des activités de traitement';
   icon = `
     <svg viewBox="0 0 28 28" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
@@ -23,19 +26,30 @@ export class RegistreTraitement implements OnInit {
     </svg>
   `;
 
-  actions: HeaderAction[] = [
-    {
-      label: 'Filtres',
-      icon: `
+  private readonly filterAction: HeaderAction = {
+    label: 'Filtres',
+    icon: `
     <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path d="M7 12V10H11V12H7ZM3 7V5H15V7H3ZM0 2V0H18V2H0Z" fill="currentColor" />
       </svg>
   `,
-      action: 'filter',
-      color: 'default',
-    },
-    { label: 'Ajouter un traitement', icon: '+', action: 'add', color: 'primary' },
-  ];
+    action: 'filter',
+    color: 'default',
+  };
+
+  private readonly addAction: HeaderAction = {
+    label: 'Ajouter un traitement', icon: '+', action: 'add', color: 'primary'
+  };
+
+  get isClient(): boolean {
+    return this.authService.getUserRole() === 'client';
+  }
+
+  get actions(): HeaderAction[] {
+    return this.isClient
+      ? [this.filterAction, this.addAction]
+      : [this.filterAction];
+  }
 
   currentPage = 1;
   traitementSelectionne?: Traitement;
@@ -47,6 +61,9 @@ export class RegistreTraitement implements OnInit {
   sortField: string = 'idFonctionnel';
   sortDirection: 'asc' | 'desc' = 'asc';
   loading = false;
+  showCreateModal = false;
+  showEditModal = false;
+  currentTraitementDetails: TraitementDetails | undefined;
 
   ngOnInit(): void {
     this.loadTraitements(0);
@@ -72,19 +89,20 @@ export class RegistreTraitement implements OnInit {
   }
 
   onActionClick(action: string) {
-    if (action === 'export') {
-      console.log('Exporting data...');
+    if (action === 'add') {
+      this.showCreateModal = true;
     } else if (action === 'filter') {
       console.log('Opening filters...');
     }
   }
 
   onSelectTraitement(item: Traitement) {
-    if (this.traitementSelectionne?.idFonctionnel === item.idFonctionnel) {
-      this.traitementSelectionne = undefined;
-    } else {
-      this.traitementSelectionne = item;
-    }
+    this.traitementSelectionne = this.traitementSelectionne?.idFonctionnel === item.idFonctionnel ? undefined : item;
+  }
+
+  onTraitementCreated() {
+    this.currentPage = 1;
+    this.loadTraitements(0);
   }
 
   onSortChange(sort: { field: string; direction: 'asc' | 'desc' }) {
@@ -96,13 +114,25 @@ export class RegistreTraitement implements OnInit {
 
   onPageChange(page: number) {
     this.currentPage = page;
-    console.log('Page changed to:', page);
     if (page > 0) {
       this.loadTraitements(page - 1);
     }
   }
 
+  onDetailsLoaded(details: TraitementDetails): void {
+    this.currentTraitementDetails = details;
+  }
+
+  onModifyClick(): void {
+    this.showEditModal = true;
+  }
+
+  onTraitementUpdated(): void {
+    this.loadTraitements(this.page);
+  }
+
   closeDetail() {
     this.traitementSelectionne = undefined;
+    this.currentTraitementDetails = undefined;
   }
 }

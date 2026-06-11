@@ -1,17 +1,17 @@
 <div class="header">
   <div class="left">
     <!-- Si l'icône est du texte normal -->
-<span *ngIf="!isSvg(icon)" class="material-icons">{{ icon }}</span>
+    <span *ngIf="!isSvg(icon)" class="material-icons">{{ icon }}</span>
 
-<!-- Si l'icône est un SVG -->
-<span *ngIf="isSvg(icon)" class="custom-icon" [innerHTML]="getSafeSvg(icon)"></span>
+    <!-- Si l'icône est un SVG -->
+    <span *ngIf="isSvg(icon)" class="custom-icon" [innerHTML]="getSafeSvg(icon)"></span>
     <h1>{{ title }}</h1>
   </div>
   <div class="actions">
-  <button *ngFor="let a of actions" (click)="onClick(a.action)" [ngClass]="a.color">
-  <span *ngIf="!isSvg(a.icon)" class="material-icons">{{ a.icon }}</span>
-  <span *ngIf="isSvg(a.icon)" class="custom-icon" [innerHTML]="getSafeSvg(a.icon)"></span>
-  {{ a.label }}
-</button>
+    <button *ngFor="let a of actions" (click)="onClick(a.action)" [ngClass]="a.color">
+      <span *ngIf="!isSvg(a.icon)" class="material-icons">{{ a.icon }}</span>
+      <span *ngIf="isSvg(a.icon)" class="custom-icon" [innerHTML]="getSafeSvg(a.icon)"></span>
+      {{ a.label }}
+    </button>
   </div>
 </div>

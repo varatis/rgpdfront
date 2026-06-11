@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { InfoFichier } from '../core/models/info-fichier.model';
-import { Traitement, TraitementDetails } from '../core/models/traitement.model';
+import { CreateTraitementPayload, Traitement, TraitementDetails } from '../core/models/traitement.model';
 import { PageResponse } from '../core/models/page-response.model';
 
 @Injectable({
@@ -41,6 +41,15 @@ export class ApiService {
       this.apiUrl + "traitements/" + traitementId);
   }
 
+  createTraitement(payload: CreateTraitementPayload): Observable<Traitement> {
+    return this.http.post<Traitement>(this.apiUrl + "traitements", payload);
+  }
 
+  updateTraitement(id: number, payload: CreateTraitementPayload): Observable<TraitementDetails> {
+    return this.http.put<TraitementDetails>(this.apiUrl + "traitements/" + id, payload);
+  }
 
+  getNextTraitementId(): Observable<Number> {
+    return this.http.get<Number>(this.apiUrl + "traitements/nextId");
+  }
 }
