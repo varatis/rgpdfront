@@ -27,33 +27,31 @@
       @if (activeTab === 0) {
         <div class="tab-content" data-testid="_lst_modal_tab_identification">
 
-          <div class="form-field" [class.invalid]="isFieldInvalid('nom')">
+          <div class="form-field" [class.invalid]="invalidStatusCause('nom')">
             <label data-testid="_lib_inp_nom" for="inp_nom">Nom du traitement <span class="required">*</span></label>
             <input id="inp_nom" data-testid="_inp_nom" type="text" formControlName="nom"
                    placeholder="Ex : Gestion des ressources humaines" autocomplete="off"/>
-            @if (isFieldInvalid('nom')) {
-              <span class="field-error" data-testid="_val_error_nom">Ce champ est requis.</span>
-            }
+              <span class="field-error" data-testid="_val_error_nom">{{invalidStatusCause('nom')}}</span>
           </div>
 
-          <div class="form-field" [class.invalid]="isFieldInvalid('dateIdentification')">
+          <div class="form-field" [class.invalid]="invalidStatusCause('dateIdentification')">
             <label data-testid="_lib_inp_date_identification" for="inp_date_identification">Date d'identification <span class="required">*</span></label>
             <input id="inp_date_identification" data-testid="_inp_date_identification" type="date" formControlName="dateIdentification"/>
-            @if (isFieldInvalid('dateIdentification')) {
-              <span class="field-error" data-testid="_val_error_date_identification">Ce champ est requis.</span>
-            }
+              <span class="field-error" data-testid="_val_error_date_identification">{{invalidStatusCause('dateIdentification')}}</span>
           </div>
 
-          <div class="form-field">
+          <div class="form-field" [class.invalid]="invalidStatusCause('gestionnaire')">
             <label data-testid="_lib_inp_gestionnaire" for="inp_gestionnaire">Gestionnaire</label>
             <input id="inp_gestionnaire" data-testid="_inp_gestionnaire" type="text" formControlName="gestionnaire"
                    placeholder="Ex : Direction des RH" autocomplete="off"/>
+            <span class="field-error" data-testid="_val_error_gestionnaire">{{invalidStatusCause('gestionnaire')}}</span>
           </div>
 
-          <div class="form-field">
+          <div class="form-field" [class.invalid]="invalidStatusCause('finalitePrincipale')">
             <label data-testid="_lib_inp_finalite" for="inp_finalite">Finalité principale</label>
             <textarea id="inp_finalite" data-testid="_inp_finalite" formControlName="finalitePrincipale" rows="2"
                       placeholder="Ex : Gestion administrative du personnel"></textarea>
+            <span class="field-error" data-testid="_val_error_gestionnaire">{{invalidStatusCause('finalitePrincipale')}}</span>
           </div>
 
           <div class="form-field">

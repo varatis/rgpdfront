@@ -24,6 +24,8 @@ export class CreateTraitementModal implements OnInit {
   activeTab = 0;
   form: FormGroup;
   loading = false;
+  validatorMaxLength = 255;
+  validatorFinaliteMaxLength = 500;
 
   get isEditMode(): boolean {
     return !!this.traitementToEdit;
@@ -40,16 +42,16 @@ export class CreateTraitementModal implements OnInit {
       idFonctionnel: [null],
       // Client mocké pour le moment
       client: this.fb.group({
-        id: ["5a9751d2-954b-460f-b19d-883ea7142a6b"],
-        nom: ["U Tech"],
-        statut: ["actif"],
+        id: ["29870d75-9a77-4fa2-99a4-10388997353d"],
+        nom: ["La breteche"],
+        statut: ["valide"]
       }),
       version: [null],
       // Tab 1 — Identification
-      nom: ['', [Validators.required, Validators.maxLength(255)]],
+      nom: ['', [Validators.required, Validators.maxLength(this.validatorMaxLength)]],
       dateIdentification: [null, Validators.required],
-      gestionnaire: [null, Validators.maxLength(255)],
-      finalitePrincipale: [null, Validators.maxLength(500)],
+      gestionnaire: [null, Validators.maxLength(this.validatorMaxLength)],
+      finalitePrincipale: [null, Validators.maxLength(this.validatorFinaliteMaxLength)],
       dateMiseAJour: [null],
       historiqueModifications: [null],
       dataProtectionOfficer: [null],
@@ -182,8 +184,14 @@ export class CreateTraitementModal implements OnInit {
     });
   }
 
-  isFieldInvalid(field: string): boolean {
+  invalidStatusCause(field: string): string | undefined  {
     const control = this.form.get(field);
-    return !!control && control.invalid && (control.dirty || control.touched);
+    if (!control?.invalid) return undefined;
+    return control.hasError('required') 
+                  ? "Ce champ est requis."
+                  : (control.hasError('maxlength')
+                              ? "La limite de caractères de ce champ est dépassée (" + control.value.length + "/"
+                                  + (field === "finalitePrincipale" ? this.validatorFinaliteMaxLength : this.validatorMaxLength) + ")"
+                              : undefined);
   }
 }
