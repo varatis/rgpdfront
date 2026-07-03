@@ -1,3 +1,17 @@
+.detail-title {
+  flex: 1;
+
+  h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 .tabs-container {
   display: flex;
   flex-direction: column;
