@@ -29,24 +29,27 @@
     <!-- Partie droite : détails -->
     @if (traitementSelectionne) {
       <div class="right-section">
+        <div class="detail-actions">
+          @if (isClient) {
+          <button data-testid="_btn_modifier_traitement" class="icon-btn edit" title="Modifier"
+              (click)="onModifyClick()" [disabled]="!currentTraitementDetails">
+            <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M5 19H6.425L16.2 9.225L14.775 7.8L5 17.575V19ZM3 21V16.75L16.2 3.575C16.4 3.39167 16.6208 3.25 16.8625 3.15C17.1042 3.05 17.3583 3 17.625 3C17.8917 3 18.15 3.05 18.4 3.15C18.65 3.25 18.8667 3.4 19.05 3.6L20.425 5C20.625 5.18333 20.7708 5.4 20.8625 5.65C20.9542 5.9 21 6.15 21 6.4C21 6.66667 20.9542 6.92083 20.8625 7.1625C20.7708 7.40417 20.625 7.825 20.425 7.825L7.25 21H3ZM15.475 8.525L14.775 7.8L16.2 9.225L15.475 8.525Z"/>
+            </svg>
+          </button>
+        }
+        <button class="icon-btn close" data-testid="_btn_fermer_detail" (click)="closeDetail()" title="Fermer">
+          <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
         <div class="detail-header">
           <div class="detail-title">
             <h2 data-testid="_lib_titre_detail_traitement">{{ traitementSelectionne.idFonctionnel }} - {{ traitementSelectionne.nom }}</h2>
           </div>
-          <div class="detail-actions">
-            @if (isClient) {
-              <button data-testid="_btn_modifier_traitement" class="icon-btn edit" title="Modifier"
-                      (click)="onModifyClick()" [disabled]="!currentTraitementDetails">
-                <span class="material-icons"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 19H6.425L16.2 9.225L14.775 7.8L5 17.575V19ZM3 21V16.75L16.2 3.575C16.4 3.39167 16.6208 3.25 16.8625 3.15C17.1042 3.05 17.3583 3 17.625 3C17.8917 3 18.15 3.05 18.4 3.15C18.65 3.25 18.8667 3.4 19.05 3.6L20.425 5C20.625 5.18333 20.7708 5.4 20.8625 5.65C20.9542 5.9 21 6.15 21 6.4C21 6.66667 20.9542 6.92083 20.8625 7.1625C20.7708 7.40417 20.625 7.825 20.425 7.825L7.25 21H3ZM15.475 8.525L14.775 7.8L16.2 9.225L15.475 8.525Z"/>
-                </svg></span>
-              </button>
-            }
-            <button class="icon-btn close" data-testid="_btn_fermer_detail" (click)="closeDetail()" title="Fermer">
-              <span class="material-icons">X</span>
-            </button>
-          </div>
-        </div>
+        
+    </div>
         <app-details-traitement
           [traitementId]="traitementSelectionne.idFonctionnel"
           (detailsLoaded)="onDetailsLoaded($event)">
