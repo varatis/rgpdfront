@@ -72,8 +72,7 @@ export class RecueilViolation {
   currentPage = 1;
   itemsPerPage = 10;
 
-  violationsPending: Violation[] = [
-  ];
+  violationsPending: Violation[] = [];
   get pageTabs(): PageTab[] {
     return [
       { key: 'pending', label: 'En cours de traitement', count: this.pendingCount },
@@ -81,64 +80,7 @@ export class RecueilViolation {
     ];
   }
 
-  violationsTreated: Violation[] = [
-    {
-      id: 'V001',
-      date: new Date('2024-10-15'),
-      nature: 'Non-respect du délai de réponse',
-      dateReception: new Date('2024-10-16'),
-      statut: 'treated',
-      description: 'Le délai de réponse de 30 jours prévu par le RGPD n\'a pas été respecté pour une demande d\'accès aux données personnelles.'
-    },
-    {
-      id: 'V002',
-      date: new Date('2024-09-20'),
-      nature: 'Défaut de notification',
-      dateReception: new Date('2024-09-22'),
-      statut: 'treated',
-      description: 'Notification de violation de données non envoyée à la CNIL dans les 72 heures.'
-    },
-    {
-      id: 'V003',
-      date: new Date('2024-08-10'),
-      nature: 'Accès non autorisé aux données',
-      dateReception: new Date('2024-08-12'),
-      statut: 'treated',
-      description: 'Accès aux données personnelles d\'utilisateurs sans autorisation appropriée.'
-    },
-    {
-      id: 'V004',
-      date: new Date('2024-07-05'),
-      nature: 'Conservation excessive des données',
-      dateReception: new Date('2024-07-07'),
-      statut: 'treated',
-      description: 'Données personnelles conservées au-delà de la durée légale sans justification.'
-    },
-    {
-      id: 'V005',
-      date: new Date('2024-06-18'),
-      nature: 'Transfert de données non sécurisé',
-      dateReception: new Date('2024-06-20'),
-      statut: 'treated',
-      description: 'Transfert de données personnelles sans chiffrement approprié.'
-    },
-    {
-      id: 'V006',
-      date: new Date('2024-05-25'),
-      nature: 'Absence de consentement valide',
-      dateReception: new Date('2024-05-27'),
-      statut: 'treated',
-      description: 'Traitement de données sans recueil du consentement explicite des personnes concernées.'
-    },
-    {
-      id: 'V007',
-      date: new Date('2024-04-12'),
-      nature: 'Défaut de documentation',
-      dateReception: new Date('2024-04-14'),
-      statut: 'treated',
-      description: 'Registre des activités de traitement incomplet ou non à jour.'
-    }
-  ];
+  violationsTreated: Violation[] = [];
 
   constructor() {}
 

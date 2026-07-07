@@ -60,50 +60,9 @@ export class RegistreDemandes {
   currentPage = 1;
   itemsPerPage = 10;
 
-  demandesPending: Demande[] = [
-    {
-      id: 'D001',
-      typeDemande: 'Accès (Consultation)',
-      descriptionSynthetique: 'Consulter son dossier personnel papier',
-      dateReception: new Date('2024-09-21'),
-      origine: 'Mail',
-      servicesConcernes: 'Service RH',
-      detailTraitement: '-',
-      servicesImpliques: 'Service RH',
-      reponse: '26/09',
-      alerteRT: '-',
-      statut: 'pending'
-    },
-    {
-      id: 'D002',
-      typeDemande: 'Accès (Consultation)',
-      descriptionSynthetique: 'Consulter son dossier personnel papier',
-      dateReception: new Date('2024-09-21'),
-      origine: 'Mail',
-      servicesConcernes: 'Service RH',
-      detailTraitement: '-',
-      servicesImpliques: 'Service RH',
-      reponse: '26/09',
-      alerteRT: '-',
-      statut: 'pending'
-    }
-  ];
+  demandesPending: Demande[] = [];
 
-  demandesTreated: Demande[] = [
-    {
-      id: 'D101',
-      typeDemande: 'Rectification',
-      descriptionSynthetique: 'Modification adresse personnelle',
-      dateReception: new Date('2024-08-15'),
-      origine: 'Courrier',
-      servicesConcernes: 'Service RH',
-      detailTraitement: 'Adresse mise à jour dans le système',
-      servicesImpliques: 'Service RH, IT',
-      reponse: '20/08',
-      alerteRT: 'Non',
-      statut: 'treated'
-    }
-  ];
+  demandesTreated: Demande[] = [];
 
   constructor() {}
 
