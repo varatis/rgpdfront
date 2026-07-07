@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from '../../../../services/api.service';
 
 @Component({
   selector: 'app-compte-client',
-  imports: [MatIconModule, MatSnackBarModule],
+  standalone: true,
+  imports: [CommonModule, MatIconModule, MatSnackBarModule],
   templateUrl: './compte-client.html',
   styleUrl: './compte-client.scss'
 })

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
   import { Header, HeaderAction } from '../../../../shared/components/header/header';
 
 import { TableItem, Table } from '../../../../shared/components/table/table';
@@ -12,8 +12,7 @@ import { TreatmentTabsComponent } from "../../../../shared/components/tabs/treat
   templateUrl: './registre-traitement.html',
   styleUrl: './registre-traitement.scss'
 })
-export class RegistreTraitement implements OnInit {
-  ngOnInit() {}
+export class RegistreTraitement {
   title = 'Registre des activités de traitement';
   icon = `
     <svg viewBox="0 0 28 28" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
@@ -124,9 +123,9 @@ export class RegistreTraitement implements OnInit {
 
   onActionClick(action: string) {
     if (action === 'export') {
-      console.log('Exporting data...');
+      // Export logic
     } else if (action === 'filter') {
-      console.log('Opening filters...');
+      // Filter logic
     }
   }
 
@@ -140,7 +139,6 @@ export class RegistreTraitement implements OnInit {
 
   onPageChange(page: number) {
     this.currentPage = page;
-    console.log('Page changed to:', page);
   }
 
   closeDetail() {

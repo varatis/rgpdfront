@@ -23,13 +23,7 @@ preconisations: Preconisation[] = [
 
   ];
 
-  ngOnInit(): void {}
+  onFilterPreconisations(): void {}
 
-  onFilterPreconisations(): void {
-    console.log('Filtrer les préconisations');
-  }
-
-  onCreatePreconisation(): void {
-    console.log('Créer une nouvelle préconisation');
-  }
+  onCreatePreconisation(): void {}
 }

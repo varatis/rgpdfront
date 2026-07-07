@@ -1,10 +1,6 @@
 <div class="main-layout">
-  @if (currentUser()?.role === 'user'){
+  @if (currentUser()?.role === 'client' || currentUser()?.role === 'admin' || currentUser()?.role === 'superadmin'){
   <app-client-sidebar></app-client-sidebar>
-  } @else if (currentUser()?.role === 'client') {
-   <app-client-sidebar></app-client-sidebar>
-  } @else if(currentUser()?.role === 'admin') {
-  <app-admin-sidebar></app-admin-sidebar>
   }
   <div class="layout-body">
     <main class="main-content">

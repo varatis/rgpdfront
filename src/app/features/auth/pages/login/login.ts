@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
+import { KeycloakService } from '../../../../core/auth/keycloak.service';
 
 @Component({
   selector: 'app-login',
@@ -18,13 +18,18 @@ export class Login {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private keycloakService: KeycloakService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+
+    // Si déjà authentifié via Keycloak, rediriger
+    if (this.keycloakService.isAuthenticated()) {
+      this.redirectBasedOnRole();
+    }
   }
 
   isFieldInvalid(field: string): boolean {
@@ -33,36 +38,18 @@ export class Login {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = null;
+    // Rediriger vers Keycloak pour l'authentification
+    this.keycloakService.login();
+  }
 
-      const { email, password } = this.loginForm.value;
+  private redirectBasedOnRole(): void {
+    const role = this.keycloakService.getUserRole();
 
-      try {
-        const success = this.authService.login(email, password);
-
-        if (await success) {
-
-          const role = this.authService.getUserRole();
-
-          if (role === 'admin') {
-            this.router.navigate(['/admin/clients']);
-          } else if (role === 'client') {
-            this.router.navigate(['/app/compte-client']);
-          } else if (role === 'user') {
-            this.router.navigate(['/app/registre-traitement']);
-          }
-        } else {
-          this.errorMessage = 'Identifiants invalides';
-        }
-      } catch (error) {
-        this.errorMessage = 'Une erreur est survenue lors de la connexion';
-      } finally {
-        this.isLoading = false;
-      }
+    // Redirection selon le rôle
+    if (role === 'admin') {
+      this.router.navigate(['/app/compte-client']);
     } else {
-      this.loginForm.markAllAsTouched();
+      this.router.navigate(['/app/registre-traitement']);
     }
   }
 

@@ -16,10 +16,8 @@ export class MainLayout {
   navItems = computed(() => {
     const user = this.currentUser();
     if (!user) return [];
-    
-    if (user.role === 'user') {
-      return CLIENT_NAV_ITEMS.filter(item => item.roles.includes('user'));
-    }
-    return CLIENT_NAV_ITEMS;
+
+    // Filtrer les items selon le rôle de l'utilisateur
+    return CLIENT_NAV_ITEMS.filter(item => item.roles.includes(user.role));
   });
 }

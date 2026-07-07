@@ -6,7 +6,7 @@ import { Pagination } from '../../../../shared/components/pagination/pagination'
 import { DetailsTraitementComponent } from '../registre-traitement/details-traitement/details-traitement';
 import { CreateTraitementModal } from '../registre-traitement/create-traitement-modal/create-traitement-modal';
 import { ApiService } from '../../../../services/api.service';
-import { AuthService } from '../../../../services/auth.service';
+import { KeycloakService } from '../../../../core/auth/keycloak.service';
 import { Traitement, TraitementDetails } from '../../../../core/models/traitement.model';
 
 @Component({
@@ -17,7 +17,7 @@ import { Traitement, TraitementDetails } from '../../../../core/models/traitemen
   styleUrls: ['./registre-traitement.scss'],
 })
 export class RegistreTraitement implements OnInit {
-  constructor(private apiService: ApiService, private authService: AuthService) {}
+  constructor(private apiService: ApiService, private keycloakService: KeycloakService) {}
 
   title = 'Registre des activités de traitement';
   icon = `
@@ -41,12 +41,12 @@ export class RegistreTraitement implements OnInit {
     label: 'Ajouter un traitement', icon: '+', action: 'add', color: 'primary'
   };
 
-  get isClient(): boolean {
-    return this.authService.getUserRole() === 'client';
+  get isAdmin(): boolean {
+    return this.keycloakService.getUserRole() === 'admin';
   }
 
   get actions(): HeaderAction[] {
-    return this.isClient
+    return this.isAdmin
       ? [this.filterAction, this.addAction]
       : [this.filterAction];
   }
@@ -92,7 +92,7 @@ export class RegistreTraitement implements OnInit {
     if (action === 'add') {
       this.showCreateModal = true;
     } else if (action === 'filter') {
-      console.log('Opening filters...');
+      // Filter logic
     }
   }
 
@@ -124,11 +124,38 @@ export class RegistreTraitement implements OnInit {
   }
 
   onModifyClick(): void {
+    if (!this.isAdmin) {
+      return;
+    }
+
     this.showEditModal = true;
   }
 
   onTraitementUpdated(): void {
     this.loadTraitements(this.page);
+  }
+
+  onDeleteClick(): void {
+    if (!this.isAdmin || !this.traitementSelectionne) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Supprimer le traitement ${this.traitementSelectionne.idFonctionnel} ?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.apiService.deleteTraitement(this.traitementSelectionne.idFonctionnel)
+      .subscribe({
+        next: () => {
+          this.closeDetail();
+          this.loadTraitements(this.page);
+        },
+        error: (err) => console.error(err)
+      });
   }
 
   closeDetail() {

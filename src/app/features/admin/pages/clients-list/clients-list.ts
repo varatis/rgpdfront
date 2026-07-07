@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Client } from '../../../../shared/interfaces/client.interface';
-import { Router } from '@angular/router';
 import { MasterDetailLayout } from '../../../../layout/master-detail-layout/master-detail-layout';
 import { PageTabsComponent,PageTab } from '../../../../shared/components/page-tabs/page-tab/page-tab';
 import { CommonModule } from '@angular/common';
-import { Header, HeaderAction } from '../../../../shared/components/header/header';
+import { HeaderAction } from '../../../../shared/components/header/header';
 
 @Component({
   selector: 'app-clients-list',
@@ -22,7 +21,7 @@ export class ClientsList implements OnInit {
   clientsListOpen = true;
   pageTitle = 'Clients';
   clientIconSvg: string = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">...</svg>';
-   actions: HeaderAction[] = [
+  actions: HeaderAction[] = [
     { label: 'Export global', icon: `<svg
                   class="icon"
                   width="18"
@@ -49,7 +48,7 @@ export class ClientsList implements OnInit {
 
   get actuelsCount() { return this.clientsActifs.length; }
   get archivesCount() { return this.clientsArchives.length; }
-  
+
   // 2. Définition des onglets de page
 get pageTabs(): PageTab[] {
     return [
@@ -75,7 +74,7 @@ onSelectClient(client: Client) {
     this.selectedClient = client;
   }
 
-  constructor(private router: Router) {}
+  constructor() {}
 
   ngOnInit(): void {}
 
@@ -86,7 +85,7 @@ onSelectClient(client: Client) {
 
   setActiveTab(key: string) {
     this.activeTab = key as 'actuel' | 'archive';
-    this.selectedClient = null; 
+    this.selectedClient = null;
   }
 
   /* COLLAPSIBLE */
@@ -100,10 +99,10 @@ onSelectClient(client: Client) {
     this.clientsListOpen = false;
   }
 
-  onCreateClient(): void { console.log('Créer un client'); }
-  onFilterClients(): void { console.log('Filtrer les clients'); }
-  onEditClient(client: Client): void { console.log('Modifier client:', client); }
-  onArchiveClient(client: Client): void { console.log('Archiver client:', client); }
-  onDeleteClient(client: Client): void { console.log('Supprimer client:', client); }
+  onCreateClient(): void {}
+  onFilterClients(): void {}
+  onEditClient(client: Client): void {}
+  onArchiveClient(client: Client): void {}
+  onDeleteClient(client: Client): void {}
 
 }

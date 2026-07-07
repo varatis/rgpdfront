@@ -9,7 +9,7 @@ import { UserProfile, UserRole } from '../shared/interfaces/navigation.interface
   providedIn: 'root'
 })
 export class AuthService {
-  
+
    private currentUserSignal = signal<UserProfile | null>(null);
   currentUser = this.currentUserSignal.asReadonly();
 
@@ -19,7 +19,7 @@ export class AuthService {
 
   login(email: string, password: string): Promise<boolean> {
     return new Promise((resolve) => {
-     
+
       setTimeout(() => {
         let user: UserProfile;
         if (email.includes('admin')) {
@@ -40,7 +40,7 @@ export class AuthService {
           user = {
             id: '3',
             email: email,
-            role: 'user',
+            role: 'client',
             clientLogo: 'assets/images/client_logo.png',
             clientName: 'Abstergo Ltd.'
           };
@@ -69,7 +69,6 @@ export class AuthService {
       const user = JSON.parse(userStr);
       this.setUser(user);
     }
-    console.log('Loaded user from storage:', this.currentUserSignal());
   }
 
   isAuthenticated(): boolean {

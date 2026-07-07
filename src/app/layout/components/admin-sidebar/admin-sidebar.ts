@@ -1,7 +1,7 @@
 import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { KeycloakService } from '../../../core/auth/keycloak.service';
 import { ADMIN_NAV_ITEMS } from '../../../shared/config/navigation.config';
 
 @Component({
@@ -18,10 +18,19 @@ export class AdminSidebar {
   logo = computed(() => 'assets/images/creative_logo.png');
 
   constructor(
-    private authService: AuthService,
+    private keycloakService: KeycloakService,
     private router: Router
   ) {
-    this.currentUser = this.authService.currentUser;
+    this.currentUser = computed(() => {
+      const role = this.keycloakService.getUserRole();
+      const email = this.keycloakService.getUserEmail();
+      const name = this.keycloakService.getUserName();
+      return role ? {
+        role,
+        email,
+        name
+      } : null;
+    });
   }
 
   getIconPath(iconName: string): string {
@@ -34,7 +43,7 @@ export class AdminSidebar {
   }
 
   logout(): void {
-    this.authService.logout();
+    this.keycloakService.logout();
   }
 
 }
