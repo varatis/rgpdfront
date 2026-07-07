@@ -4,6 +4,7 @@ export const environment = {
   keycloak: {
     url: 'https://sso.minds.k8s/auth',
     realm: 'creative',
-    clientId: 'minds-saas-rgpd'
+    clientId: 'minds-saas-rgpd',
+    redirectUri: window.location.origin
   }
 };
