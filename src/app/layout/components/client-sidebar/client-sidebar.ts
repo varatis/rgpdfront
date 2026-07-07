@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { RouterModule } from '@angular/router';
+import { KeycloakService } from '../../../core/auth/keycloak.service';
 import { Location } from '@angular/common';
 import { computed } from '@angular/core';
 import { CLIENT_NAV_ITEMS } from '../../../shared/config/navigation.config';
@@ -17,11 +17,9 @@ export class ClientSidebar {
     const user = this.currentUser();
     if (!user) return [];
 
-
-    if (user.role === 'user') {
-      return CLIENT_NAV_ITEMS.filter(item => item.roles.includes('user'));
-    }
-    return CLIENT_NAV_ITEMS;
+    // Filtrer les items selon le rôle de l'utilisateur
+    const filtered = CLIENT_NAV_ITEMS.filter(item => item.roles.includes(user.role));
+    return filtered;
   });
 
   logo = computed(() => {
@@ -34,12 +32,20 @@ export class ClientSidebar {
   });
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
+    private keycloakService: KeycloakService,
     private location: Location
   ) {
-    this.currentUser = this.authService.currentUser;
-
+    this.currentUser = computed(() => {
+      const role = this.keycloakService.getUserRole();
+      const email = this.keycloakService.getUserEmail();
+      const name = this.keycloakService.getUserName();
+      return role ? {
+        role,
+        email,
+        clientName: name || 'Client',
+        clientLogo: 'assets/images/client_logo.png'
+      } : null;
+    });
   }
 
   getIconPath(iconName: string): string {
@@ -59,7 +65,7 @@ export class ClientSidebar {
   }
 
   logout(): void {
-    this.authService.logout();
+    this.keycloakService.logout();
   }
 
 

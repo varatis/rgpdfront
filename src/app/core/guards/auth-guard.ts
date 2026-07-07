@@ -1,12 +1,23 @@
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { KeycloakService } from '../auth/keycloak.service';
 import { inject } from '@angular/core';
 
+type AppRole = 'superadmin' | 'admin' | 'client';
+
+function redirectToRoleHome(router: Router, role: string | null): void {
+  if (role === 'admin') {
+    router.navigate(['/app/compte-client']);
+    return;
+  }
+
+  router.navigate(['/app/registre-traitement']);
+}
+
 export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+  const keycloakService = inject(KeycloakService);
   const router = inject(Router);
 
-  if (authService.isAuthenticated()) {
+  if (keycloakService.isAuthenticated()) {
     return true;
   }
 
@@ -16,10 +27,24 @@ export const authGuard: CanActivateFn = (route, state) => {
 
 // Guard pour protéger les routes admin
 export const adminGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+  const keycloakService = inject(KeycloakService);
   const router = inject(Router);
 
-  if (authService.isAuthenticated() && authService.getUserRole() === 'admin') {
+  if (!keycloakService.isAuthenticated()) {
+    router.navigate(['/']);
+    return false;
+  }
+
+  redirectToRoleHome(router, keycloakService.getUserRole());
+  return false;
+};
+
+// Guard pour protéger les routes client/user
+export const clientGuard: CanActivateFn = (route, state) => {
+  const keycloakService = inject(KeycloakService);
+  const router = inject(Router);
+
+  if (keycloakService.isAuthenticated()) {
     return true;
   }
 
@@ -27,17 +52,16 @@ export const adminGuard: CanActivateFn = (route, state) => {
   return false;
 };
 
-// Guard pour protéger les routes client/user
-export const clientGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+export const roleGuard: CanActivateFn = (route, state) => {
+  const keycloakService = inject(KeycloakService);
   const router = inject(Router);
+  const role = keycloakService.getUserRole();
+  const allowedRoles = (route.data?.['roles'] ?? []) as AppRole[];
 
-  const role = authService.getUserRole();
-
-  if (authService.isAuthenticated() && (role === 'client' || role === 'user')) {
+  if (role && allowedRoles.includes(role as AppRole)) {
     return true;
   }
 
-  router.navigate(['/']);
+  redirectToRoleHome(router, role);
   return false;
 };

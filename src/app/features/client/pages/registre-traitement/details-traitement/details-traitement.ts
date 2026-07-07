@@ -1,9 +1,5 @@
-import {
-  Component, computed, effect, inject, input, output, signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, switchMap, tap } from 'rxjs';
 
 import { ApiService } from '../../../../../services/api.service';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
@@ -11,6 +7,8 @@ import { NlToBrPipe } from './nl-to-br.pipe';
 import { DateFrPipe } from './date-fr.pipe';
 import { ALL_TABS, TabConfig } from './field-config';
 import { BoolFrPipe } from './bool-fr.pipe';
+
+type UserRole = 'client' | 'admin' | 'superadmin';
 
 @Component({
   selector: 'app-details-traitement',
@@ -20,57 +18,74 @@ import { BoolFrPipe } from './bool-fr.pipe';
   styleUrls: ['./details-traitement.scss'],
 })
 export class DetailsTraitementComponent {
-  private readonly api = inject(ApiService);
+  private readonly apiService = inject(ApiService);
 
   readonly traitementId = input<number>();
-  readonly userRole = input<'client' | 'user'>('client');
+  readonly userRole = input<UserRole>('client');
   readonly detailsLoaded = output<TraitementDetails>();
 
   readonly details = signal<TraitementDetails | undefined>(undefined);
   readonly activeTab = signal('Identification du traitement');
 
   readonly tabs = computed<TabConfig[]>(() =>
-    this.userRole() === 'user'
-      ? ALL_TABS.filter(t => t.name !== 'Analyse de conformité')
+    this.userRole() === 'client'
+      ? ALL_TABS.filter(tab => tab.name !== 'Analyse de conformité')
       : ALL_TABS
   );
 
   readonly activeTabConfig = computed(() =>
-    this.tabs().find(t => t.name === this.activeTab()),
+    this.tabs().find(tab => tab.name === this.activeTab())
   );
 
   constructor() {
-    toObservable(this.traitementId).pipe(
-      filter((id): id is number => id != null),
-      tap(() => this.details.set(undefined)),
-      switchMap(id => this.api.getTraitementDetails(id)),
-    ).subscribe({
-      next: res => {
-        this.details.set(res);
-        this.detailsLoaded.emit(res);
-      },
-      error: err => console.error(err),
+    effect((onCleanup) => {
+      const id = this.traitementId();
+
+      if (id == null) {
+        this.details.set(undefined);
+        return;
+      }
+
+      this.details.set(undefined);
+      const subscription = this.apiService.getTraitementDetails(id).subscribe({
+        next: (res) => {
+          this.details.set(res);
+          this.detailsLoaded.emit(res);
+        },
+        error: (err) => console.error(err),
+      });
+
+      onCleanup(() => subscription.unsubscribe());
     });
 
     effect(() => {
-      const tabNames = this.tabs().map(t => t.name);
-      if (!tabNames.includes(this.activeTab())) {
-        this.activeTab.set(tabNames[0]);
+      if (!this.tabs().some(tab => tab.name === this.activeTab())) {
+        this.activeTab.set(this.tabs()[0]?.name ?? '');
       }
     });
   }
 
   fieldValue(key: string): string | null | undefined {
-    const d = this.details();
-    if (!d) return undefined;
-    const val = (d as unknown as Record<string, unknown>)[key];
-    if (val == null) return val;
-    return String(val);
+    const details = this.details();
+    if (!details) {
+      return undefined;
+    }
+
+    const value = (details as unknown as Record<string, unknown>)[key];
+    if (value == null) {
+      return value;
+    }
+
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+
+    return String(value);
   }
 
   get etablissementsDisplay(): string {
     const list = this.details()?.etablissements;
-    return list?.length ? list.map(e => e.nom).join('<br>') : '-';
+    return list?.length ? list.map(etablissement => etablissement.nom).join('<br>') : '-';
   }
 
   selectTab(tab: string, event: MouseEvent): void {

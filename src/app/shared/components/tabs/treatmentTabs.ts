@@ -10,10 +10,10 @@ import { CommonModule } from '@angular/common';
 })
 export class TreatmentTabsComponent {
   @Input() treatment: any;
-  @Input() userRole: 'client' | 'user' = 'client';
+  @Input() userRole: 'client' | 'admin' | 'superadmin' = 'client';
   activeTab = 'Identification du traitement';
-  
-  tabs: string[] = []; 
+
+  tabs: string[] = [];
 
   private readonly clientTabs = [
     'Identification du traitement',
@@ -29,15 +29,14 @@ export class TreatmentTabsComponent {
   ];
 
   ngOnInit() {
-    
-    if (this.userRole === 'user') {
+
+    if (this.userRole === 'client') {
       this.tabs = this.userTabs;
     } else {
-      
       this.tabs = this.clientTabs;
     }
-    
-   
+
+
     if (!this.tabs.includes(this.activeTab)) {
       this.activeTab = this.tabs[0];
     }

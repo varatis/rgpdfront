@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { adminGuard, authGuard, clientGuard } from './core/guards/auth-guard';
+import { adminGuard, authGuard, clientGuard, roleGuard } from './core/guards/auth-guard';
 import { AdminLayout } from './layout/admin-layout/admin-layout';
 import { ClientLayout } from './layout/client-layout/client-layout';
 
@@ -48,38 +48,45 @@ export const routes: Routes = [
     children: [
       {
         path: 'compte-client',
+        canActivate: [roleGuard],
+        data: { roles: ['admin'] },
         loadComponent: () => import('./features/client/pages/compte-client/compte-client')
           .then(m => m.CompteClient)
       },
       {
         path: 'registre-traitement',
+        canActivate: [roleGuard],
+        data: { roles: ['admin', 'client', 'superadmin'] },
         loadComponent: () => import('./features/client/pages/registre-traitement/registre-traitement')
           .then(m => m.RegistreTraitement)
       },
       {
-        path: 'registre-traitement',
-        loadComponent: () => import('./features/user/pages/registre-traitement/registre-traitement')
-          .then(m => m.RegistreTraitement)
-      },
-      {
         path: 'recueil-violation',
+        canActivate: [roleGuard],
+        data: { roles: [] },
         loadComponent: () => import('./features/user/pages/recueil-violation/recueil-violation')
           .then(m => m.RecueilViolation)
 
       },
       {
         path: 'registre-demandes',
+        canActivate: [roleGuard],
+        data: { roles: [] },
         loadComponent: () => import('./features/user/pages/registre-demandes/registre-demandes')
           .then(m => m.RegistreDemandes)
       },
       {
         path: 'sous-traitant-dcp',
+        canActivate: [roleGuard],
+        data: { roles: [] },
         loadComponent: () => import('./features/user/pages/sous-traitant-dcp/sous-traitant-dcp')
           .then(m => m.SousTraitantDcp)
 
       },
       {
         path: 'suivi-preconisations',
+        canActivate: [roleGuard],
+        data: { roles: [] },
         loadComponent: () => import('./features/user/pages/suivi-preconisations/suivi-preconisations')
           .then(m => m.SuiviPreconisations)
 

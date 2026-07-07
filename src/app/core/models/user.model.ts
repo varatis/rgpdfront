@@ -3,7 +3,7 @@ export interface User {
   nom: string;
   prenom: string;
   email: string;
-  role?: 'super-admin' | 'admin' | 'user' | 'client';
+  role?: 'superadmin' | 'admin' | 'client';
   fonction?: string;
   isActive?: boolean;
   createdAt?: Date;

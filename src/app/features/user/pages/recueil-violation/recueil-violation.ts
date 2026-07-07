@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {  HeaderAction } from '../../../../shared/components/header/header';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { HeaderAction } from '../../../../shared/components/header/header';
 import { CommonModule } from '@angular/common';
 import { MasterDetailLayout } from "../../../../layout/master-detail-layout/master-detail-layout";
 import { PageTab, PageTabsComponent } from '../../../../shared/components/page-tabs/page-tab/page-tab';
@@ -28,7 +27,7 @@ interface TableColumn {
   templateUrl: './recueil-violation.html',
   styleUrl: './recueil-violation.scss'
 })
-export class RecueilViolation implements OnInit {
+export class RecueilViolation {
      pageTitle = 'Recueil de violation';
   icon = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V13H11V15ZM11 11H9V5H11V11Z" fill="#161617"/>
@@ -141,26 +140,24 @@ export class RecueilViolation implements OnInit {
     }
   ];
 
-  constructor(private router: Router) {}
-
-  ngOnInit(): void {}
+  constructor() {}
 
   // Computed properties
   get displayedViolations(): any[] {
-    const violations = this.activeTab === 'pending' 
-      ? this.violationsPending 
+    const violations = this.activeTab === 'pending'
+      ? this.violationsPending
       : this.violationsTreated;
-    
+
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    
-   
+
+
     return violations.slice(startIndex, endIndex).map(v => ({
       id: v.id,
       date: this.formatDate(v.date),
       nature: v.nature,
       dateReception: this.formatDate(v.dateReception),
-      _raw: v 
+      _raw: v
     }));
   }
 
@@ -173,8 +170,8 @@ export class RecueilViolation implements OnInit {
   }
 
   get totalPages(): number {
-    const total = this.activeTab === 'pending' 
-      ? this.violationsPending.length 
+    const total = this.activeTab === 'pending'
+      ? this.violationsPending.length
       : this.violationsTreated.length;
     return Math.ceil(total / this.itemsPerPage);
   }
@@ -186,13 +183,12 @@ export class RecueilViolation implements OnInit {
 
  setActiveTab(key: string) {
     this.activeTab = key as 'pending' | 'treated';
-    this.selectedViolation = null; 
+    this.selectedViolation = null;
   }
   onCloseDetail() {
     this.selectedViolation = null;
   }
   onHeaderAction(action: string) {
-    console.log('Action cliquée:', action);
     // Logique pour filtrer ou déclarer une violation
   }
 
@@ -206,7 +202,6 @@ export class RecueilViolation implements OnInit {
     // Récupère l'objet original depuis _raw
     this.selectedViolation = item._raw || item;
     this.activeDetailTab = 'Informations générales';
-    console.log('Violation sélectionnée:', this.selectedViolation);
   }
 
   closeDetails(): void {
@@ -228,13 +223,7 @@ export class RecueilViolation implements OnInit {
     }
   }
 
-  onExportGlobal(): void {
-    console.log('Export global des violations');
-   
-  }
+  onExportGlobal(): void {}
 
-  onFilterViolations(): void {
-    console.log('Filtrer les violations');
-   
-  }
+  onFilterViolations(): void {}
 }
