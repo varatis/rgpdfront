@@ -26,9 +26,9 @@
 
     <div
       class="header-cell sortable col-gestionnaire"
-      [class.asc]="sortColumn === 'gestionnaire' && sortDirection === 'asc'"
-      [class.desc]="sortColumn === 'gestionnaire' && sortDirection === 'desc'"
-      (click)="toggleSort('gestionnaire')"
+      [class.asc]="sortColumn === 'gestionnaireMiseEnOeuvre' && sortDirection === 'asc'"
+      [class.desc]="sortColumn === 'gestionnaireMiseEnOeuvre' && sortDirection === 'desc'"
+      (click)="toggleSort('gestionnaireMiseEnOeuvre')"
     >
       GESTIONNAIRE
       <svg class="sort-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -73,7 +73,7 @@
         {{ item.idFonctionnel }}
       </div>
       <div class="cell name" data-testid="_val_traitement_nom">{{ item.nom }}</div>
-      <div class="cell col-gestionnaire" data-testid="_val_traitement_gestionnaire">{{ item.gestionnaire }}</div>
+      <div class="cell col-gestionnaire" data-testid="_val_traitement_gestionnaire">{{ item.gestionnaireMiseEnOeuvre }}</div>
       <div class="cell col-finalite" >{{ item.finalitePrincipale }}</div>
       <div class="arrow">›</div>
     </div>

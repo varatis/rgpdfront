@@ -119,4 +119,21 @@ export class KeycloakService {
   getUserName(): string | null {
     return this.kc?.tokenParsed?.['name'] ?? null;
   }
+
+  getClientGroups(): string[] {
+    const groups = this.kc?.tokenParsed?.['client_groups'];
+    return Array.isArray(groups) ? groups : [];
+  }
+
+  getClientName(): string | null {
+    // Les groupes client sont au format "/clients/<nom-du-client>"
+    for (const group of this.getClientGroups()) {
+      const match = /^\/clients\/(.+)$/.exec(group);
+      if (match) {
+        return match[1];
+      }
+    }
+
+    return null;
+  }
 }

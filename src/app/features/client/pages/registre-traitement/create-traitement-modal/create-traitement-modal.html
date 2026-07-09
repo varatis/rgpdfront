@@ -34,17 +34,53 @@
               <span class="field-error" data-testid="_val_error_nom">{{invalidStatusCause('nom')}}</span>
           </div>
 
+          <div class="form-field">
+            <label data-testid="_lib_inp_etablissements" for="inp_etablissements">Etablissement(s)</label>
+            <div class="chip-input" data-testid="_lst_etablissements">
+              @for (etablissement of selectedEtablissements; track etablissement.id ?? etablissement.nom) {
+                <span class="chip" [attr.data-testid]="'_val_etablissement_' + etablissement.nom">
+                  {{ etablissement.nom }}
+                  <button type="button" class="chip-remove" [attr.data-testid]="'_btn_remove_etablissement_' + etablissement.nom"
+                          (click)="removeEtablissement(etablissement)" title="Retirer">✕</button>
+                </span>
+              }
+              <input id="inp_etablissements" data-testid="_inp_etablissements" type="text" autocomplete="off"
+                     placeholder="Ex : Siège social"
+                     [value]="etablissementInput"
+                     (input)="onEtablissementInputChange($any($event.target).value)"
+                     (focus)="onEtablissementInputFocus()"
+                     (blur)="onEtablissementInputBlur()"
+                     (keydown.enter)="$event.preventDefault(); onEtablissementInputEnter()"/>
+            </div>
+            @if (showEtablissementSuggestions && (etablissementSuggestions.length > 0 || !etablissementExactMatchExists)) {
+              <ul class="autocomplete-dropdown" data-testid="_lst_etablissements_suggestions">
+                @for (suggestion of etablissementSuggestions; track suggestion.id ?? suggestion.nom) {
+                  <li class="autocomplete-item" [attr.data-testid]="'_btn_suggestion_etablissement_' + suggestion.nom"
+                      (mousedown)="$event.preventDefault(); selectEtablissement(suggestion)">
+                    {{ suggestion.nom }}
+                  </li>
+                }
+                @if (!etablissementExactMatchExists) {
+                  <li class="autocomplete-item autocomplete-item-create" data-testid="_btn_create_etablissement"
+                      (mousedown)="$event.preventDefault(); createEtablissement()">
+                    + Créer « {{ etablissementInput.trim() }} »
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+
+          <div class="form-field">
+            <label data-testid="_lib_inp_donnees_concernees" for="inp_donnees_concernees">Données concernées</label>
+            <textarea id="inp_donnees_concernees" data-testid="_inp_donnees_concernees"
+                      formControlName="donneesConcernees" rows="2"
+                      placeholder="Ex : Famille ou proches des demandeurs"></textarea>
+          </div>
+
           <div class="form-field" [class.invalid]="invalidStatusCause('dateIdentification')">
             <label data-testid="_lib_inp_date_identification" for="inp_date_identification">Date d'identification <span class="required">*</span></label>
             <input id="inp_date_identification" data-testid="_inp_date_identification" type="date" formControlName="dateIdentification"/>
               <span class="field-error" data-testid="_val_error_date_identification">{{invalidStatusCause('dateIdentification')}}</span>
-          </div>
-
-          <div class="form-field" [class.invalid]="invalidStatusCause('gestionnaire')">
-            <label data-testid="_lib_inp_gestionnaire" for="inp_gestionnaire">Gestionnaire</label>
-            <input id="inp_gestionnaire" data-testid="_inp_gestionnaire" type="text" formControlName="gestionnaire"
-                   placeholder="Ex : Direction des RH" autocomplete="off"/>
-            <span class="field-error" data-testid="_val_error_gestionnaire">{{invalidStatusCause('gestionnaire')}}</span>
           </div>
 
           <div class="form-field" [class.invalid]="invalidStatusCause('finalitePrincipale')">
@@ -192,16 +228,23 @@
           </div>
 
           <div class="form-field">
+            <label data-testid="_lib_inp_dispositions_securite_physique" for="inp_dispositions_securite_physique">Dispositions de sécurité (physique)</label>
+            <textarea id="inp_dispositions_securite_physique" data-testid="_inp_dispositions_securite_physique"
+                      formControlName="dispositionsSecuriteDonneesPhysique" rows="2"
+                      placeholder="Ex : Accès restreint, badge, coffre…"></textarea>
+          </div>
+
+          <div class="form-field">
             <label data-testid="_lib_inp_emplacement_numerique" for="inp_emplacement_numerique">Emplacement numérique</label>
             <input id="inp_emplacement_numerique" data-testid="_inp_emplacement_numerique" type="text"
                    formControlName="emplacementNumerique" placeholder="Ex : AWS eu-west-1" autocomplete="off"/>
           </div>
 
           <div class="form-field">
-            <label data-testid="_lib_inp_dispositions_securite" for="inp_dispositions_securite">Dispositions de sécurité</label>
-            <textarea id="inp_dispositions_securite" data-testid="_inp_dispositions_securite"
-                      formControlName="dispositionsSecuriteDonneesPhysique" rows="2"
-                      placeholder="Ex : Chiffrement AES-256, accès restreint…"></textarea>
+            <label data-testid="_lib_inp_dispositions_securite_numerique" for="inp_dispositions_securite_numerique">Dispositions de sécurité (numérique)</label>
+            <textarea id="inp_dispositions_securite_numerique" data-testid="_inp_dispositions_securite_numerique"
+                      formControlName="dispositionsSecuriteDonneesNumerique" rows="2"
+                      placeholder="Ex : Chiffrement AES-256, pare-feu…"></textarea>
           </div>
 
           <div class="form-field">
@@ -212,14 +255,14 @@
 
           <div class="form-row">
             <div class="form-field">
-              <label data-testid="_lib_inp_duree_conservation" for="inp_duree_conservation">Durée de conservation (mois)</label>
-              <input id="inp_duree_conservation" data-testid="_inp_duree_conservation" type="number"
-                     formControlName="dureeConservation" placeholder="Ex : 36" min="0"/>
+              <label data-testid="_lib_inp_duree_conservation" for="inp_duree_conservation">Durée de conservation</label>
+              <input id="inp_duree_conservation" data-testid="_inp_duree_conservation" type="text"
+                     formControlName="dureeConservation" placeholder="Ex : 36 mois" autocomplete="off"/>
             </div>
             <div class="form-field">
-              <label data-testid="_lib_inp_duree_archivage" for="inp_duree_archivage">Durée d'archivage (mois)</label>
-              <input id="inp_duree_archivage" data-testid="_inp_duree_archivage" type="number"
-                     formControlName="dureeArchivage" placeholder="Ex : 60" min="0"/>
+              <label data-testid="_lib_inp_duree_archivage" for="inp_duree_archivage">Durée d'archivage</label>
+              <input id="inp_duree_archivage" data-testid="_inp_duree_archivage" type="text"
+                     formControlName="dureeArchivage" placeholder="Ex : 5 ans" autocomplete="off"/>
             </div>
           </div>
 

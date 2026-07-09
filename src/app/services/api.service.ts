@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import { InfoFichier } from '../core/models/info-fichier.model';
 import { CreateTraitementPayload, Traitement, TraitementDetails } from '../core/models/traitement.model';
 import { PageResponse } from '../core/models/page-response.model';
+import { Etablissement } from '../core/models/etablissement.model';
+import { Client } from '../core/models/client.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +25,16 @@ export class ApiService {
   }
 
 
-  getTraitements(page: number, size: number, sortField: string = 'id', 
-      sortDirection: 'asc' | 'desc' = 'asc'): Observable<PageResponse<Traitement>> {
-    const params = new HttpParams()
+  getTraitements(page: number, size: number, sortField: string = 'id',
+      sortDirection: 'asc' | 'desc' = 'asc', clientNom?: string): Observable<PageResponse<Traitement>> {
+    let params = new HttpParams()
       .set('page', page)
       .set('size', size)
       .set('sort', `${sortField},${sortDirection}`);
+
+    if (clientNom) {
+      params = params.set('clientNom', clientNom);
+    }
 
     return this.http.get<PageResponse<Traitement>>(
       this.apiUrl + "traitements",
@@ -55,5 +61,15 @@ export class ApiService {
 
   getNextTraitementId(): Observable<Number> {
     return this.http.get<Number>(this.apiUrl + "traitements/nextId");
+  }
+
+  getEtablissements(clientId: string | number): Observable<Etablissement[]> {
+    const params = new HttpParams().set('clientId', clientId);
+
+    return this.http.get<Etablissement[]>(this.apiUrl + "etablissements", { params });
+  }
+
+  getClientByNom(nom: string): Observable<Client> {
+    return this.http.get<Client>(this.apiUrl + "clients/nom/" + encodeURIComponent(nom));
   }
 }

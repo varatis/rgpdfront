@@ -17,12 +17,18 @@ export const authGuard: CanActivateFn = (route, state) => {
   const keycloakService = inject(KeycloakService);
   const router = inject(Router);
 
-  if (keycloakService.isAuthenticated()) {
-    return true;
+  if (!keycloakService.isAuthenticated()) {
+    router.navigate(['/auth/login']);
+    return false;
   }
 
-  router.navigate(['/auth/login']);
-  return false;
+  const role = keycloakService.getUserRole();
+  if (role !== 'superadmin' && !keycloakService.getClientName()) {
+    router.navigate(['/auth/access-denied']);
+    return false;
+  }
+
+  return true;
 };
 
 // Guard pour protéger les routes admin
