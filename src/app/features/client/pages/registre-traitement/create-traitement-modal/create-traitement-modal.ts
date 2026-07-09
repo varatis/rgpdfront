@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from '../../../../../services/api.service';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
+import { Etablissement } from '../../../../../core/models/etablissement.model';
+import { KeycloakService } from '../../../../../core/auth/keycloak.service';
 
 @Component({
   selector: 'app-create-traitement-modal',
@@ -27,6 +29,12 @@ export class CreateTraitementModal implements OnInit {
   validatorMaxLength = 255;
   validatorFinaliteMaxLength = 500;
 
+  // Etablissements — chip input with autocomplete
+  clientEtablissements: Etablissement[] = [];
+  etablissementInput = '';
+  etablissementSuggestions: Etablissement[] = [];
+  showEtablissementSuggestions = false;
+
   get isEditMode(): boolean {
     return !!this.traitementToEdit;
   }
@@ -37,20 +45,21 @@ export class CreateTraitementModal implements OnInit {
     'Description du traitement',
   ];
 
-  constructor(private apiService: ApiService, private fb: FormBuilder, private snackBar: MatSnackBar) {
+  constructor(private apiService: ApiService, private fb: FormBuilder, private snackBar: MatSnackBar,
+    private keycloakService: KeycloakService) {
     this.form = this.fb.group({
       idFonctionnel: [null],
-      // Client mocké pour le moment
       client: this.fb.group({
-        id: ["29870d75-9a77-4fa2-99a4-10388997353d"],
-        nom: ["La breteche"],
-        statut: ["valide"]
+        id: [null],
+        nom: [null],
+        statut: [null]
       }),
       version: [null],
       // Tab 1 — Identification
       nom: ['', [Validators.required, Validators.maxLength(this.validatorMaxLength)]],
+      etablissements: [[] as Etablissement[]],
+      donneesConcernees: [null],
       dateIdentification: [null, Validators.required],
-      gestionnaire: [null, Validators.maxLength(this.validatorMaxLength)],
       finalitePrincipale: [null, Validators.maxLength(this.validatorFinaliteMaxLength)],
       dateMiseAJour: [null],
       historiqueModifications: [null],
@@ -76,6 +85,7 @@ export class CreateTraitementModal implements OnInit {
       emplacementPhysique: [null],
       dispositionsSecuriteDonneesPhysique: [null],
       emplacementNumerique: [null],
+      dispositionsSecuriteDonneesNumerique: [null],
       hebergement: [null],
       dureeConservation: [null],
       archivage: [false],
@@ -105,6 +115,87 @@ export class CreateTraitementModal implements OnInit {
         });
       });
     }
+
+    // Récupération du client associé à l'utilisateur connecté (groupe Keycloak "/clients/<nom>")
+    const clientName = this.keycloakService.getClientName();
+    if (clientName) {
+      this.apiService.getClientByNom(clientName).subscribe(client => {
+        this.form.patchValue({ client });
+        this.apiService.getEtablissements(client.id).subscribe(etablissements => {
+          this.clientEtablissements = etablissements;
+        });
+      });
+    }
+  }
+
+  get selectedEtablissements(): Etablissement[] {
+    return this.form.get('etablissements')?.value ?? [];
+  }
+
+  private isSameEtablissement(a: Etablissement, b: Etablissement): boolean {
+    return a.id != null && b.id != null
+      ? a.id === b.id
+      : a.nom.trim().toLowerCase() === b.nom.trim().toLowerCase();
+  }
+
+  onEtablissementInputChange(value: string): void {
+    this.etablissementInput = value;
+    const query = value.trim().toLowerCase();
+    const selected = this.selectedEtablissements;
+
+    this.etablissementSuggestions = query
+      ? this.clientEtablissements.filter(e =>
+          e.nom.toLowerCase().includes(query) &&
+          !selected.some(s => this.isSameEtablissement(s, e))
+        )
+      : this.clientEtablissements.filter(e => !selected.some(s => this.isSameEtablissement(s, e)));
+
+    this.showEtablissementSuggestions = true;
+  }
+
+  onEtablissementInputFocus(): void {
+    this.onEtablissementInputChange(this.etablissementInput);
+  }
+
+  onEtablissementInputBlur(): void {
+    // Delay so a click on a suggestion/create option registers before the list disappears
+    setTimeout(() => (this.showEtablissementSuggestions = false), 150);
+  }
+
+  get etablissementExactMatchExists(): boolean {
+    const query = this.etablissementInput.trim().toLowerCase();
+    if (!query) return true;
+    return this.selectedEtablissements.some(e => e.nom.trim().toLowerCase() === query) ||
+      this.clientEtablissements.some(e => e.nom.trim().toLowerCase() === query);
+  }
+
+  selectEtablissement(etablissement: Etablissement): void {
+    this.form.get('etablissements')?.setValue([...this.selectedEtablissements, etablissement]);
+    this.etablissementInput = '';
+    this.showEtablissementSuggestions = false;
+  }
+
+  createEtablissement(): void {
+    const nom = this.etablissementInput.trim();
+    if (!nom || this.etablissementExactMatchExists) return;
+
+    this.form.get('etablissements')?.setValue([...this.selectedEtablissements, { nom }]);
+    this.etablissementInput = '';
+    this.showEtablissementSuggestions = false;
+  }
+
+  onEtablissementInputEnter(): void {
+    if (this.etablissementSuggestions.length > 0) {
+      this.selectEtablissement(this.etablissementSuggestions[0]);
+    } else {
+      this.createEtablissement();
+    }
+  }
+
+  removeEtablissement(etablissement: Etablissement): void {
+    this.form.get('etablissements')?.setValue(
+      this.selectedEtablissements.filter(e => !this.isSameEtablissement(e, etablissement))
+    );
   }
 
   private toDateString(date: Date | string | undefined): string {

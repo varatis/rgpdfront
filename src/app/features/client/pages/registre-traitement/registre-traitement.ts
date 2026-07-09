@@ -71,7 +71,8 @@ export class RegistreTraitement implements OnInit {
 
   loadTraitements(page: number): void {
     this.loading = true;
-    this.apiService.getTraitements(page, this.size, this.sortField, this.sortDirection)
+    const clientName = this.keycloakService.getClientName();
+    this.apiService.getTraitements(page, this.size, this.sortField, this.sortDirection, clientName ?? undefined)
       .subscribe({
         next: (res) => {
           this.data = res.content;

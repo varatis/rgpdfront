@@ -1,7 +1,7 @@
 import { Client } from "./client.model";
 
 export interface Etablissement {
-    id : number,
+    id?: number,
     nom : string,
-    client : Client
+    client?: Client
 }

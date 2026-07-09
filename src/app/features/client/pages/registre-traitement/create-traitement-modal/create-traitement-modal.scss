@@ -159,6 +159,94 @@
   color: #d32f2f;
 }
 
+// ── Etablissements chip input ────────────────────────────────────
+.chip-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:focus-within {
+    border-color: #2E63CD;
+    box-shadow: 0 0 0 3px rgba(46, 99, 205, 0.12);
+  }
+
+  input {
+    flex: 1;
+    min-width: 120px;
+    border: none;
+    padding: 4px 2px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1a1a1a;
+
+    &::placeholder { color: #aaa; }
+
+    &:focus { outline: none; }
+  }
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 10px;
+  background: #eaf0fb;
+  color: #2E63CD;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  color: #2E63CD;
+  padding: 2px;
+  border-radius: 50%;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: #d32f2f;
+    color: white;
+  }
+}
+
+.autocomplete-dropdown {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #1a1a1a;
+  cursor: pointer;
+
+  &:hover { background: #f0f4fc; }
+}
+
+.autocomplete-item-create {
+  color: #2E63CD;
+  font-weight: 600;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

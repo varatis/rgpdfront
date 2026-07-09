@@ -9,6 +9,7 @@ export interface CreateTraitementPayload {
     dateIdentification?: string;
     etablissements: Array<Etablissement>;
     // Optional — Tab 1 : Identification
+    donneesConcernees?: string;
     finalitePrincipale: string;
     dateMiseAJour?: string;
     historiqueModifications?: string;
@@ -32,12 +33,13 @@ export interface CreateTraitementPayload {
     licieteTraitement?: string;
     recoursTraitementAutomatises?: boolean;
     emplacementPhysique?: string;
-    dispositionsSecuriteDonnees?: string;
+    dispositionsSecuriteDonneesPhysique?: string;
     emplacementNumerique?: string;
+    dispositionsSecuriteDonneesNumerique?: string;
     hebergement?: string;
-    dureeConservation?: number | null;
+    dureeConservation?: string;
     archivage?: boolean;
-    dureeArchivage?: number | null;
+    dureeArchivage?: string;
     categoriesDestinataires?: string;
     raisonsTransfertDestinataires?: string;
     transfertsHorsUE?: boolean;
@@ -48,7 +50,7 @@ export interface CreateTraitementPayload {
 export interface Traitement {
     idFonctionnel: number,
     nom: string,
-    gestionnaire: string,
+    gestionnaireMiseEnOeuvre: string,
     finalitePrincipale: string
 }
 
@@ -56,10 +58,10 @@ export interface TraitementDetails extends Traitement {
     version: number
     dateIdentification: Date,
     dateMiseAJour: Date,
+    donneesConcernees: string,
     historiqueModifications: string,
     dataProtectionOfficer: string,
     responsableTraitement: string,
-    gestionnaireMiseEnOeuvre: string,
     sousFinalites: string,
     categoriesPersonnesConcernees: string,
     donneesIdentification: string,
@@ -75,12 +77,13 @@ export interface TraitementDetails extends Traitement {
     licieteTraitement: string,
     recoursTraitementAutomatises: boolean,
     emplacementPhysique: string,
-    dispositionsSecuriteDonnees: string,
+    dispositionsSecuriteDonneesPhysique: string,
     emplacementNumerique: string,
+    dispositionsSecuriteDonneesNumerique: string,
     hebergement: string,
-    dureeConservation: number,
+    dureeConservation: string,
     archivage: boolean,
-    dureeArchivage: number,
+    dureeArchivage: string,
     categoriesDestinataires: string,
     raisonsTransfertDestinataires: string,
     transfertsHorsUE: boolean,
