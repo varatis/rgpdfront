@@ -33,11 +33,13 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-  
+
   imports: [
     CommonModule,
     ...COMPONENTS
   ],
-  exports: COMPONENTS
+  exports: [
+    ...COMPONENTS
+  ]
 })
 export class SharedModule { }

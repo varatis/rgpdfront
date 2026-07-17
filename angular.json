@@ -8,6 +8,12 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
+        },
+        "@angular/material:component": {
+          "style": "scss"
+        },
+        "@angular/material:application": {
+          "strictStyleImports": true
         }
       },
       "root": "",
@@ -125,9 +131,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "codeCoverage": true, 
+            "codeCoverage": true,
             "browsers": "Chrome",
-            "karmaConfig": "karma.conf.js", 
+            "karmaConfig": "karma.conf.js",
             "reporters": [
              "progress",
               "kjhtml",

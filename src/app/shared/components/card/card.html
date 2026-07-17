@@ -1,10 +1,10 @@
-<div class="card" [class.no-padding]="!padding">
+<mat-card [class.no-padding]="!padding">
   @if (title) {
-    <div class="card-header">
-      <h3 class="card-title">{{ title }}</h3>
-    </div>
+    <mat-card-header>
+      <mat-card-title>{{ title }}</mat-card-title>
+    </mat-card-header>
   }
-  <div class="card-content">
+  <mat-card-content>
     <ng-content></ng-content>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>

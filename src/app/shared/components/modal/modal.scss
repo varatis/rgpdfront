@@ -1,0 +1,25 @@
+.modal-container {
+  min-width: 300px;
+  max-width: 500px;
+
+  mat-dialog-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  mat-dialog-content {
+    padding: 20px 24px;
+    color: var(--mat-sys-on-surface-variant);
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 16px 24px;
+    gap: 8px;
+  }
+}

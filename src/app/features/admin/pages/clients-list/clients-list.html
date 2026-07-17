@@ -1,6 +1,6 @@
 <app-master-detail-layout
   [title]="pageTitle"
-  [iconSvg]="clientIconSvg"
+  [icon]="clientIcon"
   [actions]="actions"
   [isDetailOpen]="!!selectedClient"
   [isEmpty]="displayedClients.length === 0"
@@ -16,16 +16,10 @@
 
   <div slot="list-header" class="collapse-header" data-testid="_btn_toggle_clients_list" (click)="toggleClientsList()">
     <span class="collapse-title" data-testid="_lib_clients_list_titre">Client</span>
-    <svg
+    <mat-icon
       class="chevron"
       [class.open]="clientsListOpen"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
+      >expand_more</mat-icon>
   </div>
 
   <div slot="list-items" class="clients-list" data-testid="_lst_clients_list" *ngIf="clientsListOpen">
@@ -53,9 +47,7 @@
             title="Détails"
             (click)="$event.stopPropagation(); onSelectClient(c)"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
+            <mat-icon >chevron_right</mat-icon>
           </button>
         </div>
       </div>

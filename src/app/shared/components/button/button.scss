@@ -1,125 +1,28 @@
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-weight: 500;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: inherit;
-  white-space: nowrap;
+// Custom styles for ghost variant - Material doesn't have a built-in ghost button
+.mat-button-ghost {
+  background: transparent !important;
+  color: var(--mat-sys-on-surface-variant) !important;
 
-  &:focus-visible {
-    outline: 2px solid #4169E1;
-    outline-offset: 2px;
+  &:hover:not(:disabled) {
+    background: var(--mat-sys-hover-state-layer-color) !important;
+    color: var(--mat-sys-on-surface) !important;
   }
+}
 
-  // Sizes
-  &-sm {
+// Size adjustments for Material buttons
+button.mat-mdc-button {
+  &.btn-sm {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
   }
 
-  &-md {
+  &.btn-md {
     padding: 0.75rem 1.5rem;
     font-size: 0.938rem;
   }
 
-  &-lg {
+  &.btn-lg {
     padding: 1rem 2rem;
     font-size: 1rem;
   }
-
-  // Variants
-  &-primary {
-    background: #4169E1;
-    color: white;
-
-    &:hover:not(:disabled) {
-      background: #1E40AF;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(65, 105, 225, 0.3);
-    }
-  }
-
-  &-secondary {
-    background: #6B7280;
-    color: white;
-
-    &:hover:not(:disabled) {
-      background: #4B5563;
-    }
-  }
-
-  &-outline {
-    background: transparent;
-    border: 1px solid #D1D5DB;
-    color: #374151;
-
-    &:hover:not(:disabled) {
-      background: #F9FAFB;
-      border-color: #4169E1;
-      color: #4169E1;
-    }
-  }
-
-  &-ghost {
-    background: transparent;
-    color: #6B7280;
-
-    &:hover:not(:disabled) {
-      background: #F3F4F6;
-      color: #1F2937;
-    }
-  }
-
-  &-danger {
-    background: #EF4444;
-    color: white;
-
-    &:hover:not(:disabled) {
-      background: #DC2626;
-    }
-  }
-
-  // States
-  &-disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  &-loading {
-    cursor: wait;
-    opacity: 0.7;
-  }
-
-  &-full-width {
-    width: 100%;
-  }
-}
-
-.btn-loader {
-  display: inline-flex;
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
-}
-
-.spinner-circle {
-  stroke-dasharray: 60;
-  stroke-dashoffset: 60;
-  animation: dash 1.5s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes dash {
-  0% { stroke-dashoffset: 60; }
-  50% { stroke-dashoffset: 15; }
-  100% { stroke-dashoffset: 60; }
 }

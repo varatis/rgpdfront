@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 interface PreconisationRow {
   id: string;
   titre: string;
@@ -13,7 +14,7 @@ interface PreconisationRow {
 @Component({
   selector: 'app-preconisations-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './preconisations-table.html',
   styleUrl: './preconisations-table.scss'
 })
@@ -26,11 +27,11 @@ export class PreconisationsTable {
 
   get sortedData(): PreconisationRow[] {
     if (!this.sortColumn) return this.data;
-    
+
     return [...this.data].sort((a, b) => {
       const valA = (a as any)[this.sortColumn];
       const valB = (b as any)[this.sortColumn];
-      
+
       const compare = valA.toString().localeCompare(valB.toString());
       return this.sortDirection === 'asc' ? compare : -compare;
     });
@@ -68,5 +69,5 @@ export class PreconisationsTable {
   }
 }
 
- 
+
 

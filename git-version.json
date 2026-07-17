@@ -1,0 +1,12 @@
+{
+  "hash": "eec9764666297ff18fb372eb26ed951c6c397d33",
+  "shortHash": "eec9764",
+  "commit": "eec9764666297ff18fb372eb26ed951c6c397d33",
+  "shortCommit": "eec9764",
+  "author": "",
+  "email": "yoann.laurent@groupe-creative.fr",
+  "date": "Fri Jul 17 10:52:39 2026 +0200",
+  "message": "feat: mise en place angular material [MSR-168]",
+  "version": "v0.0.0-2026-07-17T1417-eec9764",
+  "imageversion": "v0.0.0-eec9764"
+}

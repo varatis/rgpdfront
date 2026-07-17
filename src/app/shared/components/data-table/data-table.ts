@@ -1,28 +1,23 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Treatment } from '../../interfaces/treatment.interface';
-import { CommonModule } from '@angular/common';
+import { Component, input, output } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface TableColumn {
-  key: string;     
-  label: string;   
-  width?: string;   
-  sortable?: boolean; 
+  key: string;
+  label: string;
+  width?: string;
+  sortable?: boolean;
 }
+
 @Component({
   selector: 'app-data-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [MatIconModule],
   templateUrl: './data-table.html',
-  styleUrl: './data-table.scss'
+  styleUrl: './data-table.scss',
 })
 export class DataTable {
-@Input() columns: TableColumn[] = [];
-  @Input() data: any[] = [];
-  @Input() trackKey: string = 'id';
-  
-  @Output() rowClick = new EventEmitter<any>();
-
-  onRowClick(row: any) {
-    this.rowClick.emit(row);
-  }
+  columns = input.required<TableColumn[]>();
+  data = input.required<any[]>();
+  trackKey = input<string>('id');
+  rowClick = output<any>();
 }

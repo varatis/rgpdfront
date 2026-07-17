@@ -1,10 +1,12 @@
-<div class="main-layout">
+<mat-sidenav-container class="main-layout">
   @if (currentUser()?.role === 'client' || currentUser()?.role === 'admin' || currentUser()?.role === 'superadmin'){
-  <app-client-sidebar></app-client-sidebar>
+  <mat-sidenav mode="side" opened class="sidebar">
+    <app-client-sidebar></app-client-sidebar>
+  </mat-sidenav>
   }
-  <div class="layout-body">
+  <mat-sidenav-content class="layout-body">
     <main class="main-content">
-    <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
     </main>
-  </div>
-</div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

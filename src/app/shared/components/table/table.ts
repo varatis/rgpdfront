@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface TableItem {
   id: number;
@@ -11,7 +13,7 @@ export interface TableItem {
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatTableModule, MatIconModule],
   templateUrl: './table.html',
   styleUrls: ['./table.scss']
 })
@@ -22,8 +24,9 @@ export class Table {
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
+  displayedColumns: string[] = ['id', 'treatment', 'manager', 'purpose', 'arrow'];
 
-    get sortedData(): TableItem[] {
+  get sortedData(): TableItem[] {
     if (!this.sortColumn) return this.data;
     return [...this.data].sort((a, b) => {
       const valA = (a as any)[this.sortColumn];
@@ -31,7 +34,7 @@ export class Table {
       if (this.sortColumn === 'id') {
         return this.sortDirection === 'asc' ? valA - valB : valB - valA;
       }
-      
+
       const compare = valA.toString().localeCompare(valB.toString());
       return this.sortDirection === 'asc' ? compare : -compare;
     });
@@ -45,7 +48,13 @@ export class Table {
       this.sortDirection = 'asc';
     }
   }
+
   onSelect(item: TableItem) {
     this.select.emit(item);
+  }
+
+  getSortIcon(column: string): string {
+    if (this.sortColumn !== column) return 'unfold_more';
+    return this.sortDirection === 'asc' ? 'expand_more' : 'expand_less';
   }
 }

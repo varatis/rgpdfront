@@ -1,16 +1,22 @@
 .main-layout {
-  display: flex;
   min-height: 100vh;
-  background: #F9FAFB;
+  background-color: var(--mat-sys-background);
+}
+
+.sidebar {
+  width: 280px;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface);
 }
 
 .layout-body {
-  flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 .main-content {
   flex: 1;
   overflow-y: auto;
+  padding: 24px;
 }

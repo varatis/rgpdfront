@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../../../../services/api.service';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
 import { Etablissement } from '../../../../../core/models/etablissement.model';
@@ -278,7 +279,7 @@ export class CreateTraitementModal implements OnInit {
   invalidStatusCause(field: string): string | undefined  {
     const control = this.form.get(field);
     if (!control?.invalid) return undefined;
-    return control.hasError('required') 
+    return control.hasError('required')
                   ? "Ce champ est requis."
                   : (control.hasError('maxlength')
                               ? "La limite de caractères de ce champ est dépassée (" + control.value.length + "/"

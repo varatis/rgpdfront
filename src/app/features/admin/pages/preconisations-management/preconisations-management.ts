@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Preconisation } from '../../../../shared/interfaces';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-preconisations-management',
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './preconisations-management.html',
   styleUrl: './preconisations-management.scss'
 })

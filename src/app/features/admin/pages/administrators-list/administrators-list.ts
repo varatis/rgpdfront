@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Administrator } from '../../../../shared/interfaces';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-administrators-list',
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './administrators-list.html',
   styleUrl: './administrators-list.scss'
 })

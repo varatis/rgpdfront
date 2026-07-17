@@ -1,50 +1,29 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, output, ViewChild } from '@angular/core';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-pagination',
   standalone: true,
-  imports: [CommonModule],
+  imports: [MatPaginatorModule],
   templateUrl: './pagination.html',
-  styleUrls: ['./pagination.scss']
+  styleUrl: './pagination.scss',
 })
 export class Pagination {
-  @Input() currentPage = 1;
-  @Input() totalPages = 1;
-  @Output() pageChange = new EventEmitter<number>();
+  currentPage = input(1);
+  totalPages = input(1);
+  pageSize = input(10);
+  pageSizeOptions = input([5, 10, 25, 50]);
+  pageChange = output<number>();
+  pageSizeChange = output<number>();
 
-  get visiblePages(): number[] {
-    const pages: number[] = [];
-    const delta = 2;
-    
-    if (this.totalPages <= 7) {
-      for (let i = 1; i <= this.totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-      
-      if (this.currentPage <= 4) {
-        for (let i = 2; i <= 5; i++) {
-          pages.push(i);
-        }
-        pages.push(-1);
-        pages.push(this.totalPages);
-      } else if (this.currentPage >= this.totalPages - 3) {
-        pages.push(-1);
-        for (let i = this.totalPages - 4; i <= this.totalPages; i++) {
-          pages.push(i);
-        }
-      } else {
-        pages.push(-1);
-        for (let i = this.currentPage - delta; i <= this.currentPage + delta; i++) {
-          pages.push(i);
-        }
-        pages.push(-1);
-        pages.push(this.totalPages);
-      }
+  get length() {
+    return this.totalPages() * this.pageSize();
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageChange.emit(event.pageIndex + 1);
+    if (event.pageSize !== this.pageSize()) {
+      this.pageSizeChange.emit(event.pageSize);
     }
-    
-    return pages;
   }
 }
