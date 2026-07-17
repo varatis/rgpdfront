@@ -8,11 +8,12 @@ import { CreateTraitementModal } from '../registre-traitement/create-traitement-
 import { ApiService } from '../../../../services/api.service';
 import { KeycloakService } from '../../../../core/auth/keycloak.service';
 import { Traitement, TraitementDetails } from '../../../../core/models/traitement.model';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-registre-traitement',
   standalone: true,
-  imports: [CommonModule, Header, TableTraitement, Pagination, DetailsTraitementComponent, CreateTraitementModal],
+  imports: [CommonModule, Header, TableTraitement, Pagination, DetailsTraitementComponent, CreateTraitementModal, MatIconModule],
   templateUrl: './registre-traitement.html',
   styleUrls: ['./registre-traitement.scss'],
 })
@@ -38,7 +39,7 @@ export class RegistreTraitement implements OnInit {
   };
 
   private readonly addAction: HeaderAction = {
-    label: 'Ajouter un traitement', icon: '+', action: 'add', color: 'primary'
+    label: 'Ajouter un traitement', action: 'add', color: 'primary'
   };
 
   get isAdmin(): boolean {

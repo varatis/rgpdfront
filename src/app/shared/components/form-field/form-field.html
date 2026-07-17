@@ -1,1 +1,33 @@
-<p>form-field works!</p>
+<mat-form-field
+  [appearance]="appearance"
+  [floatLabel]="floatLabel"
+  [class.mat-form-field-invalid]="errorState">
+
+  @if (label) {
+    <mat-label>{{ label }}</mat-label>
+  }
+
+  @if (prefixIcon) {
+    <mat-icon matPrefix>{{ prefixIcon }}</mat-icon>
+  }
+
+  <input
+    matInput
+    [type]="type"
+    [placeholder]="placeholder || ''"
+    [required]="required"
+    [disabled]="disabled"
+    [value]="value">
+
+  @if (suffixIcon) {
+    <mat-icon matSuffix>{{ suffixIcon }}</mat-icon>
+  }
+
+  @if (hint && !errorState) {
+    <mat-hint>{{ hint }}</mat-hint>
+  }
+
+  @if (errorState && errorMessage) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
+</mat-form-field>

@@ -2,8 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Header, HeaderAction } from "../../shared/components/header/header";
 
-import { PageTabsComponent, PageTab } from '../../shared/components/page-tabs/page-tab/page-tab';
+import { PageTab } from '../../shared/components/page-tabs/page-tab/page-tab';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+
 export interface Tab {
   key: string;
   label: string;
@@ -11,25 +13,26 @@ export interface Tab {
 }
 @Component({
   selector: 'app-master-detail-layout',
-  imports: [CommonModule,Header],
+  imports: [CommonModule,Header, MatIconModule],
   templateUrl: './master-detail-layout.html',
   styleUrl: './master-detail-layout.scss'
 })
 export class MasterDetailLayout {
 @Input() title: string = '';
-  @Input() iconSvg: string = ''; 
+  @Input() iconSvg: string = '';
+  @Input() icon: string = '';
   @Input() actions: HeaderAction[] = [];
   @Output() actionClick = new EventEmitter<string>();
 
-  @Input() tabs: PageTab[] = []; 
+  @Input() tabs: PageTab[] = [];
   @Input() activeTabKey: string = '';
   @Output() tabChange = new EventEmitter<string>();
 
-  
+
   @Input() isDetailOpen: boolean = false;
   @Input() detailTitle: string = 'Détails';
   @Input() isEmpty: boolean = false;
-  @Input() isLoading: boolean = false; 
+  @Input() isLoading: boolean = false;
   @Output() detailClose = new EventEmitter<void>();
 
   // --- Helpers pour le template ---

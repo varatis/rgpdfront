@@ -1,6 +1,7 @@
-import { ApplicationConfig, APP_INITIALIZER, inject, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, APP_INITIALIZER, inject, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { KeycloakAuthInterceptor } from './core/auth/keycloak-auth.interceptor';
 import { KeycloakService } from './core/auth/keycloak.service';
 
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
+    provideAnimationsAsync(),
     { provide: HTTP_INTERCEPTORS, useClass: KeycloakAuthInterceptor, multi: true },
     { provide: APP_INITIALIZER, useFactory: initializeKeycloak, multi: true },
   ]

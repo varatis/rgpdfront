@@ -7,13 +7,11 @@
 
   <nav class="sidebar-nav">
     @for (item of navItems; track item.route) {
-      <a 
-        [routerLink]="item.route" 
-        routerLinkActive="active" 
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="active"
         class="nav-item">
-        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path [attr.d]="getIconPath(item.icon)" />
-        </svg>
+        <mat-icon class="nav-icon">{{ getIconName(item.icon) }}</mat-icon>
         <span>{{ item.label }}</span>
       </a>
     }
@@ -21,11 +19,7 @@
 
   <div class="sidebar-footer">
     <button class="logout-btn" (click)="logout()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-        <polyline points="16 17 21 12 16 7"></polyline>
-        <line x1="21" y1="12" x2="9" y2="12"></line>
-      </svg>
+      <mat-icon>logout</mat-icon>
       <span>Se déconnecter</span>
     </button>
   </div>

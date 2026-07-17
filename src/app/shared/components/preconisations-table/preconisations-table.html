@@ -3,30 +3,22 @@
   <div class="table-header">
     <div class="header-cell sortable" (click)="toggleSort('titre')">
       <span>PRÉCONISATION</span>
-      <svg class="sort-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
+      <mat-icon class="sort-icon">sort</mat-icon>
     </div>
-    
+
     <div class="header-cell sortable" (click)="toggleSort('prioriteLabel')">
       <span>PRIORITÉ</span>
-      <svg class="sort-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
+      <mat-icon class="sort-icon">sort</mat-icon>
     </div>
-    
+
     <div class="header-cell sortable" (click)="toggleSort('complexiteLabel')">
       <span>COMPLEXITÉ</span>
-      <svg class="sort-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
+      <mat-icon class="sort-icon">sort</mat-icon>
     </div>
-    
+
     <div class="header-cell sortable" (click)="toggleSort('avancement')">
       <span>AVANCEMENT</span>
-      <svg class="sort-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
+      <mat-icon class="sort-icon">sort</mat-icon>
     </div>
 
     <div class="header-cell arrow-col"></div>
@@ -34,11 +26,11 @@
 
   <!-- Body -->
   <div class="table-body">
-    <div 
-      class="table-row" 
+    <div
+      class="table-row"
       *ngFor="let item of sortedData"
       (click)="onRowClick(item)">
-      
+
       <!-- Titre -->
       <div class="table-cell titre">
         {{ item.titre }}
@@ -70,9 +62,7 @@
 
       <!-- Flèche -->
       <div class="table-cell arrow">
-        <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1 13L7 7L1 1" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <mat-icon>chevron_right</mat-icon>
       </div>
     </div>
   </div>

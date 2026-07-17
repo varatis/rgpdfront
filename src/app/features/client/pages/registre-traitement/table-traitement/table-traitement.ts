@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Traitement } from '../../../../../core/models/traitement.model';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-table-traitement',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './table-traitement.html',
-  styleUrls: ['./table-traitement.scss'] 
+  styleUrls: ['./table-traitement.scss']
 })
 export class TableTraitement {
   @Input() data: Traitement[] = [];

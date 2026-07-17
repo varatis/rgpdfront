@@ -1,6 +1,7 @@
 // ===================================
 // VARIABLES
 // ===================================
+@use 'sass:color';
 $color-primary: #2E63CD;
 $color-text-dark: #111827;
 $color-text-medium: #374151;
@@ -110,7 +111,7 @@ $transition-smooth: 0.3s ease;
   transition: background 0.2s ease;
 
   &:hover {
-    background: darken($color-primary, 5%);
+    background: color.adjust($color-primary, $lightness: -5%);
   }
 }
 
@@ -219,7 +220,7 @@ $transition-smooth: 0.3s ease;
   }
 
   &.selected {
-    background: lighten($color-primary, 45%);
+    background: color.adjust($color-primary, $lightness: 45%);
   }
 }
 

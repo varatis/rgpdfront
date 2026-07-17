@@ -4,7 +4,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 export interface HeaderAction {
   label: string;
-  icon: string;
+  icon?: string;
   action: string;
   color?: 'primary' | 'default';
 }

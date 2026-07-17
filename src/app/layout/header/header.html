@@ -1,8 +1,10 @@
-<div class="page-header">
+<mat-toolbar class="page-header">
   <div class="header-content">
     <div class="title-section">
       @if (showBackButton) {
-        <button class="back-button" (click)="onBack()">←</button>
+        <button mat-icon-button (click)="onBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
       }
       <h1 class="page-title">{{ title }}</h1>
     </div>
@@ -13,4 +15,4 @@
   <div class="header-actions">
     <ng-content></ng-content>
   </div>
-</div>
+</mat-toolbar>

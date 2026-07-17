@@ -1,51 +1,33 @@
 .pagination {
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.75rem 1rem;
-  
+  padding: 16px 0;
 
-  .page-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: none;
-    border: none;
-     align-items: center;
-  justify-content: center;
-  display: flex;
-    font-size: 0.85rem;
-    color: #374151;
-    cursor: pointer;
-    transition: all 0.15s ease;
+  mat-paginator {
+    background-color: transparent;
 
-    &:hover:not(:disabled) {
-      background: #f3f4f6;
+    ::ng-deep .mat-mdc-paginator-range-label {
+      color: var(--mat-sys-on-surface-variant);
     }
 
-    &.active {
-      border: 1px solid #d1d5db;
-      background: #2E63CD;
-      color: white;
-      border-color: #2E63CD;
-    }
+    ::ng-deep .mat-mdc-icon-button {
+      color: var(--mat-sys-primary);
 
-    &:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-
-    &.dots {
-      background: none;
-      cursor: default;
-      opacity: 1;
-      border: none;
-      
-      &:hover {
-        background: none;
+      &:disabled {
+        color: var(--mat-sys-on-surface);
+        opacity: 0.38;
       }
     }
+
+    ::ng-deep .mat-mdc-text-button {
+      color: var(--mat-sys-primary);
+    }
   }
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
