@@ -3,7 +3,7 @@ export const environment = {
     apiURL: 'https://demo.minds-rgpd.minds.k8s/apims',
     keycloak: {
         url: 'https://sso.minds.k8s/auth',
-        realm: 'creative',
+        realm: 'minds-rgpd',
         clientId: 'minds-saas-rgpd',
         redirectUri: window.location.origin
     }
