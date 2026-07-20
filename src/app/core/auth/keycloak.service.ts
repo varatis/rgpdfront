@@ -126,11 +126,16 @@ export class KeycloakService {
   }
 
   getClientName(): string | null {
-    // Les groupes client sont au format "/clients/<nom-du-client>"
+    // Les groupes client peuvent être au format "/clients/<nom-du-client>" ou "<nom-du-client>"
     for (const group of this.getClientGroups()) {
-      const match = /^\/clients\/(.+)$/.exec(group);
-      if (match) {
-        return match[1];
+      // Essayer d'abord avec le préfixe /clients/
+      const matchWithPrefix = /^\/clients\/(.+)$/.exec(group);
+      if (matchWithPrefix) {
+        return matchWithPrefix[1];
+      }
+      // Si pas de préfixe, retourner le groupe tel quel
+      if (group && !group.startsWith('/')) {
+        return group;
       }
     }
 
