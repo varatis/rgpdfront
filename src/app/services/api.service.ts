@@ -55,7 +55,7 @@ export class ApiService {
     return this.http.put<TraitementDetails>(this.apiUrl + "traitements/" + id, payload);
   }
 
-  deleteTraitement(id: number): Observable<void> {
+  deleteTraitement(id: string): Observable<void> {
     return this.http.delete<void>(this.apiUrl + "traitements/" + id);
   }
 

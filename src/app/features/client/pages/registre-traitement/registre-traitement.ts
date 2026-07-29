@@ -149,7 +149,7 @@ export class RegistreTraitement implements OnInit {
       return;
     }
 
-    this.apiService.deleteTraitement(this.traitementSelectionne.idFonctionnel)
+    this.apiService.deleteTraitement(this.traitementSelectionne.identifiant)
       .subscribe({
         next: () => {
           this.closeDetail();
