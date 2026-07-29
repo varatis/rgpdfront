@@ -48,6 +48,7 @@ export interface CreateTraitementPayload {
 }
 
 export interface Traitement {
+    identifiant: string,
     idFonctionnel: number,
     nom: string,
     gestionnaireMiseEnOeuvre: string,
