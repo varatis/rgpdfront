@@ -1,7 +1,7 @@
 app:
   name: minds-rgpd-front-ng-int
   env: int
-  apiurl: "https://int.minds-rgpd.minds.k8s/apims"
+  apiurl: "https://int.minds-rgpd.minds.k8s/apims/"
   ingress:
     interne:
       host: int.minds-rgpd.minds.k8s
