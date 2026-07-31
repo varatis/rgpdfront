@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Header, HeaderAction } from '../../../../shared/components/header/header';
 import { TableTraitement } from '../registre-traitement/table-traitement/table-traitement';
@@ -8,17 +8,26 @@ import { CreateTraitementModal } from '../registre-traitement/create-traitement-
 import { ApiService } from '../../../../services/api.service';
 import { KeycloakService } from '../../../../core/auth/keycloak.service';
 import { Traitement, TraitementDetails } from '../../../../core/models/traitement.model';
+import { FiltreTraitement } from './filtre-traitement/filtre-traitement';
 import { MatIconModule } from '@angular/material/icon';
+import { FiltreTraitementPayload } from '../../../../core/models/filtre-traitement.payload';
+import { Subject } from 'rxjs';
+import { debounceTime, switchMap, finalize } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PageResponse } from '../../../../core/models/page-response.model';
 
 @Component({
   selector: 'app-registre-traitement',
   standalone: true,
-  imports: [CommonModule, Header, TableTraitement, Pagination, DetailsTraitementComponent, CreateTraitementModal, MatIconModule],
+  imports: [CommonModule, Header, TableTraitement, Pagination, DetailsTraitementComponent, CreateTraitementModal, MatIconModule, FiltreTraitement],
   templateUrl: './registre-traitement.html',
-  styleUrls: ['./registre-traitement.scss'],
+  styleUrl: './registre-traitement.scss',
 })
 export class RegistreTraitement implements OnInit {
-  constructor(private apiService: ApiService, private keycloakService: KeycloakService) {}
+  private apiService = inject(ApiService);
+  private keycloakService = inject(KeycloakService);
+  private destroyRef = inject(DestroyRef);
+  private load$ = new Subject<number>();
 
   title = 'Registre des activités de traitement';
   icon = `
@@ -54,6 +63,12 @@ export class RegistreTraitement implements OnInit {
 
   currentPage = 1;
   traitementSelectionne?: Traitement;
+  filtreSelectionne = false;
+  currentFilters: FiltreTraitementPayload = {
+    traitement: '',
+    gestionnaire: '',
+    finalitePrincipale: ''
+  };
   data: Traitement[] = [];
   page = 0;
   size = 10;
@@ -67,34 +82,42 @@ export class RegistreTraitement implements OnInit {
   currentTraitementDetails: TraitementDetails | undefined;
 
   ngOnInit(): void {
+    this.load$.pipe(
+      debounceTime(150),
+      switchMap(page =>
+        this.apiService.getTraitements(page, this.size, this.sortField, this.sortDirection, this.keycloakService.getClientName() ?? undefined, this.currentFilters).pipe(
+          finalize(() => this.loading = false)
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (res: PageResponse<Traitement>) => {
+        this.data = res.content;
+        this.page = res.number;
+        this.size = res.size;
+        this.totalElements = res.totalElements;
+        this.totalPages = res.totalPages;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+
     this.loadTraitements(0);
   }
 
   loadTraitements(page: number): void {
     this.loading = true;
-    const clientName = this.keycloakService.getClientName();
-    this.apiService.getTraitements(page, this.size, this.sortField, this.sortDirection, clientName ?? undefined)
-      .subscribe({
-        next: (res) => {
-          this.data = res.content;
-          this.page = res.number;
-          this.size = res.size;
-          this.totalElements = res.totalElements;
-          this.totalPages = res.totalPages;
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-        }
-      });
+    this.load$.next(page);
   }
+
 
   onActionClick(action: string) {
     if (action === 'add') {
       this.showCreateModal = true;
     } else if (action === 'filter') {
-      // Filter logic
+      this.closeDetail();
+      this.filtreSelectionne = true;
     }
   }
 
@@ -112,6 +135,15 @@ export class RegistreTraitement implements OnInit {
     this.sortDirection = sort.direction;
     this.currentPage = 1;
     this.loadTraitements(0);
+  }
+
+  onFiltreChange(filtre: FiltreTraitementPayload) {
+    this.currentFilters = filtre;
+    this.loadTraitements(0);
+  }
+
+  onFiltreClose() {
+    this.filtreSelectionne = false;
   }
 
   onPageChange(page: number) {

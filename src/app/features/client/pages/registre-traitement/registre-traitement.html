@@ -58,6 +58,14 @@
         </app-details-traitement>
       </div>
     }
+     @if (filtreSelectionne) {
+      <div>
+          <app-filtre-traitement
+          (filtreChange)="onFiltreChange($event)"
+          (filtreClose)="onFiltreClose()">
+        </app-filtre-traitement>
+      </div>
+    }
   </div>
 </div>
 
