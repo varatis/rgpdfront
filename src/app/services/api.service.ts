@@ -7,6 +7,7 @@ import { CreateTraitementPayload, Traitement, TraitementDetails } from '../core/
 import { PageResponse } from '../core/models/page-response.model';
 import { Etablissement } from '../core/models/etablissement.model';
 import { Client } from '../core/models/client.model';
+import { FiltreTraitementPayload } from '../core/models/filtre-traitement.payload';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class ApiService {
 
 
   getTraitements(page: number, size: number, sortField: string = 'id',
-      sortDirection: 'asc' | 'desc' = 'asc', clientNom?: string): Observable<PageResponse<Traitement>> {
+      sortDirection: 'asc' | 'desc' = 'asc', clientNom?: string, filters?: Partial<FiltreTraitementPayload>): Observable<PageResponse<Traitement>> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
@@ -34,6 +35,16 @@ export class ApiService {
 
     if (clientNom) {
       params = params.set('clientNom', clientNom);
+    }
+
+    if (filters?.traitement) {
+      params = params.set('nom', filters.traitement);
+    }
+    if (filters?.gestionnaire) {
+      params = params.set('gestionnaireMiseEnOeuvre', filters.gestionnaire);
+    }
+    if (filters?.finalitePrincipale) {
+      params = params.set('finalitePrincipale', filters.finalitePrincipale);
     }
 
     return this.http.get<PageResponse<Traitement>>(
