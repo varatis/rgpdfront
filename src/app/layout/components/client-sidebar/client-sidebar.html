@@ -9,7 +9,7 @@
     </div>
 
     <nav class="mini-nav">
-      <a [routerLink]="null" class="mini-nav-item disabled" aria-disabled="true" tabindex="-1" title="Compte client">
+      <a [routerLink]="null" class="mini-nav-item" (click)="toggleClientMenu()" title="Compte client">
         <mat-icon>business</mat-icon>
       </a>
 
@@ -31,6 +31,7 @@
   </aside>
 
   <!-- Sidebar principale (240px) -->
+  @if (showClientMenu()) {
   <aside class="sidebar-main">
     <div class="sidebar-header">
       <div class="client-info">
@@ -53,6 +54,7 @@
       }
     </nav>
   </aside>
+  }
 </div>
 
 }

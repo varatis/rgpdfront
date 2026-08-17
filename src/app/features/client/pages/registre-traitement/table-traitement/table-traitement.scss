@@ -22,10 +22,10 @@
 
 .header-cell {
   display: flex;
-  flex-direction: row;  
-  align-items: center;     
+  flex-direction: row;
+  align-items: center;
   justify-content: flex-start;
-  gap: 4px;                 
+  gap: 4px;
   font-weight: 600;
   cursor: pointer;
   color: #333;
@@ -33,18 +33,12 @@
   &.sortable {
     .sort-icon {
       stroke: currentColor;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      opacity: 0.6;
-      transform: rotate(90deg);
+      transition: opacity 0.2s ease;
+      opacity: 0.4;
     }
 
-    &.asc .sort-icon {
-      transform: rotate(270deg);
-      opacity: 1;
-    }
-
-    &.desc .sort-icon {
-      transform: rotate(90deg);   
+    &:hover .sort-icon,
+    &.active .sort-icon {
       opacity: 1;
     }
 

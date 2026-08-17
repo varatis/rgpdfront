@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { KeycloakService } from '../../../core/auth/keycloak.service';
 import { Location } from '@angular/common';
-import { computed } from '@angular/core';
 import { CLIENT_NAV_ITEMS } from '../../../shared/config/navigation.config';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -14,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ClientSidebar {
   currentUser: any;
+  showClientMenu = signal(false);
   navItems = computed(() => {
     const user = this.currentUser();
     if (!user) return [];
@@ -69,6 +69,8 @@ export class ClientSidebar {
     this.keycloakService.logout();
   }
 
-
+  toggleClientMenu(): void {
+    this.showClientMenu.update(v => !v);
+  }
 
 }

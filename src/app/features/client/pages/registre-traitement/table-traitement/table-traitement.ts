@@ -1,33 +1,47 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { Traitement } from '../../../../../core/models/traitement.model';
 import { MatIconModule } from '@angular/material/icon';
+
+export type SortColumn = 'idFonctionnel' | 'nom' | 'gestionnaireMiseEnOeuvre' | 'finalitePrincipale' | null;
+export type SortDirection = 'asc' | 'desc';
+export interface SortEvent { field: SortColumn; direction: SortDirection; }
 
 @Component({
   selector: 'app-table-traitement',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule],
   templateUrl: './table-traitement.html',
-  styleUrls: ['./table-traitement.scss']
+  styleUrls: ['./table-traitement.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableTraitement {
-  @Input() data: Traitement[] = [];
-  @Input() selectedId?: number;
-  @Input() loading = false;
-  @Output() select = new EventEmitter<Traitement>();
-  @Output() sortChange = new EventEmitter<{ field: string; direction: 'asc' | 'desc' }>();
-  sortColumn: string = '';
-  sortDirection: 'asc' | 'desc' = 'asc';
+  data = input<Traitement[]>([]);
+  selectedId = input<number | undefined>(undefined);
+  loading = input(false);
+  sortColumn = input<SortColumn>(null);
+  sortDirection = input<SortDirection>('asc');
+  select = output<Traitement>();
+  sortChange = output<SortEvent>();
 
-  toggleSort(column: string) {
-    if (this.sortColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
+
+  toggleSort(column: SortColumn) {
+    let newDirection: SortDirection = 'asc';
+    if (this.sortColumn() === column) {
+      newDirection = this.sortDirection() === 'asc' ? 'desc' : 'asc';
     }
-    this.sortChange.emit({ field: this.sortColumn, direction: this.sortDirection });
+    this.sortChange.emit({ field: column, direction: newDirection });
   }
+
+  getSortIcon(column: SortColumn): string {
+    if (this.sortColumn() !== column) return 'unfold_more';
+    return this.sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward';
+  }
+
+  getAriaSort(column: SortColumn): 'ascending' | 'descending' | 'none' {
+    if (this.sortColumn() !== column) return 'none';
+    return this.sortDirection() === 'asc' ? 'ascending' : 'descending';
+  }
+
   onSelect(item: Traitement) {
     this.select.emit(item);
   }
