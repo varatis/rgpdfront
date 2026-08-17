@@ -84,11 +84,22 @@ export class RegistreTraitement implements OnInit {
   ngOnInit(): void {
     this.load$.pipe(
       debounceTime(150),
-      switchMap(page =>
-        this.apiService.getTraitements(page, this.size, this.sortField, this.sortDirection, this.keycloakService.getClientName() ?? undefined, this.currentFilters).pipe(
+      switchMap(page => {
+        const clientNameArg = this.keycloakService.getClientName();
+        const safeClientName = (clientNameArg === null) ? undefined : clientNameArg;
+        const safeSortField = (this.sortField === null) ? undefined : this.sortField;
+
+        return this.apiService.getTraitements(
+          page,
+          this.size,
+          safeSortField,
+          this.sortDirection,
+          safeClientName,
+          this.currentFilters
+        ).pipe(
           finalize(() => this.loading = false)
-        )
-      ),
+        );
+      }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (res: PageResponse<Traitement>) => {
