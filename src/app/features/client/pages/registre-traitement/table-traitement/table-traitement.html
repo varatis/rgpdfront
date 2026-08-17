@@ -2,42 +2,58 @@
   <div class="table-header">
     <div
       class="header-cell sortable id"
-      [class.asc]="sortColumn === 'idFonctionnel' && sortDirection === 'asc'"
-      [class.desc]="sortColumn === 'idFonctionnel' && sortDirection === 'desc'"
+      [class.active]="sortColumn() === 'idFonctionnel'"
+      role="columnheader"
+      [attr.aria-sort]="getAriaSort('idFonctionnel')"
       (click)="toggleSort('idFonctionnel')"
+      (keydown.enter)="toggleSort('idFonctionnel')"
+      (keydown.space)="toggleSort('idFonctionnel')"
+      tabindex="0"
     >
       <span class="header-text">ID</span>
-      <mat-icon class="sort-icon" >sort</mat-icon>
+      <mat-icon class="sort-icon">{{ getSortIcon('idFonctionnel') }}</mat-icon>
     </div>
 
     <div
       class="header-cell sortable"
-      [class.asc]="sortColumn === 'nom' && sortDirection === 'asc'"
-      [class.desc]="sortColumn === 'nom' && sortDirection === 'desc'"
+      [class.active]="sortColumn() === 'nom'"
+      role="columnheader"
+      [attr.aria-sort]="getAriaSort('nom')"
       (click)="toggleSort('nom')"
+      (keydown.enter)="toggleSort('nom')"
+      (keydown.space)="toggleSort('nom')"
+      tabindex="0"
     >
       TRAITEMENT
-      <mat-icon class="sort-icon" >sort</mat-icon>
+      <mat-icon class="sort-icon">{{ getSortIcon('nom') }}</mat-icon>
     </div>
 
     <div
       class="header-cell sortable col-gestionnaire"
-      [class.asc]="sortColumn === 'gestionnaireMiseEnOeuvre' && sortDirection === 'asc'"
-      [class.desc]="sortColumn === 'gestionnaireMiseEnOeuvre' && sortDirection === 'desc'"
+      [class.active]="sortColumn() === 'gestionnaireMiseEnOeuvre'"
+      role="columnheader"
+      [attr.aria-sort]="getAriaSort('gestionnaireMiseEnOeuvre')"
       (click)="toggleSort('gestionnaireMiseEnOeuvre')"
+      (keydown.enter)="toggleSort('gestionnaireMiseEnOeuvre')"
+      (keydown.space)="toggleSort('gestionnaireMiseEnOeuvre')"
+      tabindex="0"
     >
       GESTIONNAIRE
-      <mat-icon class="sort-icon" >sort</mat-icon>
+      <mat-icon class="sort-icon">{{ getSortIcon('gestionnaireMiseEnOeuvre') }}</mat-icon>
     </div>
 
     <div
       class="header-cell sortable col-finalite"
-      [class.asc]="sortColumn === 'finalite' && sortDirection === 'asc'"
-      [class.desc]="sortColumn === 'finalite' && sortDirection === 'desc'"
+      [class.active]="sortColumn() === 'finalitePrincipale'"
+      role="columnheader"
+      [attr.aria-sort]="getAriaSort('finalitePrincipale')"
       (click)="toggleSort('finalitePrincipale')"
+      (keydown.enter)="toggleSort('finalitePrincipale')"
+      (keydown.space)="toggleSort('finalitePrincipale')"
+      tabindex="0"
     >
       FINALITÉ PRINCIPALE
-      <mat-icon class="sort-icon" >sort</mat-icon>
+      <mat-icon class="sort-icon">{{ getSortIcon('finalitePrincipale') }}</mat-icon>
     </div>
 
     <div class="header-cell-arrow"></div>
@@ -45,29 +61,30 @@
 
   <div class="table-body">
 
-    <div *ngIf="loading" class="loading-overlay">
+    @if (loading()) {
+    <div class="loading-overlay">
       <div class="spinner"></div>
     </div>
+    } @else {
+      @for (item of data(); track item.idFonctionnel) {
+        <div
+          class="row"
+          [attr.data-testid]="'_lst_traitement_row_' + item.idFonctionnel"
+          (click)="onSelect(item)"
+          [class.selected]="item.idFonctionnel === selectedId()"
+        >
+          <div class="cell id" data-testid="_val_traitement_id">
 
-    <ng-container *ngIf="!loading">
-    <div
-      class="row"
-      *ngFor="let item of data"
-      [attr.data-testid]="'_lst_traitement_row_' + item.idFonctionnel"
-      (click)="onSelect(item)"
-      [class.selected]="item.idFonctionnel === selectedId"
-    >
-      <div class="cell id" data-testid="_val_traitement_id">
+            <mat-icon class="arming-countdown">arming_countdown</mat-icon>
 
-        <mat-icon class="arming-countdown">arming_countdown</mat-icon>
-
-        {{ item.idFonctionnel }}
-      </div>
-      <div class="cell name" data-testid="_val_traitement_nom">{{ item.nom }}</div>
-      <div class="cell col-gestionnaire" data-testid="_val_traitement_gestionnaire">{{ item.gestionnaireMiseEnOeuvre }}</div>
-      <div class="cell col-finalite" >{{ item.finalitePrincipale }}</div>
-      <div class="arrow">›</div>
-    </div>
-    </ng-container>
+            {{ item.idFonctionnel }}
+          </div>
+          <div class="cell name" data-testid="_val_traitement_nom">{{ item.nom }}</div>
+          <div class="cell col-gestionnaire" data-testid="_val_traitement_gestionnaire">{{ item.gestionnaireMiseEnOeuvre }}</div>
+          <div class="cell col-finalite" >{{ item.finalitePrincipale }}</div>
+          <div class="arrow">›</div>
+        </div>
+      }
+    }
   </div>
 </div>

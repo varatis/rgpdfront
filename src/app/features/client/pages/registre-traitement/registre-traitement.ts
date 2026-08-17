@@ -1,10 +1,10 @@
 import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Header, HeaderAction } from '../../../../shared/components/header/header';
-import { TableTraitement } from '../registre-traitement/table-traitement/table-traitement';
+import { TableTraitement, SortColumn, SortDirection, SortEvent } from './table-traitement/table-traitement';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
-import { DetailsTraitementComponent } from '../registre-traitement/details-traitement/details-traitement';
-import { CreateTraitementModal } from '../registre-traitement/create-traitement-modal/create-traitement-modal';
+import { DetailsTraitementComponent } from './details-traitement/details-traitement';
+import { CreateTraitementModal } from './create-traitement-modal/create-traitement-modal';
 import { ApiService } from '../../../../services/api.service';
 import { KeycloakService } from '../../../../core/auth/keycloak.service';
 import { Traitement, TraitementDetails } from '../../../../core/models/traitement.model';
@@ -74,8 +74,8 @@ export class RegistreTraitement implements OnInit {
   size = 10;
   totalElements = 0;
   totalPages = 0;
-  sortField: string = 'idFonctionnel';
-  sortDirection: 'asc' | 'desc' = 'asc';
+  sortField: SortColumn = null;
+  sortDirection: SortDirection = 'asc';
   loading = false;
   showCreateModal = false;
   showEditModal = false;
@@ -108,7 +108,23 @@ export class RegistreTraitement implements OnInit {
 
   loadTraitements(page: number): void {
     this.loading = true;
-    this.load$.next(page);
+    const clientName = this.keycloakService.getClientName();
+    const sortFieldToUse = this.sortField ?? 'idFonctionnel';
+    this.apiService.getTraitements(page, this.size, sortFieldToUse, this.sortDirection, clientName ?? undefined)
+      .subscribe({
+        next: (res) => {
+          this.data = res.content;
+          this.page = res.number;
+          this.size = res.size;
+          this.totalElements = res.totalElements;
+          this.totalPages = res.totalPages;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        }
+      });
   }
 
 
@@ -130,11 +146,13 @@ export class RegistreTraitement implements OnInit {
     this.loadTraitements(0);
   }
 
-  onSortChange(sort: { field: string; direction: 'asc' | 'desc' }) {
-    this.sortField = sort.field;
-    this.sortDirection = sort.direction;
-    this.currentPage = 1;
-    this.loadTraitements(0);
+  onSortChange(sort: SortEvent) {
+    if (sort.field) {
+      this.sortField = sort.field;
+      this.sortDirection = sort.direction;
+      this.currentPage = 1;
+      this.loadTraitements(0);
+    }
   }
 
   onFiltreChange(filtre: FiltreTraitementPayload) {
