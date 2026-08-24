@@ -82,7 +82,7 @@
               data-testid="_val_selected_selected_preco_priorite"
               class="badge"
               [ngClass]="getPrioriteClass(details.priorite)">
-              {{ value(details.prioriteh2 || details.priorite) }}
+              {{ value(details.prioriteLabel || details.priorite) }}
             </span>
           </div>
           <div class="badge-item">
@@ -91,7 +91,7 @@
               data-testid="_val_selected_preco_complexite"
               class="badge"
               [ngClass]="getComplexiteClass(details.complexite)">
-              {{ value(details.complexiteh2 || details.complexite) }}
+              {{ value(details.complexiteLabel || details.complexite) }}
             </span>
           </div>
           <div class="badge-item">

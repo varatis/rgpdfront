@@ -1,10 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Location } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import { KeycloakService } from '../../../core/auth/keycloak.service';
+import { Location } from '@angular/common';
 import { CLIENT_NAV_ITEMS } from '../../../shared/config/navigation.config';
 import { UserRole } from '../../../shared/interfaces/navigation.interface';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-client-sidebar',
@@ -13,36 +13,42 @@ import { UserRole } from '../../../shared/interfaces/navigation.interface';
   styleUrl: './client-sidebar.scss'
 })
 export class ClientSidebar {
-  private readonly keycloakService = inject(KeycloakService);
-  private readonly location = inject(Location);
-
-  currentUser = computed(() => {
-    const role = this.keycloakService.getUserRole();
-    const email = this.keycloakService.getUserEmail();
-    const name = this.keycloakService.getUserName();
-    return role ? {
-      role,
-      email,
-      clientName: name || 'Client',
-      clientLogo: 'assets/images/client_logo.png'
-    } : null;
-  });
-
-  isEndUser = computed(() => this.currentUser()?.role === 'client');
-
-  showClientMenu = signal(this.keycloakService.getUserRole() === 'client');
-
+  currentUser: any;
+  showClientMenu = signal(false);
   navItems = computed(() => {
     const user = this.currentUser();
-    if (!user) {
-      return [];
-    }
-    return CLIENT_NAV_ITEMS.filter(item => item.roles.includes(user.role as UserRole));
+    if (!user) return [];
+
+    // Filtrer les items selon le rôle de l'utilisateur
+    const filtered = CLIENT_NAV_ITEMS.filter(item => item.roles.includes(user.role));
+    return filtered;
   });
 
-  logo = computed(() => this.currentUser()?.clientLogo || 'assets/images/creative_logo.png');
+  logo = computed(() => {
+    const user = this.currentUser();
+    return user?.clientLogo || 'assets/images/creative_logo.png';
+  });
 
-  clientName = computed(() => this.currentUser()?.clientName || 'Client');
+  clientName = computed(() => {
+    return this.currentUser()?.clientName || 'Client';
+  });
+
+  constructor(
+    private keycloakService: KeycloakService,
+    private location: Location
+  ) {
+    this.currentUser = computed(() => {
+      const role = this.keycloakService.getUserRole();
+      const email = this.keycloakService.getUserEmail();
+      const name = this.keycloakService.getUserName();
+      return role ? {
+        role,
+        email,
+        clientName: name || 'Client',
+        clientLogo: 'assets/images/client_logo.png'
+      } : null;
+    });
+  }
 
   getIconName(iconName: string): string {
     const icons: { [key: string]: string } = {

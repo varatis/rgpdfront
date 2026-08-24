@@ -32,13 +32,13 @@ export const CLIENT_NAV_ITEMS: NavItem[] = [
     label: 'Registre de traitement',
     route: 'registre-traitement',
     icon: 'registre',
-    roles: ['admin', 'client', 'superadmin']
+    roles: ['admin', 'client', 'user', 'superadmin']
   },
   {
     label: 'Suivi des préconisations',
     route: 'suivi-preconisations',
     icon: 'suivi',
-    roles: ['client']
+    roles: ['user', 'client']
   },
   {
     label: 'Registre des demandes',

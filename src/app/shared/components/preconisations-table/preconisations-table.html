@@ -27,7 +27,7 @@
     </div>
 
     <div
-      class="header-cell sortable"
+      class="header-cell sortable col-complexite"
       [class.active]="sortColumn() === 'complexite'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('complexite')"
@@ -40,7 +40,7 @@
     </div>
 
     <div
-      class="header-cell sortable"
+      class="header-cell sortable col-avancement"
       [class.active]="sortColumn() === 'etatAvancement'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('etatAvancement')"
@@ -78,13 +78,13 @@
             </span>
       </div>
 
-      <div class="table-cell complexite">
+      <div class="table-cell complexite col-complexite">
         <span data-testid="_val_preco_complexite" class="badge" [ngClass]="getComplexiteClass(item.complexite)">
           {{ item.complexite || '—' }}
         </span>
       </div>
 
-      <div class="table-cell avancement">
+      <div class="table-cell avancement col-avancement">
         @let percent = getAvancementPercent(item.etatAvancement);
         @if (percent !== null) {
         <div class="progress-wrapper">

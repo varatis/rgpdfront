@@ -56,7 +56,7 @@ export const routes: Routes = [
       {
         path: 'registre-traitement',
         canActivate: [roleGuard],
-        data: { roles: ['admin', 'client', 'superadmin'] },
+        data: { roles: ['admin', 'client', 'user', 'superadmin'] },
         loadComponent: () => import('./features/client/pages/registre-traitement/registre-traitement')
           .then(m => m.RegistreTraitement)
       },
@@ -86,7 +86,7 @@ export const routes: Routes = [
       {
         path: 'suivi-preconisations',
         canActivate: [roleGuard],
-        data: { roles: ['client'] },
+        data: { roles: ['user', 'client'] },
         loadComponent: () => import('./features/user/pages/suivi-preconisations/suivi-preconisations')
           .then(m => m.SuiviPreconisations)
 
