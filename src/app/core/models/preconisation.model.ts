@@ -100,6 +100,9 @@ export function scaleLabel(value?: string | null): string {
   if (value == null || value === '') {
     return '—';
   }
-  const stripped = value.replace(/^\s*\d+\s*[-–—.:：]\s*/u, '').trim();
+  const stripped = value
+    .normalize('NFKC')
+    .replace(/^\s*\d+\s*[^\p{L}]+/u, '')
+    .trim();
   return stripped || value.trim();
 }

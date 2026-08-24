@@ -132,7 +132,7 @@ export class SuiviPreconisations implements OnInit {
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe((res: PageResponse<Preconisation>) => {
-      this.data = res.content ?? [];
+      this.data = (res.content ?? []).map(item => this.normalizeScales(item));
       this.page = res.number;
       this.size = res.size;
       this.totalElements = res.totalElements;
@@ -154,7 +154,7 @@ export class SuiviPreconisations implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe((details) => {
       if (this.selectedPreconisation?.identifiant === details.identifiant) {
-        this.selectedDetails = details;
+        this.selectedDetails = this.normalizeScales(details);
       }
     });
 
@@ -277,5 +277,25 @@ export class SuiviPreconisations implements OnInit {
 
   commentaireOf(details: PreconisationDetails | Preconisation): string | undefined {
     return 'commentaire' in details ? details.commentaire : undefined;
+  }
+
+  private normalizeScales<T extends Preconisation>(item: T): T {
+    const priorite = this.stripScale(item.priorite);
+    const complexite = this.stripScale(item.complexite);
+    return {
+      ...item,
+      priorite,
+      prioriteLabel: this.stripScale(item.prioriteLabel) || priorite,
+      complexite,
+      complexiteLabel: this.stripScale(item.complexiteLabel) || complexite
+    };
+  }
+
+  private stripScale(value?: string): string | undefined {
+    if (!value) {
+      return value;
+    }
+    const label = scaleLabel(value);
+    return label === '—' ? value : label;
   }
 }
