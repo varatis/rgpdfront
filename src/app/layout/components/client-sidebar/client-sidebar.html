@@ -1,6 +1,32 @@
 @if (currentUser()) {
+@if (isEndUser()) {
+<aside class="sidebar-user" data-testid="_lst_sidebar_user">
+  <div class="sidebar-header">
+    <div class="logo">
+          <img [src]="logo()" [alt]="clientName()" />
+        </div>
+      </div>
+  <nav class="sidebar-nav">
+    @for (item of navItems(); track item.route) {
+    <a [routerLink]="item.route"
+       routerLinkActive="active"
+       class="nav-item"
+       [attr.data-testid]="'_btn_nav_' + item.route">
+      <mat-icon class="nav-icon">{{ getIconName(item.icon) }}</mat-icon>
+      <span>{{ item.label }}</span>
+    </a>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()" title="Se déconnecter">
+      <mat-icon>logout</mat-icon>
+      <span>Se déconnecter</span>
+    </button>
+  </div>
+</aside>
+} @else {
 <div class="double-sidebar-container">
-  <!-- Mini sidebar gauche (60px) -->
   <aside class="sidebar-mini">
     <div class="mini-header">
       <div class="logo-triangle">
@@ -18,7 +44,7 @@
       </a>
 
       <a [routerLink]="null" class="mini-nav-item disabled" aria-disabled="true" tabindex="-1"
-        title="Gestion des préconisations">
+         title="Gestion des préconisations">
         <mat-icon>tune</mat-icon>
       </a>
     </nav>
@@ -30,7 +56,6 @@
     </div>
   </aside>
 
-  <!-- Sidebar principale (240px) -->
   @if (showClientMenu()) {
   <aside class="sidebar-main">
     <div class="sidebar-header">
@@ -55,6 +80,6 @@
     </nav>
   </aside>
   }
-</div>
-
+  </div>
+  }
 }

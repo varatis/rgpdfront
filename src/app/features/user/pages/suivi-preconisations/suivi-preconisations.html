@@ -2,80 +2,116 @@
   [title]="pageTitle"
   [iconSvg]="icon"
   [actions]="actions"
-  [isDetailOpen]="!!selectedPreconisation"
-  [detailTitle]="selectedPreconisation ? selectedPreconisation.titre : 'Détails'"
+  [isDetailOpen]="isDetailOpen"
+  [detailTitle]="detailTitle"
   (actionClick)="onHeaderAction($event)"
   (detailClose)="onCloseDetail()">
 
-  <!-- Table avec badges -->
   <app-preconisations-table
     slot="list-items"
-    [data]="displayedPreconisations"
-    (rowClick)="onSelectPreconisation($event)">
+    [data]="data"
+    [loading]="loading"
+    [selectedId]="selectedPreconisation?.identifiant"
+    [sortColumn]="sortField"
+    [sortDirection]="sortDirection"
+    (rowClick)="onSelectPreconisation($event)"
+    (sortChange)="onSortChange($event)">
   </app-preconisations-table>
 
-  <!-- Pagination -->
   <app-pagination
     slot="pagination"
     [currentPage]="currentPage"
     [totalPages]="totalPages"
+    [pageSize]="size"
     (pageChange)="goToPage($event)">
   </app-pagination>
 
-  <!-- État vide -->
-  @if(displayedPreconisations.length === 0) {
+  @if (!loading && data.length === 0) {
     <div slot="empty-state">
       <div class="empty-state">
         <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF">
           <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"
                 stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <p data-testid="_lib_empty_preconisations">Aucune préconisation trouvée</p>
+        <p data-testid="_lib_empty_preconisations">{{ error || 'Aucune préconisation trouvée' }}</p>
       </div>
     </div>
   }
 
-  <!-- Détails -->
-  @if(selectedPreconisation) {
+  @if (filtreSelectionne) {
+  <div slot="detail-content">
+    <app-filtre-preconisation
+      (filtreChange)="onFiltreChange($event)"
+      (filtreClose)="onFiltreClose()">
+    </app-filtre-preconisation>
+  </div>
+  } @else if (detailView; as details) {
     <div slot="detail-content">
       <div class="detail-content">
-        <div class="field-group">
-          <label data-testid="_lib_label_selected_preco_description">Description</label>
-          <p data-testid="_val_selected_preco_description">{{ selectedPreconisation.description }}</p>
+        @if (detailsLoading && !selectedDetails) {
+        <div class="detail-loading">Chargement des détails...</div>
+        }
+        <div class="detail-title">
+          <h2 data-testid="_lib_h2_selected_preco_description">Description</h2>
+          <p data-testid="_val_selected_preco_description">{{ value(explicationOf(details)) }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_selected_preco_risque">Risque encouru</label>
-          <p data-testid="_val_selected_preco_risque">{{ selectedPreconisation.risqueEncouru }}</p>
+        <div class="detail-title">
+          <h2 data-testid="_lib_h2_selected_preco_risque">Risque encouru</h2>
+          <p data-testid="_val_selected_preco_risque">{{ value(risqueOf(details)) }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_selected_preco_contrainte">Contrainte</label>
-          <p data-testid="_val_selected_preco_contrainte">{{ selectedPreconisation.contrainte }}</p>
+        <div class="detail-title">
+          <h2 data-testid="_lib_h2_selected_preco_contrainte">Contrainte</h2>
+          <p data-testid="_val_selected_preco_contrainte">{{ value(contraintesOf(details)) }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_selected_preco_cout">Coût</label>
-          <p data-testid="_val_selected_preco_cout">{{ selectedPreconisation.cout }}</p>
+        <div class="detail-title">
+          <h2 data-testid="_lib_h2_selected_preco_cout">Coût</h2>
+          <p data-testid="_val_selected_preco_cout">{{ value(coutOf(details)) }}</p>
+        </div>
+        <div class="detail-title">
+          <h2 data-testid="_lib_h2_selected_preco_commentaire">Commentaire</h2>
+          <p data-testid="_val_selected_preco_commentaire">{{ value(commentaireOf(details)) }}</p>
+        </div>
+        <div class="detail-title">
+          <h2 data-testid="_lib_h2_selected_preco_traitement">Traitement lié</h2>
+          <p data-testid="_val_selected_preco_traitement">{{ traitementLie(details) }}</p>
         </div>
         <div class="status-badges">
           <div class="badge-item">
-            <label data-testid="_lib_label_selected_selected_preco_priorite">Priorité</label>
-            <span data-testid="_val_selected_selected_preco_priorite" class="badge" [ngClass]="getPrioriteClass(selectedPreconisation.priorite)">
-              {{ selectedPreconisation.prioriteLabel }}
+            <h2 data-testid="_lib_h2_selected_selected_preco_priorite">Priorité</h2>
+            <span
+              data-testid="_val_selected_selected_preco_priorite"
+              class="badge"
+              [ngClass]="getPrioriteClass(details.priorite)">
+              {{ value(details.prioriteh2 || details.priorite) }}
             </span>
           </div>
           <div class="badge-item">
-            <label data-testid="_lib_label_selected_preco_complexite">Complexité</label>
-            <span data-testid="_val_selected_preco_complexite" class="badge" [ngClass]="getComplexiteClass(selectedPreconisation.complexite)">
-              {{ selectedPreconisation.complexiteLabel }}
+            <h2 data-testid="_lib_h2_selected_preco_complexite">Complexité</h2>
+            <span
+              data-testid="_val_selected_preco_complexite"
+              class="badge"
+              [ngClass]="getComplexiteClass(details.complexite)">
+              {{ value(details.complexiteh2 || details.complexite) }}
             </span>
           </div>
           <div class="badge-item">
-            <label data-testid="_lib_label_selected_preco_avancement">Avancement</label>
+            <h2 data-testid="_lib_h2_selected_preco_avancement">Avancement</h2>
+            @let percent = getAvancementPercent(details.etatAvancement);
+            @if (percent !== null) {
             <div class="progress-container">
               <div class="progress-bar">
-                <div class="progress-fill" [style.width.%]="selectedPreconisation.avancement"></div>
+                <div class="progress-fill" [style.width.%]="percent"></div>
               </div>
-              <span data-testid="_val_selected_preco_avancement" class="progress-text">{{ selectedPreconisation.avancement }}%</span>
-            </div>
+              <span data-testid="_val_selected_preco_avancement" class="progress-text">{{ percent }}%</span>
+              </div>
+            } @else {
+            <span
+              data-testid="_val_selected_preco_avancement"
+              class="badge"
+              [ngClass]="getAvancementClass(details.etatAvancement)">
+                {{ value(details.etatAvancement) }}
+              </span>
+            }
           </div>
         </div>
       </div>
