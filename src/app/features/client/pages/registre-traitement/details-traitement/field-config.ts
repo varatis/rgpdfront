@@ -67,9 +67,9 @@ export const TAB_IDENTIFICATION: TabConfig = {
     date('Date de mise à jour', 'dateMiseAJour', 'date_maj', '20%'),
     html('Historique des modifications', 'historiqueModifications', 'historique', '40%'),
     text('Data Protection Officer', 'dataProtectionOfficer', 'dpo', '40%'),
-    text('Responsable de traitement', 'responsableTraitement', 'responsable_traitement', '40%'),
+    text('Responsable de traitement', 'responsableTraitement.valeur', 'responsable_traitement', '40%'),
     html('Gestionnaire de la mise en œuvre du traitement', 'gestionnaireMiseEnOeuvre', 'gestionnaire', '40%'),
-    text('Finalité principale', 'finalitePrincipale', 'finalite_principale', '80%'),
+    text('Finalité principale', 'finalitePrincipale.valeur', 'finalite_principale', '80%'),
     html('Sous-finalités', 'sousFinalites', 'sous_finalites', '80%', 'list'),
   ],
 };
@@ -91,8 +91,8 @@ export const TAB_DONNEES_PERSO: TabConfig = {
          'donnees_professionnelles', '80%'),
     html('Catégories particulières de données (NIR, santé par exemple)',
          'categoriesParticulieresDonnees', 'categories_particulieres', '90%', 'default', 2),
-    text('Sensibilité', 'sensibilite', 'sensibilite', '40%'),
-    text("Etude d'impact (PIA)", 'etudeImpact', 'etude_impact', '90%'),
+    text('Sensibilité', 'sensibilite.valeur', 'sensibilite', '40%'),
+    text("Etude d'impact (PIA)", 'etudeImpact.valeur', 'etude_impact', '90%'),
   ],
 };
 
@@ -101,7 +101,7 @@ export const TAB_DESCRIPTION: TabConfig = {
   fields: [
     html('Canaux de collecte des données', 'canauxCollecteDonnees',
          'canaux_collecte', '80%'),
-    text('Licéité du traitement', 'licieteTraitement', 'liceite', '80%'),
+    text('Licéité du traitement', 'licieteTraitement.valeur', 'liceite', '80%'),
     bool('Recours au traitements automatisés (y compris profilage) ? (Oui / Non)',
      'recoursTraitementAutomatises', 'traitements_automatises', '10%'),
     text('Emplacement physique du traitement', 'emplacementPhysique',
@@ -113,9 +113,9 @@ export const TAB_DESCRIPTION: TabConfig = {
     html('Dispositions existantes pour assurer la sécurité des données (numérique)',
          'dispositionsSecuriteDonneesNumerique', 'dispositions_securite_numerique', '90%', 'default', 2),
     text('Hébergement', 'hebergement', 'hebergement', '30%'),
-    text('Durée de conservation', 'dureeConservation', 'duree_conservation', '20%'),
+    text('Durée de conservation', 'dureeConservation.valeur', 'duree_conservation', '20%'),
     bool('Archivage ? (Oui / Non)', 'archivage', 'archivage', '10%'),    
-    text("Durée d'archivage", 'dureeArchivage', 'duree_archivage', '80%'),
+    text("Durée d'archivage", 'dureeArchivage.valeur', 'duree_archivage', '80%'),
     html('Catégories de destinataires', 'categoriesDestinataires',
          'categories_destinataires', '20%'),
     html('Raisons du transfert vers les catégories de destinataires',

@@ -15,6 +15,14 @@ import { FiltreTraitementPayload } from '../core/models/filtre-traitement.payloa
 export class ApiService {
   private apiUrl = environment.apiURL;
 
+  /**
+   * Colonnes de la liste dont la propriété persistée n'est plus une chaîne :
+   * le tri doit porter sur la valeur textuelle de l'entité référencée.
+   */
+  private static readonly SORT_PROPERTIES: Record<string, string> = {
+    finalitePrincipale: 'finalitePrincipale.valeur',
+  };
+
 
   constructor(private http: HttpClient) { }
 
@@ -31,7 +39,7 @@ export class ApiService {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
-      .set('sort', `${sortField},${sortDirection}`);
+      .set('sort', `${ApiService.SORT_PROPERTIES[sortField] ?? sortField},${sortDirection}`);
 
     if (clientNom) {
       params = params.set('clientNom', clientNom);

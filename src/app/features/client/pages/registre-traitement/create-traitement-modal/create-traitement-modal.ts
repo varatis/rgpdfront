@@ -5,8 +5,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../../../../services/api.service';
-import { TraitementDetails } from '../../../../../core/models/traitement.model';
+import { Observable } from 'rxjs';
+import { CreateTraitementPayload, Traitement, TraitementDetails } from '../../../../../core/models/traitement.model';
 import { Etablissement } from '../../../../../core/models/etablissement.model';
+import {
+  Definition,
+  DUREE_ARCHIVAGE,
+  DUREE_CONSERVATION,
+  Duree,
+  ResponsableTraitement,
+  TYPE_ETUDE_IMPACT,
+  TYPE_FINALITE_PRINCIPALE,
+  TYPE_LICEITE_TRAITEMENT,
+  TYPE_SENSIBILITE,
+} from '../../../../../core/models/referentiel.model';
 import { KeycloakService } from '../../../../../core/auth/keycloak.service';
 
 @Component({
@@ -104,6 +116,7 @@ export class CreateTraitementModal implements OnInit {
       // Mode Edition
       this.form.patchValue({
         ...this.traitementToEdit,
+        ...CreateTraitementModal.aplatirReferentiels(this.traitementToEdit),
         dateIdentification: this.toDateString(this.traitementToEdit.dateIdentification),
         dateMiseAJour: this.toDateString(this.traitementToEdit.dateMiseAJour),
       });
@@ -218,12 +231,14 @@ export class CreateTraitementModal implements OnInit {
     this.isSubmitting = true;
     this.submitError = null;
 
-    const call$ = this.isEditMode
+    const payload = this.buildPayload();
+
+    const call$: Observable<Traitement | TraitementDetails> = this.isEditMode
       ? this.apiService.updateTraitement(
         this.traitementToEdit!.idFonctionnel,
-        this.form.value
+        payload
       )
-      : this.apiService.createTraitement(this.form.value);
+      : this.apiService.createTraitement(payload);
 
     call$.subscribe({
       next: () => {
@@ -276,7 +291,62 @@ export class CreateTraitementModal implements OnInit {
     });
   }
 
+  /**
+   * Champs adossés à un référentiel du client : le back les échange sous forme
+   * d'objet alors que le formulaire les saisit en texte libre.
+   */
+  private static readonly CHAMPS_REFERENTIEL = [
+    'finalitePrincipale',
+    'responsableTraitement',
+    'sensibilite',
+    'etudeImpact',
+    'licieteTraitement',
+    'dureeConservation',
+    'dureeArchivage',
+  ] as const;
+
+  /** Objet du back → valeur textuelle affichée dans le formulaire. */
+  private static aplatirReferentiels(traitement: TraitementDetails): Record<string, string | null> {
+    return Object.fromEntries(
+      CreateTraitementModal.CHAMPS_REFERENTIEL.map(champ => [champ, traitement[champ]?.valeur ?? null])
+    );
+  }
+
+  /** Valeur textuelle du formulaire → objet attendu par le back. */
+  private buildPayload(): CreateTraitementPayload {
+    const {
+      finalitePrincipale, responsableTraitement, sensibilite, etudeImpact,
+      licieteTraitement, dureeConservation, dureeArchivage, ...reste
+    } = this.form.value;
+
+    return {
+      ...reste,
+      finalitePrincipale: this.toDefinition(finalitePrincipale, TYPE_FINALITE_PRINCIPALE),
+      responsableTraitement: this.toResponsableTraitement(responsableTraitement),
+      sensibilite: this.toDefinition(sensibilite, TYPE_SENSIBILITE),
+      etudeImpact: this.toDefinition(etudeImpact, TYPE_ETUDE_IMPACT),
+      licieteTraitement: this.toDefinition(licieteTraitement, TYPE_LICEITE_TRAITEMENT),
+      dureeConservation: this.toDuree(dureeConservation, DUREE_CONSERVATION),
+      dureeArchivage: this.toDuree(dureeArchivage, DUREE_ARCHIVAGE),
+    };
+  }
+
+  // Une valeur vide laisse la référence nulle : le back ne crée alors aucune
+  // entrée de référentiel pour ce traitement.
+  private toDefinition(valeur: string | null | undefined, type: string): Definition | null {
+    return valeur?.trim() ? { type, valeur: valeur.trim() } : null;
+  }
+
+  private toDuree(valeur: string | null | undefined, estArchivage: boolean): Duree | null {
+    return valeur?.trim() ? { estArchivage, valeur: valeur.trim() } : null;
+  }
+
+  private toResponsableTraitement(valeur: string | null | undefined): ResponsableTraitement | null {
+    return valeur?.trim() ? { valeur: valeur.trim() } : null;
+  }
+
   invalidStatusCause(field: string): string | undefined  {
+
     const control = this.form.get(field);
     if (!control?.invalid) return undefined;
     return control.hasError('required')

@@ -71,7 +71,13 @@ export class DetailsTraitementComponent {
       return undefined;
     }
 
-    const value = (details as unknown as Record<string, unknown>)[key];
+    // La clé peut désigner un champ imbriqué (ex. 'finalitePrincipale.valeur') :
+    // les champs adossés à un référentiel client sont renvoyés sous forme d'objet.
+    const value = key.split('.').reduce<unknown>(
+      (current, segment) =>
+        current == null ? current : (current as Record<string, unknown>)[segment],
+      details,
+    );
     if (value == null) {
       return value;
     }
