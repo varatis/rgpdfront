@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface HeaderAction {
   label: string;
@@ -11,7 +12,7 @@ export interface HeaderAction {
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './header.html',
   styleUrls: ['./header.scss']
 })

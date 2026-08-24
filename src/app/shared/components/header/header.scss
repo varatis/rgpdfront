@@ -13,8 +13,11 @@
   align-items: center;
   gap: 12px;
 
-  .material-icons {
+  .material-icons,
+  .header-icon {
     font-size: 24px;
+    width: 24px;
+    height: 24px;
     color: #666;
   }
 

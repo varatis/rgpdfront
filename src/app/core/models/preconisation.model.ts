@@ -100,6 +100,6 @@ export function scaleLabel(value?: string | null): string {
   if (value == null || value === '') {
     return '—';
   }
-  const stripped = value.replace(/^\s*\d+\s*[-–:]\s*/, '').trim();
+  const stripped = value.replace(/^\s*\d+\s*[-–—.:：]\s*/u, '').trim();
   return stripped || value.trim();
 }
