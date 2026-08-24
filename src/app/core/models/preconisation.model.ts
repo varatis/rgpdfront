@@ -95,3 +95,11 @@ export function displayValue(value?: string | number | null): string {
   }
   return String(value);
 }
+
+export function scaleLabel(value?: string | null): string {
+  if (value == null || value === '') {
+    return '—';
+  }
+  const stripped = value.replace(/^\s*\d+\s*[-–:]\s*/, '').trim();
+  return stripped || value.trim();
+}

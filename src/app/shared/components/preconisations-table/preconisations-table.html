@@ -74,13 +74,13 @@
 
       <div class="table-cell priorite">
             <span data-testid="_val_preco_priorite" class="badge" [ngClass]="getPrioriteClass(item.priorite)">
-              {{ item.priorite || '—' }}
+              {{ scaleLabel(item.priorite) }}
             </span>
       </div>
 
       <div class="table-cell complexite col-complexite">
         <span data-testid="_val_preco_complexite" class="badge" [ngClass]="getComplexiteClass(item.complexite)">
-          {{ item.complexite || '—' }}
+          {{ scaleLabel(item.complexite) }}
         </span>
       </div>
 

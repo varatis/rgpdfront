@@ -54,7 +54,8 @@ export class ClientSidebar {
     const icons: { [key: string]: string } = {
       'clients': 'business',
       'registre': 'library_books',
-      'suivi': 'checklist',
+      'suivi': 'tune',
+      'preconisations': 'tune',
       'demandes': 'contact_support',
       'violation': 'error',
       'sous-traitant': 'people'

@@ -18,7 +18,8 @@ import {
   Preconisation,
   PreconisationDetails,
   PreconisationSortField,
-  prioriteClass
+  prioriteClass,
+  scaleLabel
 } from '../../../../core/models/preconisation.model';
 import { FiltrePreconisationPayload } from '../../../../core/models/filtre-preconisation.payload';
 import { PageResponse } from '../../../../core/models/page-response.model';
@@ -36,10 +37,8 @@ export class SuiviPreconisations implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly load$ = new Subject<number>();
   private readonly details$ = new Subject<string>();
-  pageTitle = 'Suivi des préconisations';
-  icon = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M9.58329 10.7084L14.2916 6.00008L13.125 4.79175L9.58329 8.33342L7.79163 6.58342L6.62496 7.75008L9.58329 10.7084ZM5.66663 14.0001C5.20829 14.0001 4.81593 13.8369 4.48954 13.5105C4.16315 13.1841 3.99996 12.7917 3.99996 12.3334V2.33341C3.99996 1.87508 4.16315 1.48272 4.48954 1.15633C4.81593 0.829943 5.20829 0.666748 5.66663 0.666748H15.6666C16.125 0.666748 16.5173 0.829943 16.8437 1.15633C17.1701 1.48272 17.3333 1.87508 17.3333 2.33341V12.3334C17.3333 12.7917 17.1701 13.1841 16.8437 13.5105C16.5173 13.8369 16.125 14.0001 15.6666 14.0001H5.66663ZM5.66663 12.3334H15.6666V2.33341H5.66663V12.3334ZM2.33329 17.3334C1.87496 17.3334 1.4826 17.1702 1.15621 16.8438C0.82982 16.5174 0.666626 16.1251 0.666626 15.6667V4.00008H2.33329V15.6667H14V17.3334H2.33329Z" fill="#161617"/>
-  </svg>`;
+  pageTitle = 'Gestion des préconisations';
+  icon = 'tune';
 
   actions: HeaderAction[] = [
     {
@@ -243,6 +242,10 @@ export class SuiviPreconisations implements OnInit {
 
   value(value?: string | number | null): string {
     return displayValue(value);
+  }
+
+  scaleValue(value?: string | null): string {
+    return scaleLabel(value);
   }
 
   traitementLie(details: PreconisationDetails | Preconisation): string {

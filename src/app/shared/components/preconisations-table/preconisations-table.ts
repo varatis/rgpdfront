@@ -7,7 +7,8 @@ import {
   parseAvancementPercent,
   Preconisation,
   PreconisationSortField,
-  prioriteClass
+  prioriteClass,
+  scaleLabel as toScaleLabel
 } from '../../../core/models/preconisation.model';
 
 export type PreconisationSortDirection = 'asc' | 'desc';
@@ -72,6 +73,10 @@ export class PreconisationsTable {
 
   getAvancementPercent(etatAvancement?: string): number | null {
     return parseAvancementPercent(etatAvancement);
+  }
+
+  scaleLabel(value?: string): string {
+    return toScaleLabel(value);
   }
 }
 
