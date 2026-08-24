@@ -8,6 +8,8 @@ import { PageResponse } from '../core/models/page-response.model';
 import { Etablissement } from '../core/models/etablissement.model';
 import { Client } from '../core/models/client.model';
 import { FiltreTraitementPayload } from '../core/models/filtre-traitement.payload';
+import { FiltrePreconisationPayload } from '../core/models/filtre-preconisation.payload';
+import { Preconisation, PreconisationDetails } from '../core/models/preconisation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -82,5 +84,38 @@ export class ApiService {
 
   getClientByNom(nom: string): Observable<Client> {
     return this.http.get<Client>(this.apiUrl + "clients/nom/" + encodeURIComponent(nom));
+  }
+
+  getPreconisations(
+    page: number,
+    size: number,
+    sortField: string = 'libelle',
+    sortDirection: 'asc' | 'desc' = 'asc',
+    clientNom?: string,
+    filters?: Partial<FiltrePreconisationPayload>
+  ): Observable<PageResponse<Preconisation>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sort', `${sortField},${sortDirection}`);
+
+    if (clientNom) {
+      params = params.set('clientNom', clientNom);
+    }
+    if (filters?.libelle) {
+      params = params.set('libelle', filters.libelle);
+    }
+    if (filters?.etatAvancement) {
+      params = params.set('etatAvancement', filters.etatAvancement);
+    }
+
+    return this.http.get<PageResponse<Preconisation>>(
+      this.apiUrl + 'preconisations',
+      { params }
+    );
+  }
+
+  getPreconisationDetails(identifiant: string): Observable<PreconisationDetails> {
+    return this.http.get<PreconisationDetails>(this.apiUrl + 'preconisations/' + identifiant);
   }
 }

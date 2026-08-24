@@ -1,15 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-interface PreconisationRow {
-  id: string;
-  titre: string;
-  priorite: string;
-  prioriteLabel: string;
-  complexite: string;
-  complexiteLabel: string;
-  avancement: number;
-  _raw?: any;
+import {
+  avancementClass,
+  complexiteClass,
+  parseAvancementPercent,
+  Preconisation,
+  PreconisationSortField,
+  prioriteClass
+} from '../../../core/models/preconisation.model';
+
+export type PreconisationSortDirection = 'asc' | 'desc';
+
+export interface PreconisationSortEvent {
+  field: PreconisationSortField;
+  direction: PreconisationSortDirection;
 }
 @Component({
   selector: 'app-preconisations-table',
@@ -19,53 +24,54 @@ interface PreconisationRow {
   styleUrl: './preconisations-table.scss'
 })
 export class PreconisationsTable {
-@Input() data: PreconisationRow[] = [];
-@Output() rowClick = new EventEmitter<any>();
+  data = input<Preconisation[]>([]);
+  selectedId = input<string | undefined>(undefined);
+  loading = input(false);
+  sortColumn = input<PreconisationSortField>('libelle');
+  sortDirection = input<PreconisationSortDirection>('asc');
+  rowClick = output<Preconisation>();
+  sortChange = output<PreconisationSortEvent>();
 
-  sortColumn: string = '';
-  sortDirection: 'asc' | 'desc' = 'asc';
-
-  get sortedData(): PreconisationRow[] {
-    if (!this.sortColumn) return this.data;
-
-    return [...this.data].sort((a, b) => {
-      const valA = (a as any)[this.sortColumn];
-      const valB = (b as any)[this.sortColumn];
-
-      const compare = valA.toString().localeCompare(valB.toString());
-      return this.sortDirection === 'asc' ? compare : -compare;
-    });
-  }
-
-  toggleSort(column: string): void {
-    if (this.sortColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
+  toggleSort(column: PreconisationSortField): void {
+    let direction: PreconisationSortDirection = 'asc';
+    if (this.sortColumn() === column) {
+      direction = this.sortDirection() === 'asc' ? 'desc' : 'asc';
     }
+    this.sortChange.emit({ field: column, direction });
   }
 
-  onRowClick(item: PreconisationRow): void {
+  getSortIcon(column: PreconisationSortField): string {
+    if (this.sortColumn() !== column) {
+      return 'unfold_more';
+    }
+    return this.sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward';
+  }
+
+  getAriaSort(column: PreconisationSortField): 'ascending' | 'descending' | 'none' {
+    if (this.sortColumn() !== column) {
+      return 'none';
+    }
+    return this.sortDirection() === 'asc' ? 'ascending' : 'descending';
+  }
+
+    onRowClick(item: Preconisation): void {
     this.rowClick.emit(item);
   }
 
-  getPrioriteClass(priorite: string): string {
-    const classes: { [key: string]: string } = {
-      'tres-urgent': 'badge-danger',
-      'urgent': 'badge-alert',
-      'normal': 'badge-info'
-    };
-    return classes[priorite] || 'badge-info';
+  getPrioriteClass(priorite?: string): string {
+    return prioriteClass(priorite);
   }
 
-  getComplexiteClass(complexite: string): string {
-    const classes: { [key: string]: string } = {
-      'moyennement-complexe': 'badge-alert',
-      'tres-simple': 'badge-warning',
-      'complexe': 'badge-danger'
-    };
-    return classes[complexite] || 'badge-info';
+  getComplexiteClass(complexite?: string): string {
+    return complexiteClass(complexite);
+  }
+
+  getAvancementClass(etatAvancement?: string): string {
+    return avancementClass(etatAvancement);
+  }
+
+  getAvancementPercent(etatAvancement?: string): number | null {
+    return parseAvancementPercent(etatAvancement);
   }
 }
 
