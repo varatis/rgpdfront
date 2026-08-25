@@ -160,7 +160,6 @@ export class RegistreTraitement implements OnInit {
       finalitePrincipale: filtre.finalitePrincipale.trim()
     };
     this.currentPage = 1;
-    this.filtreSelectionne = false;
     this.loadTraitements(0);
   }
 

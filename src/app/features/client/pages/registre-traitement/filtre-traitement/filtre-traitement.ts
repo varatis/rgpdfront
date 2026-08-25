@@ -50,5 +50,6 @@ export class FiltreTraitement {
       gestionnaire: this.gestionnaire,
       finalitePrincipale: this.finalitePrincipale
     });
+    this.onClose();
   }
 }
