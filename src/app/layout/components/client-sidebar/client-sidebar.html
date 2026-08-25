@@ -1,6 +1,5 @@
 @if (currentUser()) {
 <div class="double-sidebar-container">
-  <!-- Mini sidebar gauche (60px) -->
   <aside class="sidebar-mini">
     <div class="mini-header">
       <div class="logo-triangle">
@@ -18,7 +17,7 @@
       </a>
 
       <a [routerLink]="null" class="mini-nav-item disabled" aria-disabled="true" tabindex="-1"
-        title="Gestion des préconisations">
+         title="Gestion des préconisations">
         <mat-icon>tune</mat-icon>
       </a>
     </nav>
@@ -30,7 +29,6 @@
     </div>
   </aside>
 
-  <!-- Sidebar principale (240px) -->
   @if (showClientMenu()) {
   <aside class="sidebar-main">
     <div class="sidebar-header">
@@ -56,5 +54,4 @@
   </aside>
   }
 </div>
-
 }

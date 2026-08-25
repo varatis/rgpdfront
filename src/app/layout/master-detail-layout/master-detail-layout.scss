@@ -20,6 +20,27 @@
   background: white;
   transition: width 0.3s ease;
   overflow: hidden;
+
+  .main-content-wrapper,
+    .content-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    app-preconisations-table {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    app-pagination {
+      flex-shrink: 0;
+    }
 }
 
 

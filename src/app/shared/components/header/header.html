@@ -1,21 +1,24 @@
 <div class="header">
   <div class="left">
-    <!-- Si l'icône est du texte normal -->
-    <mat-icon *ngIf="icon && !isSvg(icon)">
-      {{ icon }}
-    </mat-icon>
-
-    <!-- Si l'icône est un SVG -->
-    <span *ngIf="icon && isSvg(icon)" class="custom-icon" [innerHTML]="getSafeSvg(icon)"></span>
+    @if (icon && !isSvg(icon)) {
+    <mat-icon class="header-icon">{{ icon }}</mat-icon>
+    }
+    @if (icon && isSvg(icon)) {
+    <span class="custom-icon" [innerHTML]="getSafeSvg(icon)"></span>
+    }
     <h1>{{ title }}</h1>
   </div>
   <div class="actions">
-    <button *ngFor="let a of actions" (click)="onClick(a.action)" [ngClass]="a.color">
-      <mat-icon *ngIf="a.icon && !isSvg(a.icon)">
-        {{ a.icon }}
-      </mat-icon>
-      <span *ngIf="a.icon && isSvg(a.icon)" class="custom-icon" [innerHTML]="getSafeSvg(a.icon)"></span>
+    @for (a of actions; track a.action) {
+    <button (click)="onClick(a.action)" [ngClass]="a.color">
+      @if (a.icon && !isSvg(a.icon)) {
+      <mat-icon>{{ a.icon }}</mat-icon>
+      }
+      @if (a.icon && isSvg(a.icon)) {
+      <span class="custom-icon" [innerHTML]="getSafeSvg(a.icon)"></span>
+      }
       {{ a.label }}
     </button>
+    }
   </div>
 </div>

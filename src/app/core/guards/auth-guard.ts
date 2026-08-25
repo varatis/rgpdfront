@@ -2,7 +2,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { KeycloakService } from '../auth/keycloak.service';
 import { inject } from '@angular/core';
 
-type AppRole = 'superadmin' | 'admin' | 'client';
+type AppRole = 'superadmin' | 'admin' | 'client'| 'user';
 
 function redirectToRoleHome(router: Router, role: string | null): void {
   if (role === 'admin') {

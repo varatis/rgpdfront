@@ -5,7 +5,7 @@ export interface NavItem {
   roles: UserRole[];
 }
 
-export type UserRole = 'superadmin' | 'admin' | 'client';
+export type UserRole = 'superadmin' | 'admin' | 'client' | 'user';
 
 export interface UserProfile {
   id: string;

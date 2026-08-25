@@ -1,3 +1,9 @@
+.detail-loading {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin-bottom: 0.5rem;
+}
+
 /* --- EMPTY STATE --- */
 .empty-state {
   display: flex;
@@ -22,57 +28,50 @@
 
 /* --- DETAIL CONTENT --- */
 .detail-content {
-  padding: 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  padding: 24px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+   }
 
-
-  .field-group {
-    margin-bottom: 1.5rem;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #6B7280;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    p {
-      font-size: 0.95rem;
-      color: #111827;
-      margin: 0;
-      line-height: 1.6;
-    }
+    .detail-title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+      p {
+        margin: 0;
+        padding-top: 5px;
+        font-size: 14px;
+        color: #333;
+        line-height: 1.5;
   }
 }
 
 /* --- STATUS BADGES --- */
 .status-badges {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  padding: 1rem;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 4px;
 
   .badge-item {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 
-    label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #6B7280;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    h2 {
       margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
     }
 
     .badge {
@@ -84,7 +83,7 @@
       width: fit-content;
 
       &.badge-danger {
-        background: #FF8B8B;//#FDBCBC
+        background: #FF8B8B;
         color: #770505;
       }
 
@@ -111,16 +110,6 @@
 }
 
 
-
-.status-badges {
-
-}
-
-.status-badges .badge-item {
-  flex: 1;
-  min-width: 100px;
-}
-
 /* --- PROGRESS BAR --- */
 .progress-container {
   display: flex;
@@ -138,7 +127,6 @@
       height: 100%;
       background: linear-gradient(90deg, #3B82F6 0%, #2563EB 100%);
       border-radius: 4px;
-      transition: width 0.3s ease;
     }
   }
 
