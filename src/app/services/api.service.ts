@@ -8,6 +8,7 @@ import { PageResponse } from '../core/models/page-response.model';
 import { Etablissement } from '../core/models/etablissement.model';
 import { Client } from '../core/models/client.model';
 import { FiltreTraitementPayload } from '../core/models/filtre-traitement.payload';
+import { Demande } from '../core/models/demande.model';
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +61,19 @@ export class ApiService {
 
   createTraitement(payload: CreateTraitementPayload): Observable<Traitement> {
     return this.http.post<Traitement>(this.apiUrl + "traitements", payload);
+  }
+
+  getDemandes(): Observable<Demande[]> {
+    return this.http.get<Demande[]>(
+      this.apiUrl + 'demandes'
+    );
+  }
+
+  createDemande(payload: any): Observable<any> {
+    return this.http.post<any>(
+      this.apiUrl + 'demandes',
+      payload
+    );
   }
 
   updateTraitement(id: number, payload: CreateTraitementPayload): Observable<TraitementDetails> {

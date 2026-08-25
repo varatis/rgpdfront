@@ -1,0 +1,181 @@
+<div class="modal-backdrop"
+     data-testid="_lst_modal_create_demande"
+     (click)="close()">
+
+  <div class="modal-panel"
+       (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+
+    <div class="modal-header">
+
+      <h2 data-testid="_lib_modal_title">
+        Ajouter une demande
+      </h2>
+
+      <button
+        class="modal-close-btn"
+        type="button"
+        (click)="close()">
+
+        ✕
+      </button>
+
+    </div>
+
+    <!-- Form -->
+
+    <form
+      class="modal-body"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()">
+
+      <div class="form-field">
+
+        <label>
+          Type de demande
+          <span class="required">*</span>
+        </label>
+
+        <input
+          type="text"
+          formControlName="typeDemande">
+
+      </div>
+
+      <div class="form-field">
+
+        <label>
+          Description synthétique
+          <span class="required">*</span>
+        </label>
+
+        <textarea
+          rows="3"
+          formControlName="descriptionSynthetique">
+        </textarea>
+
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-field">
+
+          <label>Origine</label>
+
+          <input
+            type="text"
+            formControlName="origine">
+
+        </div>
+
+        <div class="form-field">
+
+          <label>Date réception</label>
+
+          <input
+            type="date"
+            formControlName="dateReception">
+
+        </div>
+
+      </div>
+
+      <div class="form-field">
+
+        <label>Services concernés</label>
+
+        <textarea
+          rows="2"
+          formControlName="servicesConcernes">
+        </textarea>
+
+      </div>
+
+      <div class="form-field">
+
+        <label>Détail traitement</label>
+
+        <textarea
+          rows="2"
+          formControlName="detailTraitement">
+        </textarea>
+
+      </div>
+
+      <div class="form-field">
+
+        <label>Services impliqués</label>
+
+        <textarea
+          rows="2"
+          formControlName="servicesImpliques">
+        </textarea>
+
+      </div>
+
+      <div class="form-field">
+
+        <label>Réponse</label>
+
+        <textarea
+          rows="2"
+          formControlName="reponse">
+        </textarea>
+
+      </div>
+
+      <div class="form-field">
+
+        <label>Alerte RT</label>
+
+        <input
+          type="text"
+          formControlName="alerteRt">
+
+      </div>
+
+      <div class="form-field">
+
+        <label>Statut</label>
+
+        <select formControlName="statut">
+
+          <option value="EN_ATTENTE">
+            En attente
+          </option>
+
+          <option value="TRAITEE">
+            Traitée
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="close()">
+
+          Annuler
+
+        </button>
+
+        <button
+          type="submit"
+          class="btn-primary">
+
+          Ajouter
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
