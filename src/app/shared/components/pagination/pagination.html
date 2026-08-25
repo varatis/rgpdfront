@@ -2,6 +2,7 @@
   <div class="pagination-container">
     <mat-paginator
       [length]="length"
+      [pageIndex]="currentPage() - 1"
       [pageSize]="pageSize()"
       [pageSizeOptions]="pageSizeOptions()"
       hidePageSize="true"
