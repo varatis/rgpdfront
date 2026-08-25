@@ -1,8 +1,9 @@
 import { Component, computed, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { KeycloakService } from '../../../core/auth/keycloak.service';
 import { Location } from '@angular/common';
+import { KeycloakService } from '../../../core/auth/keycloak.service';
 import { CLIENT_NAV_ITEMS } from '../../../shared/config/navigation.config';
+import { UserRole } from '../../../shared/interfaces/navigation.interface';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -53,7 +54,8 @@ export class ClientSidebar {
     const icons: { [key: string]: string } = {
       'clients': 'business',
       'registre': 'library_books',
-      'suivi': 'checklist',
+      'suivi': 'tune',
+      'preconisations': 'tune',
       'demandes': 'contact_support',
       'violation': 'error',
       'sous-traitant': 'people'

@@ -1,69 +1,110 @@
 <div class="preconisations-table">
-  <!-- Header -->
   <div class="table-header">
-    <div class="header-cell sortable" (click)="toggleSort('titre')">
+    <div
+      class="header-cell sortable"
+      [class.active]="sortColumn() === 'libelle'"
+      role="columnheader"
+      [attr.aria-sort]="getAriaSort('libelle')"
+      (click)="toggleSort('libelle')"
+      (keydown.enter)="toggleSort('libelle')"
+      (keydown.space)="toggleSort('libelle')"
+      tabindex="0">
       <span>PRÉCONISATION</span>
-      <mat-icon class="sort-icon">sort</mat-icon>
+      <mat-icon class="sort-icon">{{ getSortIcon('libelle') }}</mat-icon>
     </div>
 
-    <div class="header-cell sortable" (click)="toggleSort('prioriteLabel')">
+    <div
+      class="header-cell sortable"
+      [class.active]="sortColumn() === 'priorite'"
+      role="columnheader"
+      [attr.aria-sort]="getAriaSort('priorite')"
+      (click)="toggleSort('priorite')"
+      (keydown.enter)="toggleSort('priorite')"
+      (keydown.space)="toggleSort('priorite')"
+      tabindex="0">
       <span>PRIORITÉ</span>
-      <mat-icon class="sort-icon">sort</mat-icon>
+      <mat-icon class="sort-icon">{{ getSortIcon('priorite') }}</mat-icon>
     </div>
 
-    <div class="header-cell sortable" (click)="toggleSort('complexiteLabel')">
+    <div
+      class="header-cell sortable col-complexite"
+      [class.active]="sortColumn() === 'complexite'"
+      role="columnheader"
+      [attr.aria-sort]="getAriaSort('complexite')"
+      (click)="toggleSort('complexite')"
+      (keydown.enter)="toggleSort('complexite')"
+      (keydown.space)="toggleSort('complexite')"
+      tabindex="0">
       <span>COMPLEXITÉ</span>
-      <mat-icon class="sort-icon">sort</mat-icon>
+      <mat-icon class="sort-icon">{{ getSortIcon('complexite') }}</mat-icon>
     </div>
 
-    <div class="header-cell sortable" (click)="toggleSort('avancement')">
+    <div
+      class="header-cell sortable col-avancement"
+      [class.active]="sortColumn() === 'etatAvancement'"
+      role="columnheader"
+      [attr.aria-sort]="getAriaSort('etatAvancement')"
+      (click)="toggleSort('etatAvancement')"
+      (keydown.enter)="toggleSort('etatAvancement')"
+      (keydown.space)="toggleSort('etatAvancement')"
+      tabindex="0">
       <span>AVANCEMENT</span>
-      <mat-icon class="sort-icon">sort</mat-icon>
+      <mat-icon class="sort-icon">{{ getSortIcon('etatAvancement') }}</mat-icon>
     </div>
 
     <div class="header-cell arrow-col"></div>
   </div>
 
-  <!-- Body -->
   <div class="table-body">
+    @if (loading()) {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+      </div>
+    } @else {
+    @for (item of data(); track item.identifiant) {
     <div
       class="table-row"
-      *ngFor="let item of sortedData"
+      [class.selected]="item.identifiant === selectedId()"
+      [attr.data-testid]="'_lst_preconisations_row_' + item.identifiant"
       (click)="onRowClick(item)">
 
-      <!-- Titre -->
-      <div class="table-cell titre">
-        {{ item.titre }}
+      <div class="table-cell titre" data-testid="_val_preco_titre">
+        {{ item.libelle }}
       </div>
 
-      <!-- Priorité avec badge -->
       <div class="table-cell priorite">
-        <span class="badge" [ngClass]="getPrioriteClass(item.priorite)">
-          {{ item.prioriteLabel }}
+            <span data-testid="_val_preco_priorite" class="badge" [ngClass]="getPrioriteClass(item.priorite)">
+              {{ scaleLabel(item.priorite) }}
+            </span>
+      </div>
+
+      <div class="table-cell complexite col-complexite">
+        <span data-testid="_val_preco_complexite" class="badge" [ngClass]="getComplexiteClass(item.complexite)">
+          {{ scaleLabel(item.complexite) }}
         </span>
       </div>
 
-      <!-- Complexité avec badge -->
-      <div class="table-cell complexite">
-        <span class="badge" [ngClass]="getComplexiteClass(item.complexite)">
-          {{ item.complexiteLabel }}
-        </span>
-      </div>
-
-      <!-- Avancement avec barre de progression -->
-      <div class="table-cell avancement">
+      <div class="table-cell avancement col-avancement">
+        @let percent = getAvancementPercent(item.etatAvancement);
+        @if (percent !== null) {
         <div class="progress-wrapper">
           <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="item.avancement"></div>
+            <div class="progress-fill" [style.width.%]="percent"></div>
           </div>
-          <span class="progress-text">{{ item.avancement }}%</span>
+          <span data-testid="_val_preco_avancement" class="progress-text">{{ percent }}%</span>
         </div>
+        } @else {
+        <span data-testid="_val_preco_avancement" class="badge" [ngClass]="getAvancementClass(item.etatAvancement)">
+          {{ item.etatAvancement || '—' }}
+        </span>
+        }
       </div>
 
-      <!-- Flèche -->
       <div class="table-cell arrow">
         <mat-icon>chevron_right</mat-icon>
       </div>
     </div>
+    }
+    }
   </div>
 </div>
