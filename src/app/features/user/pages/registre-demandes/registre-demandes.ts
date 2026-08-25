@@ -1,37 +1,52 @@
-import { Component } from '@angular/core';
+
 import { PageTab, PageTabsComponent } from '../../../../shared/components/page-tabs/page-tab/page-tab';
 import { TableColumn, DataTable } from '../../../../shared/components/data-table/data-table';
 import { HeaderAction } from '../../../../shared/components/header/header';
 import { MasterDetailLayout } from "../../../../layout/master-detail-layout/master-detail-layout";
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-interface Demande {
-  id: string;
-  typeDemande: string;
-  descriptionSynthetique: string;
-  dateReception: Date;
-  origine: string;
-  servicesConcernes: string;
-  detailTraitement: string;
-  servicesImpliques: string;
-  reponse: string;
-  alerteRT: string;
-  statut: 'treated' | 'pending';
-}
+import {CreateDemandeModal} from './create-demande-modal/create-demande-modal';
+import {ApiService} from '../../../../services/api.service';
+import { Component, OnInit } from '@angular/core';
+import { Demande } from '../../../../core/models/demande.model';
+
+
 @Component({
   selector: 'app-registre-demandes',
   standalone: true,
-  imports: [CommonModule,MasterDetailLayout, PageTabsComponent, DataTable, MatIconModule],
+  imports: [CommonModule,MasterDetailLayout, PageTabsComponent, DataTable, MatIconModule, CreateDemandeModal],
   templateUrl: './registre-demandes.html',
   styleUrl: './registre-demandes.scss'
 })
-export class RegistreDemandes {
+export class RegistreDemandes implements OnInit{
   pageTitle = 'Registre des demandes';
-  icon = 'contact_support';
+  icon = 'help_outline';
 
   actions: HeaderAction[] = [
-    { label: 'Export global', icon: 'download', action: 'export', color: 'default' },
-    { label: 'Filtres', icon: 'tune', action: 'filter', color: 'default' }
+    {
+      label: 'Ajouter une demande',
+      icon: 'add',
+      action: 'add',
+      color: 'primary'
+    },
+    {
+      label: 'Import',
+      icon: 'upload_file',
+      action: 'import',
+      color: 'primary'
+    },
+    {
+      label: 'Export global',
+      icon: 'download',
+      action: 'export',
+      color: 'default'
+    },
+    {
+      label: 'Filtres',
+      icon: 'filter_list',
+      action: 'filter',
+      color: 'default'
+    }
   ];
 
   tableColumns: TableColumn[] = [
@@ -42,6 +57,7 @@ export class RegistreDemandes {
 
   activeTab: 'pending' | 'treated' = 'pending';
   selectedDemande: Demande | null = null;
+  showCreateDemandeModal = false;
   currentPage = 1;
   itemsPerPage = 10;
 
@@ -49,7 +65,16 @@ export class RegistreDemandes {
 
   demandesTreated: Demande[] = [];
 
-  constructor() {}
+  constructor(
+    private apiService: ApiService
+  ) {
+
+    // this.demandesPending = [...];
+    // this.demandesTreated = [...];
+
+  }
+
+
 
   // Computed properties
   get pageTabs(): PageTab[] {
@@ -91,6 +116,36 @@ export class RegistreDemandes {
     return Math.ceil(total / this.itemsPerPage);
   }
 
+  ngOnInit(): void {
+  this.loadDemandes()
+  }
+
+  loadDemandes(): void {
+
+    this.apiService.getDemandes()
+      .subscribe({
+
+        next: demandes => {
+
+          this.demandesPending =
+            demandes.filter(
+              d => d.statut === 'EN_ATTENTE'
+            );
+
+          this.demandesTreated =
+            demandes.filter(
+              d => d.statut === 'TRAITEE'
+            );
+
+        },
+
+        error: err => {
+          console.error(err);
+        }
+
+      });
+
+  }
   // Méthodes
   formatDate(date: any): string {
   if (!date) return '';
@@ -118,9 +173,19 @@ export class RegistreDemandes {
 
   onHeaderAction(action: string): void {
     switch(action) {
+
+      case 'add':
+        this.showCreateDemandeModal = true;
+        break;
+
+      case 'import':
+        this.onImportDemandes();
+        break;
+
       case 'export':
         this.onExportGlobal();
         break;
+
       case 'filter':
         this.onFilterDemandes();
         break;
@@ -135,5 +200,13 @@ export class RegistreDemandes {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
     }
+  }
+
+  private onImportDemandes() {
+    console.log('Import Excel')
+  }
+
+  onDemandeCreated(): void {
+    this.loadDemandes();
   }
 }

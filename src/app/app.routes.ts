@@ -71,7 +71,7 @@ export const routes: Routes = [
       {
         path: 'registre-demandes',
         canActivate: [roleGuard],
-        data: { roles: [] },
+        data: { roles: ['admin', 'client', 'superadmin'] },
         loadComponent: () => import('./features/user/pages/registre-demandes/registre-demandes')
           .then(m => m.RegistreDemandes)
       },

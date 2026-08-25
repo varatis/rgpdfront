@@ -1,7 +1,9 @@
 <div class="header">
   <div class="left">
     <!-- Si l'icône est du texte normal -->
-    <span *ngIf="icon && !isSvg(icon)" class="material-icons">{{ icon }}</span>
+    <mat-icon *ngIf="icon && !isSvg(icon)">
+      {{ icon }}
+    </mat-icon>
 
     <!-- Si l'icône est un SVG -->
     <span *ngIf="icon && isSvg(icon)" class="custom-icon" [innerHTML]="getSafeSvg(icon)"></span>
@@ -9,7 +11,9 @@
   </div>
   <div class="actions">
     <button *ngFor="let a of actions" (click)="onClick(a.action)" [ngClass]="a.color">
-      <span *ngIf="a.icon && !isSvg(a.icon)" class="material-icons">{{ a.icon }}</span>
+      <mat-icon *ngIf="a.icon && !isSvg(a.icon)">
+        {{ a.icon }}
+      </mat-icon>
       <span *ngIf="a.icon && isSvg(a.icon)" class="custom-icon" [innerHTML]="getSafeSvg(a.icon)"></span>
       {{ a.label }}
     </button>

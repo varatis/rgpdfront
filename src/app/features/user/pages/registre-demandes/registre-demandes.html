@@ -75,16 +75,16 @@
         </div>
         <div class="field-group">
           <label data-testid="_lib_label_alerte_rt">Alerte du RT</label>
-          <p data-testid="_val_demande_alerte_rt">{{ selectedDemande.alerteRT }}</p>
+          <p data-testid="_val_demande_alerte_rt">{{ selectedDemande.alerteRt }}</p>
         </div>
         <div class="field-group">
           <label data-testid="_lib_label_statut">Statut de la demande</label>
           <span
             data-testid="_val_demande_statut"
             class="badge"
-            [class.badge-success]="selectedDemande.statut === 'treated'"
+            [class.badge-success]="selectedDemande.statut === 'TRAITEE'"
           >
-            {{ selectedDemande.statut === 'treated' ? 'Traité' : 'Non traité' }}
+            {{ selectedDemande.statut === 'TRAITEE' ? 'Traité' : 'Non traité' }}
           </span>
         </div>
       </div>
@@ -92,3 +92,9 @@
   }
 
 </app-master-detail-layout>
+@if(showCreateDemandeModal) {
+  <app-create-demande-modal
+    (closed)="showCreateDemandeModal = false"
+    (created)="onDemandeCreated()">
+  </app-create-demande-modal>
+}
