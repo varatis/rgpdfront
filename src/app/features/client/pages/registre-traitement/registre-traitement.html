@@ -60,15 +60,20 @@
         </app-details-traitement>
       </div>
     }
-     @if (filtreSelectionne) {
-      <div>
-          <app-filtre-traitement
+  </div>
+
+  @if (filtreSelectionne) {
+  <div class="filter-modal" role="dialog" aria-modal="true" aria-labelledby="filter-title">
+    <button class="filter-backdrop" type="button" aria-label="Fermer les filtres" (click)="onFiltreClose()"></button>
+    <div class="filter-panel">
+      <app-filtre-traitement
+        [filters]="currentFilters"
           (filtreChange)="onFiltreChange($event)"
           (filtreClose)="onFiltreClose()">
         </app-filtre-traitement>
       </div>
-    }
   </div>
+  }
 </div>
 
 <!-- Modal : Ajouter un traitement -->

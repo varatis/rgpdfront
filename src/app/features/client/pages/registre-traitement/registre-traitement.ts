@@ -85,9 +85,10 @@ export class RegistreTraitement implements OnInit {
     this.load$.pipe(
       debounceTime(150),
       switchMap(page => {
+        this.loading = true;
         const clientNameArg = this.keycloakService.getClientName();
         const safeClientName = (clientNameArg === null) ? undefined : clientNameArg;
-        const safeSortField = (this.sortField === null) ? undefined : this.sortField;
+        const safeSortField = this.sortField ?? 'idFonctionnel';
 
         return this.apiService.getTraitements(
           page,
@@ -105,6 +106,7 @@ export class RegistreTraitement implements OnInit {
       next: (res: PageResponse<Traitement>) => {
         this.data = res.content;
         this.page = res.number;
+        this.currentPage = res.number + 1;
         this.size = res.size;
         this.totalElements = res.totalElements;
         this.totalPages = res.totalPages;
@@ -118,24 +120,7 @@ export class RegistreTraitement implements OnInit {
   }
 
   loadTraitements(page: number): void {
-    this.loading = true;
-    const clientName = this.keycloakService.getClientName();
-    const sortFieldToUse = this.sortField ?? 'idFonctionnel';
-    this.apiService.getTraitements(page, this.size, sortFieldToUse, this.sortDirection, clientName ?? undefined)
-      .subscribe({
-        next: (res) => {
-          this.data = res.content;
-          this.page = res.number;
-          this.size = res.size;
-          this.totalElements = res.totalElements;
-          this.totalPages = res.totalPages;
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-        }
-      });
+    this.load$.next(page);
   }
 
 
@@ -167,7 +152,12 @@ export class RegistreTraitement implements OnInit {
   }
 
   onFiltreChange(filtre: FiltreTraitementPayload) {
-    this.currentFilters = filtre;
+    this.currentFilters = {
+      traitement: filtre.traitement.trim(),
+      gestionnaire: filtre.gestionnaire.trim(),
+      finalitePrincipale: filtre.finalitePrincipale.trim()
+    };
+    this.currentPage = 1;
     this.loadTraitements(0);
   }
 
