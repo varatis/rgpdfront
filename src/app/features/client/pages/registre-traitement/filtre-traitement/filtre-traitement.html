@@ -1,56 +1,39 @@
 <div class="filtres-container">
-
   <div class="filtres-header">
-    <h2 class="filtres-title">Filtres</h2>
+    <h2 id="filter-title" class="filtres-title">Filtres</h2>
     <button mat-icon-button type="button" (click)="onClose()" aria-label="Fermer">
       <mat-icon class="close" fontIcon="close" aria-hidden="true"></mat-icon>
     </button>
   </div>
 
   <div class="filtres-body">
+    <div class="filter-control">
+      <label class="filter-label" for="traitement">Traitement</label>
+      <mat-form-field class="filter-field" appearance="outline">
+        <input matInput id="traitement" type="text" [(ngModel)]="traitement"
+          placeholder="Rechercher un traitement..." autocomplete="off" />
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Traitement</mat-label>
-      <input
-        matInput
-        id="traitement"
-        type="text"
-        [(ngModel)]="traitement"
-        placeholder="Rechercher un traitement..."
-        autocomplete="off"
-      />
-    </mat-form-field>
+    <div class="filter-control">
+      <label class="filter-label" for="gestionnaire">Gestionnaire</label>
+      <mat-form-field class="filter-field" appearance="outline">
+        <input matInput id="gestionnaire" type="text" [(ngModel)]="gestionnaire"
+          placeholder="Rechercher un gestionnaire..." autocomplete="off" />
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Gestionnaire</mat-label>
-      <input
-        matInput
-        id="gestionnaire"
-        type="text"
-        [(ngModel)]="gestionnaire"
-        placeholder="Rechercher un gestionnaire..."
-        autocomplete="off"
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Finalité principale</mat-label>
-      <input
-        matInput
-        id="finalite"
-        type="text"
-        [(ngModel)]="finalitePrincipale"
-        placeholder="Rechercher une finalité..."
-        autocomplete="off"
-      />
-    </mat-form-field>
-
+    <div class="filter-control">
+      <label class="filter-label" for="finalite">Finalité principale</label>
+      <mat-form-field class="filter-field" appearance="outline">
+        <input matInput id="finalite" type="text" [(ngModel)]="finalitePrincipale"
+          placeholder="Rechercher une finalité..." autocomplete="off" />
+      </mat-form-field>
+    </div>
   </div>
 
   <div class="filtres-footer">
-    <button mat-button type="button" (click)="onReset()">
-      Réinitialiser les filtres
-    </button>
+    <button mat-button type="button" (click)="onReset()">Réinitialiser les filtres</button>
     <button mat-flat-button color="primary" type="button" (click)="onApply()">
       <mat-icon aria-hidden="true">filter_alt</mat-icon>
       Appliquer les filtres

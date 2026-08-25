@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -26,6 +26,12 @@ export class FiltreTraitement {
   traitement = '';
   gestionnaire = '';
   finalitePrincipale = '';
+
+  @Input() set filters(value: FiltreTraitementPayload) {
+    this.traitement = value?.traitement ?? '';
+    this.gestionnaire = value?.gestionnaire ?? '';
+    this.finalitePrincipale = value?.finalitePrincipale ?? '';
+  }
 
   onClose(): void {
     this.filtreClose.emit();
