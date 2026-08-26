@@ -1,3 +1,5 @@
+import { Client } from './client.model';
+
 export type PreconisationSortField = 'libelle' | 'priorite' | 'complexite' | 'etatAvancement';
 
 export interface Preconisation {
@@ -10,6 +12,31 @@ export interface Preconisation {
   etatAvancement?: string;
   traitementIdentifiant?: string;
   traitementNom?: string;
+  client?: Client;
+}
+
+/**
+ * Payload attendu par les endpoints POST/PUT du back.
+ *
+ * Le client est résolu côté interface depuis le groupe Keycloak de
+ * l'utilisateur connecté. Le rattachement à un traitement reste facultatif :
+ * une préconisation peut être globale au client.
+ */
+export interface PreconisationWritePayload {
+  identifiant?: string;
+  libelle: string;
+  explication?: string | null;
+  risqueEncours?: string | null;
+  contraintes?: string | null;
+  cout?: string | null;
+  priorite?: string | null;
+  complexite?: string | null;
+  commentaire?: string | null;
+  etatAvancement?: string | null;
+  client: Client;
+  traitementIdentifiant?: string | null;
+  traitementIdFonctionnel?: number | null;
+  traitementNom?: string | null;
 }
 
 export interface PreconisationDetails extends Preconisation {
