@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { catchError, of } from 'rxjs';
 import { ApiService } from '../../../../../services/api.service';
@@ -25,7 +26,7 @@ interface PreconisationFormValue {
 @Component({
   selector: 'app-create-preconisation-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatSnackBarModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatSnackBarModule],
   templateUrl: './create-preconisation-modal.html',
   styleUrl: './create-preconisation-modal.scss'
 })
