@@ -32,6 +32,8 @@ export class MasterDetailLayout {
   @Input() isDetailOpen: boolean = false;
   @Input() detailTitle: string = 'Détails';
   @Input() isEmpty: boolean = false;
+  /** When enabled, the parent supplies the complete detail action bar. */
+  @Input() useProjectedDetailActions = false;
   @Input() isLoading: boolean = false;
   @Output() detailClose = new EventEmitter<void>();
 
