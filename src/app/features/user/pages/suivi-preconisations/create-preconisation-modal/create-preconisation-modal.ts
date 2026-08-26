@@ -228,7 +228,11 @@ export class CreatePreconisationModal implements OnInit {
         return of({ content: [], totalElements: 0, totalPages: 0, size: 1000, number: 0 });
       })
     ).subscribe(result => {
-      this.traitements = result.content ?? [];
+      // L’API trie cet appel par nom, alors que le sélecteur doit suivre
+      // l’ordre fonctionnel du registre : 1, 2, 10 et non 1, 10, 2.
+      this.traitements = [...(result.content ?? [])].sort(
+        (a, b) => a.idFonctionnel - b.idFonctionnel
+      );
       this.loading = false;
     });
   }
