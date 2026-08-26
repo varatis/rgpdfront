@@ -47,6 +47,32 @@
   </div>
   } @else if (detailView; as details) {
     <div slot="detail-content">
+      @if (isAdmin) {
+        <div class="detail-actions" aria-label="Actions sur la préconisation">
+          <button
+            mat-icon-button
+            class="detail-action edit"
+            type="button"
+            title="Modifier"
+            aria-label="Modifier la préconisation"
+            data-testid="_btn_modifier_preconisation"
+            (click)="onModifyClick()"
+            [disabled]="!selectedDetails || detailsLoading || isDeleting">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            class="detail-action delete"
+            type="button"
+            title="Supprimer"
+            aria-label="Supprimer la préconisation"
+            data-testid="_btn_supprimer_preconisation"
+            (click)="onDeleteClick()"
+            [disabled]="isDeleting">
+            <mat-icon>{{ isDeleting ? 'hourglass_top' : 'delete' }}</mat-icon>
+          </button>
+        </div>
+      }
       <div class="detail-content">
         @if (detailsLoading && !selectedDetails) {
         <div class="detail-loading">Chargement des détails...</div>
@@ -119,3 +145,18 @@
   }
 
 </app-master-detail-layout>
+
+@if (showCreateModal) {
+  <app-create-preconisation-modal
+    (closed)="showCreateModal = false"
+    (created)="onPreconisationCreated()">
+  </app-create-preconisation-modal>
+}
+
+@if (showEditModal && selectedDetails) {
+  <app-create-preconisation-modal
+    [preconisationToEdit]="selectedDetails"
+    (closed)="showEditModal = false"
+    (updated)="onPreconisationUpdated()">
+  </app-create-preconisation-modal>
+}

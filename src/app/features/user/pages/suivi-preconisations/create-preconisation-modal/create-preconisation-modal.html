@@ -1,0 +1,181 @@
+<div class="modal-backdrop" role="presentation">
+  <section
+    class="modal-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="preconisation-modal-title"
+    data-testid="_modal_preconisation">
+    <header class="modal-header">
+      <div>
+        <p class="eyebrow">Gestion des préconisations</p>
+        <h2 id="preconisation-modal-title">{{ modalTitle }}</h2>
+      </div>
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Fermer"
+        data-testid="_btn_modal_close"
+        (click)="close()"
+        [disabled]="isSubmitting">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="modal-body">
+        @if (loadError) {
+          <div class="load-warning" role="status">
+            <mat-icon aria-hidden="true">info</mat-icon>
+            <span>{{ loadError }}</span>
+          </div>
+        }
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Préconisation</mat-label>
+          <input
+            matInput
+            formControlName="libelle"
+            data-testid="_inp_preconisation_libelle"
+            maxlength="255"
+            autocomplete="off"
+            placeholder="Ex. Mettre en place une politique de mots de passe" />
+          @if (form.get('libelle')?.hasError('required')) {
+            <mat-error>Le libellé est requis.</mat-error>
+          } @else if (form.get('libelle')?.hasError('maxlength')) {
+            <mat-error>Le libellé ne peut pas dépasser 255 caractères.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-grid two-columns">
+          <mat-form-field appearance="outline">
+            <mat-label>Priorité</mat-label>
+            <mat-select formControlName="priorite" data-testid="_inp_preconisation_priorite">
+              <mat-option [value]="null">Non définie</mat-option>
+              @for (priorite of availablePriorites; track priorite) {
+                <mat-option [value]="priorite">{{ scaleValue(priorite) }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Complexité</mat-label>
+            <mat-select formControlName="complexite" data-testid="_inp_preconisation_complexite">
+              <mat-option [value]="null">Non définie</mat-option>
+              @for (complexite of availableComplexites; track complexite) {
+                <mat-option [value]="complexite">{{ scaleValue(complexite) }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>État d’avancement</mat-label>
+          <input
+            matInput
+            formControlName="etatAvancement"
+            data-testid="_inp_preconisation_avancement"
+            autocomplete="off"
+            placeholder="Ex. À faire, En cours, Réalisée ou 50 %" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Traitement lié</mat-label>
+          <mat-select
+            formControlName="traitementIdentifiant"
+            data-testid="_inp_preconisation_traitement">
+            <mat-option [value]="null">Préconisation globale au client</mat-option>
+            @for (traitement of traitements; track traitement.identifiant) {
+              <mat-option [value]="traitement.identifiant">
+                {{ traitement.idFonctionnel }} – {{ traitement.nom }}
+              </mat-option>
+            }
+          </mat-select>
+          <mat-hint>Le rattachement à un traitement est facultatif.</mat-hint>
+        </mat-form-field>
+
+        <div class="form-grid two-columns">
+          <mat-form-field appearance="outline">
+            <mat-label>Description / explication</mat-label>
+            <textarea
+              matInput
+              formControlName="explication"
+              data-testid="_inp_preconisation_explication"
+              rows="4"
+              placeholder="Expliquez la mesure à mettre en œuvre"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Risque encouru</mat-label>
+            <textarea
+              matInput
+              formControlName="risqueEncours"
+              data-testid="_inp_preconisation_risque"
+              rows="4"
+              placeholder="Décrivez le risque en cas de non-application"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraintes</mat-label>
+            <textarea
+              matInput
+              formControlName="contraintes"
+              data-testid="_inp_preconisation_contraintes"
+              rows="4"
+              placeholder="Contraintes identifiées"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Coût</mat-label>
+            <textarea
+              matInput
+              formControlName="cout"
+              data-testid="_inp_preconisation_cout"
+              rows="4"
+              placeholder="Évaluation du coût"></textarea>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Commentaire</mat-label>
+          <textarea
+            matInput
+            formControlName="commentaire"
+            data-testid="_inp_preconisation_commentaire"
+            rows="3"
+            placeholder="Informations complémentaires"></textarea>
+        </mat-form-field>
+
+        @if (submitError) {
+          <p class="submit-error" role="alert" data-testid="_val_preconisation_submit_error">
+            {{ submitError }}
+          </p>
+        }
+      </div>
+
+      <footer class="modal-footer">
+        <button
+          mat-button
+          type="button"
+          class="cancel-button"
+          data-testid="_btn_modal_cancel"
+          (click)="close()"
+          [disabled]="isSubmitting">
+          Annuler
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          data-testid="_btn_modal_submit"
+          [disabled]="isSubmitting || loading || !client">
+          @if (isSubmitting) {
+            <span class="button-spinner" aria-hidden="true"></span>
+            Enregistrement…
+          } @else {
+            {{ isEditMode ? 'Enregistrer' : 'Ajouter' }}
+          }
+        </button>
+      </footer>
+    </form>
+  </section>
+</div>

@@ -1,14 +1,10 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
-import { HeaderAction } from '../../../../shared/components/header/header';
-import { MasterDetailLayout } from '../../../../layout/master-detail-layout/master-detail-layout';
-import { Pagination } from '../../../../shared/components/pagination/pagination';
-import { PreconisationsTable, PreconisationSortEvent } from '../../../../shared/components/preconisations-table/preconisations-table';
-import { FiltrePreconisation } from './filtre-preconisation/filtre-preconisation';
-import { ApiService } from '../../../../services/api.service';
 import { KeycloakService } from '../../../../core/auth/keycloak.service';
 import {
   avancementClass,
@@ -21,13 +17,32 @@ import {
   prioriteClass,
   scaleLabel
 } from '../../../../core/models/preconisation.model';
+import { ApiService } from '../../../../services/api.service';
+import { MasterDetailLayout } from '../../../../layout/master-detail-layout/master-detail-layout';
+import { HeaderAction } from '../../../../shared/components/header/header';
+import { Pagination } from '../../../../shared/components/pagination/pagination';
+import {
+  PreconisationsTable,
+  PreconisationSortEvent
+} from '../../../../shared/components/preconisations-table/preconisations-table';
+import { FiltrePreconisation } from './filtre-preconisation/filtre-preconisation';
+import { CreatePreconisationModal } from './create-preconisation-modal/create-preconisation-modal';
 import { FiltrePreconisationPayload } from '../../../../core/models/filtre-preconisation.payload';
 import { PageResponse } from '../../../../core/models/page-response.model';
 
 @Component({
   selector: 'app-suivi-preconisations',
   standalone: true,
-  imports: [CommonModule, MasterDetailLayout, Pagination, PreconisationsTable, FiltrePreconisation],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    MasterDetailLayout,
+    Pagination,
+    PreconisationsTable,
+    FiltrePreconisation,
+    CreatePreconisationModal
+  ],
   templateUrl: './suivi-preconisations.html',
   styleUrl: './suivi-preconisations.scss'
 })
@@ -35,35 +50,57 @@ export class SuiviPreconisations implements OnInit {
   private readonly apiService = inject(ApiService);
   private readonly keycloakService = inject(KeycloakService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly load$ = new Subject<number>();
   private readonly details$ = new Subject<string>();
+
   pageTitle = 'Gestion des préconisations';
   icon = 'tune';
 
-  actions: HeaderAction[] = [
-    {
-      label: 'Export global',
-      icon: `<svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 15L13 11L11.6 9.6L10 11.2V7H8V11.2L6.4 9.6L5 11L9 15ZM2 5V16H16V5H2ZM2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V3.525C0 3.29167 0.0375 3.06667 0.1125 2.85C0.1875 2.63333 0.3 2.43333 0.45 2.25L1.7 0.725C1.88333 0.491667 2.1125 0.3125 2.3875 0.1875C2.6625 0.0625 2.95 0 3.25 0H14.75C15.05 0 15.3375 0.0625 15.6125 0.1875C15.8875 0.3125 16.1167 0.491667 16.3 0.725L17.55 2.25C17.7 2.43333 17.8125 2.63333 17.8875 2.85C17.9625 3.06667 18 3.29167 18 3.525V16C18 16.55 17.8042 17.0208 17.4125 17.4125C17.0208 17.8042 16.55 18 16 18H2ZM2.4 3H15.6L14.75 2H3.25L2.4 3Z"/>
-      </svg>`,
-      action: 'export',
-      color: 'default'
-    },
-    {
-      label: 'Filtres',
-      icon: `<svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7 12V10H11V12H7ZM3 7V5H15V7H3ZM0 2V0H18V2H0Z" fill="currentColor"/>
-      </svg>`,
-      action: 'filter',
-      color: 'default'
-    }
-  ];
+  private readonly exportAction: HeaderAction = {
+    label: 'Export global',
+    icon: 'download',
+    action: 'export',
+    color: 'default'
+  };
+  private readonly filterAction: HeaderAction = {
+    label: 'Filtres',
+    icon: 'tune',
+    action: 'filter',
+    color: 'default',
+    testId: '_btn_filtres_preconisations'
+  };
+  private readonly addAction: HeaderAction = {
+    label: 'Ajouter une préconisation',
+    icon: 'add',
+    action: 'add',
+    color: 'primary',
+    testId: '_btn_ajouter_preconisation'
+  };
+
+  /**
+   * Comme pour le registre des traitements, seul un administrateur reçoit
+   * l’action d’écriture. La liste et le détail restent disponibles pour les
+   * rôles user/client.
+   */
+  get isAdmin(): boolean {
+    return this.keycloakService.getUserRole() === 'admin';
+  }
+
+  get actions(): HeaderAction[] {
+    return this.isAdmin
+      ? [this.exportAction, this.filterAction, this.addAction]
+      : [this.exportAction, this.filterAction];
+  }
 
   data: Preconisation[] = [];
-
   selectedPreconisation: Preconisation | null = null;
   selectedDetails: PreconisationDetails | null = null;
   filtreSelectionne = false;
+  showCreateModal = false;
+  showEditModal = false;
+  isDeleting = false;
+
   currentFilters: FiltrePreconisationPayload = {
     libelle: '',
     etatAvancement: ''
@@ -93,24 +130,21 @@ export class SuiviPreconisations implements OnInit {
       || 'Détails';
   }
 
-  // Computed properties
   get displayedDetails(): PreconisationDetails | Preconisation | null {
     return this.selectedDetails ?? this.selectedPreconisation;
   }
 
   get detailView(): PreconisationDetails | Preconisation | null {
-    if (this.filtreSelectionne) {
-      return null;
-    }
-    return this.displayedDetails;
+    return this.filtreSelectionne ? null : this.displayedDetails;
   }
 
   ngOnInit(): void {
     this.load$.pipe(
-      switchMap((page) => {
+      switchMap(page => {
         this.loading = true;
         this.error = null;
         const clientNom = this.keycloakService.getClientName() ?? undefined;
+
         return this.apiService.getPreconisations(
           page,
           this.size,
@@ -119,8 +153,8 @@ export class SuiviPreconisations implements OnInit {
           clientNom,
           this.currentFilters
         ).pipe(
-          catchError((err) => {
-            console.error(err);
+          catchError(error => {
+            console.error(error);
             this.data = [];
             this.totalPages = 0;
             this.totalElements = 0;
@@ -131,28 +165,28 @@ export class SuiviPreconisations implements OnInit {
         );
       }),
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe((res: PageResponse<Preconisation>) => {
-      this.data = (res.content ?? []).map(item => this.normalizeScales(item));
-      this.page = res.number;
-      this.size = res.size;
-      this.totalElements = res.totalElements;
-      this.totalPages = res.totalPages;
-      this.currentPage = res.number + 1;
+    ).subscribe((response: PageResponse<Preconisation>) => {
+      this.data = (response.content ?? []).map(item => this.normalizeScales(item));
+      this.page = response.number;
+      this.size = response.size;
+      this.totalElements = response.totalElements;
+      this.totalPages = response.totalPages;
+      this.currentPage = response.number + 1;
     });
 
     this.details$.pipe(
-      switchMap((identifiant) => {
+      switchMap(identifiant => {
         this.detailsLoading = true;
         return this.apiService.getPreconisationDetails(identifiant).pipe(
-          catchError((err) => {
-            console.error(err);
+          catchError(error => {
+            console.error(error);
             return EMPTY;
           }),
           finalize(() => this.detailsLoading = false)
         );
       }),
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe((details) => {
+    ).subscribe(details => {
       if (this.selectedPreconisation?.identifiant === details.identifiant) {
         this.selectedDetails = this.normalizeScales(details);
       }
@@ -186,21 +220,88 @@ export class SuiviPreconisations implements OnInit {
 
   onHeaderAction(action: string): void {
     switch (action) {
+      case 'add':
+        this.onCreatePreconisation();
+        break;
       case 'export':
         this.onExportGlobal();
         break;
       case 'filter':
-        this.selectedPreconisation = null;
-        this.selectedDetails = null;
+        this.onCloseDetail();
         this.filtreSelectionne = true;
         break;
     }
   }
 
-  onExportGlobal(): void {}
+  onCreatePreconisation(): void {
+    if (this.isAdmin) {
+      this.showCreateModal = true;
+    }
+  }
+
+  onPreconisationCreated(): void {
+    this.currentPage = 1;
+    this.loadPreconisations(0);
+  }
+
+  onModifyClick(): void {
+    if (this.isAdmin && this.selectedDetails) {
+      this.showEditModal = true;
+    }
+  }
+
+  onPreconisationUpdated(): void {
+    this.showEditModal = false;
+    this.onCloseDetail();
+    this.loadPreconisations(this.page);
+  }
+
+  onDeleteClick(): void {
+    if (!this.isAdmin || !this.selectedPreconisation || this.isDeleting) {
+      return;
+    }
+
+    const preconisation = this.selectedPreconisation;
+    if (!window.confirm(`Supprimer la préconisation « ${preconisation.libelle} » ?`)) {
+      return;
+    }
+
+    this.isDeleting = true;
+    this.apiService.deletePreconisation(preconisation.identifiant).subscribe({
+      next: () => {
+        this.isDeleting = false;
+        this.snackBar.open('Préconisation supprimée avec succès', 'OK', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-success']
+        });
+        this.onCloseDetail();
+        this.loadPreconisations(this.page);
+      },
+      error: error => {
+        console.error(error);
+        this.isDeleting = false;
+        this.snackBar.open('Erreur lors de la suppression de la préconisation', 'Fermer', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
+  }
+
+  onExportGlobal(): void {
+    // L'export n'est pas encore exposé par le back. L'action reste affichée
+    // pour conserver la navigation actuelle, sans inventer un endpoint.
+  }
 
   onFiltreChange(filtre: FiltrePreconisationPayload): void {
-    this.currentFilters = filtre;
+    this.currentFilters = {
+      libelle: filtre.libelle.trim(),
+      etatAvancement: filtre.etatAvancement.trim()
+    };
     this.currentPage = 1;
     this.loadPreconisations(0);
   }
@@ -238,7 +339,6 @@ export class SuiviPreconisations implements OnInit {
   getAvancementPercent(etatAvancement?: string): number | null {
     return parseAvancementPercent(etatAvancement);
   }
-
 
   value(value?: string | number | null): string {
     return displayValue(value);

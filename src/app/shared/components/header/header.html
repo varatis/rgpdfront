@@ -10,7 +10,10 @@
   </div>
   <div class="actions">
     @for (a of actions; track a.action) {
-    <button (click)="onClick(a.action)" [ngClass]="a.color">
+    <button
+      (click)="onClick(a.action)"
+      [ngClass]="a.color"
+      [attr.data-testid]="a.testId || null">
       @if (a.icon && !isSvg(a.icon)) {
       <mat-icon>{{ a.icon }}</mat-icon>
       }

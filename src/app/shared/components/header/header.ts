@@ -8,6 +8,7 @@ export interface HeaderAction {
   icon?: string;
   action: string;
   color?: 'primary' | 'default';
+  testId?: string;
 }
 @Component({
   selector: 'app-header',

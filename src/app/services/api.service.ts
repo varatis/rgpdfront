@@ -9,7 +9,11 @@ import { Etablissement } from '../core/models/etablissement.model';
 import { Client } from '../core/models/client.model';
 import { FiltreTraitementPayload } from '../core/models/filtre-traitement.payload';
 import { FiltrePreconisationPayload } from '../core/models/filtre-preconisation.payload';
-import { Preconisation, PreconisationDetails } from '../core/models/preconisation.model';
+import {
+  Preconisation,
+  PreconisationDetails,
+  PreconisationWritePayload
+} from '../core/models/preconisation.model';
 import { Demande } from '../core/models/demande.model';
 
 @Injectable({
@@ -139,5 +143,23 @@ export class ApiService {
 
   getPreconisationDetails(identifiant: string): Observable<PreconisationDetails> {
     return this.http.get<PreconisationDetails>(this.apiUrl + 'preconisations/' + identifiant);
+  }
+
+  createPreconisation(payload: PreconisationWritePayload): Observable<PreconisationDetails> {
+    return this.http.post<PreconisationDetails>(this.apiUrl + 'preconisations', payload);
+  }
+
+  updatePreconisation(
+    identifiant: string,
+    payload: PreconisationWritePayload
+  ): Observable<PreconisationDetails> {
+    return this.http.put<PreconisationDetails>(
+      this.apiUrl + 'preconisations/' + identifiant,
+      payload
+    );
+  }
+
+  deletePreconisation(identifiant: string): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + 'preconisations/' + identifiant);
   }
 }
