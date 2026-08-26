@@ -35,16 +35,14 @@
       <div class="detail-header">
         <div class="detail-actions">
           <ng-content select="[slot='detail-actions']"></ng-content>
-          @if (!useProjectedDetailActions) {
-            <button
-              class="icon-btn close"
-              type="button"
-              data-testid="_btn_fermer_detail"
-              title="Fermer"
-              (click)="onCloseDetail()">
-              <mat-icon>close</mat-icon>
-            </button>
-          }
+          <button
+            class="icon-btn close"
+            type="button"
+            data-testid="_btn_fermer_detail"
+            title="Fermer"
+            (click)="onCloseDetail()">
+            <mat-icon>close</mat-icon>
+          </button>
         </div>
         <div class="detail-title">
           <h2>{{ detailTitle }}</h2>

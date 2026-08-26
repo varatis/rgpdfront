@@ -12,6 +12,12 @@
   width: 100%;
 }
 
+/* Le wrapper est projeté dans la barre du layout ; ses boutons restent des
+ * éléments de la même ligne que le bouton Fermer du layout. */
+.preconisation-detail-actions {
+  display: contents;
+}
+
 .icon-btn {
   width: 36px;
   height: 36px;

@@ -4,7 +4,6 @@
   [actions]="actions"
   [isDetailOpen]="isDetailOpen"
   [detailTitle]="detailTitle"
-  [useProjectedDetailActions]="true"
   (actionClick)="onHeaderAction($event)"
   (detailClose)="onCloseDetail()">
 
@@ -19,7 +18,7 @@
     (sortChange)="onSortChange($event)">
   </app-preconisations-table>
 
-  <div slot="detail-actions">
+  <div slot="detail-actions" class="preconisation-detail-actions">
     @if (isAdmin) {
       <!-- Bouton Modifier : même code que le registre des traitements -->
       <button data-testid="_btn_modifier_preconisation" class="icon-btn edit" title="Modifier"
@@ -33,9 +32,6 @@
         <mat-icon >delete</mat-icon>
       </button>
     }
-    <button class="icon-btn close" data-testid="_btn_fermer_detail" (click)="onCloseDetail()" title="Fermer">
-      <mat-icon >close</mat-icon>
-    </button>
   </div>
 
   <app-pagination
