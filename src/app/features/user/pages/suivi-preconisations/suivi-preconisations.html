@@ -4,7 +4,6 @@
   [actions]="actions"
   [isDetailOpen]="isDetailOpen"
   [detailTitle]="detailTitle"
-  [hideDetailHeader]="filtreSelectionne"
   (actionClick)="onHeaderAction($event)"
   (detailClose)="onCloseDetail()">
 
@@ -55,15 +54,7 @@
     </div>
   }
 
-  @if (filtreSelectionne) {
-  <div slot="detail-content">
-    <app-filtre-preconisation
-      [filters]="currentFilters"
-      (filtreChange)="onFiltreChange($event)"
-      (filtreClose)="onFiltreClose()">
-    </app-filtre-preconisation>
-  </div>
-  } @else if (detailView; as details) {
+  @if (detailView; as details) {
     <div slot="detail-content">
       <div class="detail-content">
         @if (detailsLoading && !selectedDetails) {
@@ -137,6 +128,19 @@
   }
 
 </app-master-detail-layout>
+
+@if (filtreSelectionne) {
+  <div class="filter-modal" role="dialog" aria-modal="true" aria-labelledby="filter-title">
+    <button class="filter-backdrop" type="button" aria-label="Fermer les filtres" (click)="onFiltreClose()"></button>
+    <div class="filter-panel">
+      <app-filtre-preconisation
+        [filters]="currentFilters"
+        (filtreChange)="onFiltreChange($event)"
+        (filtreClose)="onFiltreClose()">
+      </app-filtre-preconisation>
+    </div>
+  </div>
+}
 
 @if (showCreateModal) {
   <app-create-preconisation-modal

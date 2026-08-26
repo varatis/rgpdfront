@@ -121,7 +121,7 @@ export class SuiviPreconisations implements OnInit {
   error: string | null = null;
 
   get isDetailOpen(): boolean {
-    return this.filtreSelectionne || !!this.selectedPreconisation;
+    return !!this.selectedPreconisation;
   }
 
   get detailTitle(): string {
