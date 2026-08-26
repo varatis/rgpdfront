@@ -131,10 +131,6 @@ export class ApiService {
     if (filters?.libelle) {
       params = params.set('libelle', filters.libelle);
     }
-    if (filters?.etatAvancement) {
-      params = params.set('etatAvancement', filters.etatAvancement);
-    }
-
     return this.http.get<PageResponse<Preconisation>>(
       this.apiUrl + 'preconisations',
       { params }

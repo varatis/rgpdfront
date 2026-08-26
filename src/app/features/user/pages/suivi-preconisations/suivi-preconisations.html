@@ -58,6 +58,7 @@
   @if (filtreSelectionne) {
   <div slot="detail-content">
     <app-filtre-preconisation
+      [filters]="currentFilters"
       (filtreChange)="onFiltreChange($event)"
       (filtreClose)="onFiltreClose()">
     </app-filtre-preconisation>

@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,7 +24,10 @@ export class FiltrePreconisation {
   filtreChange = output<FiltrePreconisationPayload>();
 
   libelle = '';
-  etatAvancement = '';
+
+  @Input() set filters(value: FiltrePreconisationPayload) {
+    this.libelle = value?.libelle ?? '';
+  }
 
   onClose(): void {
     this.filtreClose.emit();
@@ -32,14 +35,13 @@ export class FiltrePreconisation {
 
   onReset(): void {
     this.libelle = '';
-    this.etatAvancement = '';
-    this.filtreChange.emit({ libelle: '', etatAvancement: '' });
+    this.filtreChange.emit({ libelle: '' });
   }
 
   onApply(): void {
     this.filtreChange.emit({
-      libelle: this.libelle,
-      etatAvancement: this.etatAvancement
+      libelle: this.libelle
     });
+    this.onClose();
   }
 }

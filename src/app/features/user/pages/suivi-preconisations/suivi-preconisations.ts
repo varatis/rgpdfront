@@ -106,8 +106,7 @@ export class SuiviPreconisations implements OnInit {
   isDeleting = false;
 
   currentFilters: FiltrePreconisationPayload = {
-    libelle: '',
-    etatAvancement: ''
+    libelle: ''
   };
 
   currentPage = 1;
@@ -319,8 +318,7 @@ export class SuiviPreconisations implements OnInit {
 
   onFiltreChange(filtre: FiltrePreconisationPayload): void {
     this.currentFilters = {
-      libelle: filtre.libelle.trim(),
-      etatAvancement: filtre.etatAvancement.trim()
+      libelle: filtre.libelle.trim()
     };
     this.currentPage = 1;
     this.loadPreconisations(0);
