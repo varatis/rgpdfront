@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { EMPTY, Subject } from 'rxjs';
@@ -29,12 +30,14 @@ import { FiltrePreconisation } from './filtre-preconisation/filtre-preconisation
 import { CreatePreconisationModal } from './create-preconisation-modal/create-preconisation-modal';
 import { FiltrePreconisationPayload } from '../../../../core/models/filtre-preconisation.payload';
 import { PageResponse } from '../../../../core/models/page-response.model';
+import { Modal } from '../../../../shared/components/modal/modal';
 
 @Component({
   selector: 'app-suivi-preconisations',
   standalone: true,
   imports: [
     CommonModule,
+    MatDialogModule,
     MatIconModule,
     MatSnackBarModule,
     MasterDetailLayout,
@@ -50,6 +53,7 @@ export class SuiviPreconisations implements OnInit {
   private readonly apiService = inject(ApiService);
   private readonly keycloakService = inject(KeycloakService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly load$ = new Subject<number>();
   private readonly details$ = new Subject<string>();
@@ -262,12 +266,28 @@ export class SuiviPreconisations implements OnInit {
     }
 
     const preconisation = this.selectedPreconisation;
-    if (!window.confirm(`Supprimer la préconisation « ${preconisation.libelle} » ?`)) {
-      return;
-    }
+    const dialogRef = this.dialog.open(Modal, {
+      width: 'min(500px, calc(100vw - 32px))',
+      data: {
+        title: 'Supprimer la préconisation',
+        message: `Supprimer la préconisation « ${preconisation.libelle} » ?`,
+        confirmText: 'Supprimer',
+        confirmColor: 'warn',
+        cancelText: 'Annuler',
+        showCancel: true
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.deletePreconisation(preconisation.identifiant);
+      }
+    });
+  }
+
+  private deletePreconisation(identifiant: string): void {
     this.isDeleting = true;
-    this.apiService.deletePreconisation(preconisation.identifiant).subscribe({
+    this.apiService.deletePreconisation(identifiant).subscribe({
       next: () => {
         this.isDeleting = false;
         this.snackBar.open('Préconisation supprimée avec succès', 'OK', {

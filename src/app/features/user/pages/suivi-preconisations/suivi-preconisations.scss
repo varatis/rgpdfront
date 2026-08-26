@@ -26,30 +26,6 @@
   }
 }
 
-/* --- DETAIL ACTIONS --- */
-.detail-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 4px;
-  padding: 12px 24px 0;
-
-  .detail-action {
-    color: #2E63CD;
-
-    &:hover:not(:disabled) {
-      background: #EFF6FF;
-    }
-
-    &.delete {
-      color: #B92424;
-
-      &:hover:not(:disabled) {
-        background: #FEF2F2;
-      }
-    }
-  }
-}
-
 /* --- DETAIL CONTENT --- */
 .detail-content {
   padding: 24px;

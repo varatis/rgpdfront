@@ -31,12 +31,24 @@
 
     <!-- Section droite : Détails -->
      @if(isDetailOpen) {
-    <div class="right-section" >
+    <div class="right-section">
       <div class="detail-header">
-        <h2>{{ detailTitle }}</h2>
-        <button class="close-btn" (click)="onCloseDetail()">×</button>
+        <div class="detail-actions">
+          <ng-content select="[slot='detail-actions']"></ng-content>
+          <button
+            class="icon-btn close"
+            type="button"
+            data-testid="_btn_fermer_detail"
+            title="Fermer"
+            (click)="onCloseDetail()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div class="detail-title">
+          <h2>{{ detailTitle }}</h2>
+        </div>
       </div>
-      
+
       <ng-content select="[slot='detail-content']"></ng-content>
     </div>
   }

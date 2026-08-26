@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { catchError, of } from 'rxjs';
 import { ApiService } from '../../../../../services/api.service';
@@ -30,16 +25,7 @@ interface PreconisationFormValue {
 @Component({
   selector: 'app-create-preconisation-modal',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSnackBarModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, MatSnackBarModule],
   templateUrl: './create-preconisation-modal.html',
   styleUrl: './create-preconisation-modal.scss'
 })
@@ -212,6 +198,20 @@ export class CreatePreconisationModal implements OnInit {
 
   scaleValue(value?: string | null): string {
     return scaleLabel(value);
+  }
+
+  invalidStatusCause(field: string): string {
+    const control = this.form.get(field);
+    if (!control?.invalid || (!control.dirty && !control.touched)) {
+      return '';
+    }
+    if (control.hasError('required')) {
+      return 'Ce champ est requis.';
+    }
+    if (control.hasError('maxlength')) {
+      return 'La limite de caractères est dépassée.';
+    }
+    return '';
   }
 
   private setClientAndLoadTreatments(client: Client): void {

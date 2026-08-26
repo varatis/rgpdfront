@@ -18,6 +18,31 @@
     (sortChange)="onSortChange($event)">
   </app-preconisations-table>
 
+  <div slot="detail-actions">
+    @if (isAdmin) {
+      <button
+        data-testid="_btn_modifier_preconisation"
+        class="icon-btn edit"
+        type="button"
+        title="Modifier"
+        aria-label="Modifier la préconisation"
+        (click)="onModifyClick()"
+        [disabled]="!selectedDetails || detailsLoading || isDeleting">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button
+        data-testid="_btn_supprimer_preconisation"
+        class="icon-btn delete"
+        type="button"
+        title="Supprimer"
+        aria-label="Supprimer la préconisation"
+        (click)="onDeleteClick()"
+        [disabled]="isDeleting">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
+  </div>
+
   <app-pagination
     slot="pagination"
     [currentPage]="currentPage"
@@ -47,32 +72,6 @@
   </div>
   } @else if (detailView; as details) {
     <div slot="detail-content">
-      @if (isAdmin) {
-        <div class="detail-actions" aria-label="Actions sur la préconisation">
-          <button
-            mat-icon-button
-            class="detail-action edit"
-            type="button"
-            title="Modifier"
-            aria-label="Modifier la préconisation"
-            data-testid="_btn_modifier_preconisation"
-            (click)="onModifyClick()"
-            [disabled]="!selectedDetails || detailsLoading || isDeleting">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            class="detail-action delete"
-            type="button"
-            title="Supprimer"
-            aria-label="Supprimer la préconisation"
-            data-testid="_btn_supprimer_preconisation"
-            (click)="onDeleteClick()"
-            [disabled]="isDeleting">
-            <mat-icon>{{ isDeleting ? 'hourglass_top' : 'delete' }}</mat-icon>
-          </button>
-        </div>
-      }
       <div class="detail-content">
         @if (detailsLoading && !selectedDetails) {
         <div class="detail-loading">Chargement des détails...</div>

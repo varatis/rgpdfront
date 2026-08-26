@@ -11,6 +11,8 @@
     @if (data.showCancel) {
       <button mat-button (click)="onCancel()">{{ data.cancelText }}</button>
     }
-    <button mat-raised-button color="primary" (click)="onConfirm()">{{ data.confirmText }}</button>
+    <button mat-raised-button [color]="data.confirmColor || 'primary'" (click)="onConfirm()">
+      {{ data.confirmText }}
+    </button>
   </mat-dialog-actions>
 </div>
