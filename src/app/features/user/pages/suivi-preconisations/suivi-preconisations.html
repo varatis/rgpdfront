@@ -4,6 +4,7 @@
   [actions]="actions"
   [isDetailOpen]="isDetailOpen"
   [detailTitle]="detailTitle"
+  [hideDetailHeader]="filtreSelectionne"
   (actionClick)="onHeaderAction($event)"
   (detailClose)="onCloseDetail()">
 
@@ -17,6 +18,19 @@
     (rowClick)="onSelectPreconisation($event)"
     (sortChange)="onSortChange($event)">
   </app-preconisations-table>
+
+  <div slot="detail-actions" class="preconisation-detail-actions">
+    @if (isAdmin) {
+    <button data-testid="_btn_modifier_preconisation" class="icon-btn edit" title="Modifier"
+            (click)="onModifyClick()" [disabled]="!selectedDetails || detailsLoading || isDeleting">
+      <mat-icon >edit</mat-icon>
+      </button>
+    <button data-testid="_btn_supprimer_preconisation" class="icon-btn delete" title="Supprimer"
+            (click)="onDeleteClick()" [disabled]="isDeleting">
+      <mat-icon >delete</mat-icon>
+      </button>
+    }
+  </div>
 
   <app-pagination
     slot="pagination"
@@ -38,14 +52,7 @@
     </div>
   }
 
-  @if (filtreSelectionne) {
-  <div slot="detail-content">
-    <app-filtre-preconisation
-      (filtreChange)="onFiltreChange($event)"
-      (filtreClose)="onFiltreClose()">
-    </app-filtre-preconisation>
-  </div>
-  } @else if (detailView; as details) {
+  @if (detailView; as details) {
     <div slot="detail-content">
       <div class="detail-content">
         @if (detailsLoading && !selectedDetails) {
@@ -119,3 +126,31 @@
   }
 
 </app-master-detail-layout>
+
+@if (filtreSelectionne) {
+<div class="filter-modal" role="dialog" aria-modal="true" aria-labelledby="filter-title">
+  <button class="filter-backdrop" type="button" aria-label="Fermer les filtres" (click)="onFiltreClose()"></button>
+  <div class="filter-panel">
+    <app-filtre-preconisation
+      [filters]="currentFilters"
+      (filtreChange)="onFiltreChange($event)"
+      (filtreClose)="onFiltreClose()">
+    </app-filtre-preconisation>
+  </div>
+</div>
+}
+
+@if (showCreateModal) {
+  <app-create-preconisation-modal
+    (closed)="showCreateModal = false"
+    (created)="onPreconisationCreated()">
+  </app-create-preconisation-modal>
+}
+
+@if (showEditModal && selectedDetails) {
+  <app-create-preconisation-modal
+    [preconisationToEdit]="selectedDetails"
+    (closed)="showEditModal = false"
+    (updated)="onPreconisationUpdated()">
+  </app-create-preconisation-modal>
+}
