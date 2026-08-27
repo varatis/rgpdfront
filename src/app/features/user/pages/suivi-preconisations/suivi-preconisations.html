@@ -130,24 +130,18 @@
         
         }
         @if (detailTab === 'historique') {
-<div class="historique-section">
-          <h2>Historique des modifications</h2>
+        <div class="historique-section">
           @if (historique.length === 0) {
-            <p>Aucune modification enregistrée</p>
+            <p class="historique-vide">Aucune modification enregistrée</p>
           } @else {
-            <table class="historique-table">
-              <thead>
-                <tr><th>Date</th><th>Motif</th></tr>
-              </thead>
-              <tbody>
-                @for (item of historique; track $index) {
-                  <tr>
-                    <td>{{ formatHistoriqueDate(item.date) }}</td>
-                    <td>{{ item.motif }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+            <div class="historique-liste">
+              @for (item of historique; track $index) {
+                <div class="historique-item">
+                  <div class="historique-date">{{ formatHistoriqueDate(item.date) }}</div>
+                  <div class="historique-motif">{{ item.motif }}</div>
+                </div>
+              }
+            </div>
           }
         </div>
         }
