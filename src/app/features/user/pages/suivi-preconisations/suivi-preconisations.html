@@ -121,6 +121,28 @@
             }
           </div>
         </div>
+
+        <div class="historique-section">
+          <h2>Historique des modifications</h2>
+          @if (historique.length === 0) {
+            <p>Aucune modification enregistrée</p>
+          } @else {
+            <table class="historique-table">
+              <thead>
+                <tr><th>Date</th><th>Motif</th></tr>
+              </thead>
+              <tbody>
+                @for (item of historique; track $index) {
+                  <tr>
+                    <td>{{ formatHistoriqueDate(item.date) }}</td>
+                    <td>{{ item.motif }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+
       </div>
     </div>
   }

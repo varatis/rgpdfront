@@ -100,6 +100,7 @@ export class SuiviPreconisations implements OnInit {
   data: Preconisation[] = [];
   selectedPreconisation: Preconisation | null = null;
   selectedDetails: PreconisationDetails | null = null;
+  historique: HistoriqueEntry[] = [];
   filtreSelectionne = false;
   showCreateModal = false;
   showEditModal = false;
@@ -192,6 +193,7 @@ export class SuiviPreconisations implements OnInit {
     ).subscribe(details => {
       if (this.selectedPreconisation?.identifiant === details.identifiant) {
         this.selectedDetails = this.normalizeScales(details);
+        this.loadHistorique(details.identifiant);
       }
     });
 
@@ -200,6 +202,33 @@ export class SuiviPreconisations implements OnInit {
 
   loadPreconisations(page: number): void {
     this.load$.next(page);
+  }
+
+
+  private loadHistorique(identifiant: string): void {
+    this.apiService.getPreconisationHistorique(identifiant).subscribe({
+      next: (res) => this.historique = res ?? [],
+      error: (err) => {
+        if (err?.status === 404) {
+          this.historique = [];
+        } else {
+          console.error(err);
+          this.historique = [];
+        }
+      }
+    });
+  }
+
+  formatHistoriqueDate(isoDate: string): string {
+    if (!isoDate) return '-';
+    const [datePart, timePart] = isoDate.split('T');
+    if (!datePart || !timePart) return isoDate;
+    const [y, m, d] = datePart.split('-');
+    const [hh, mm] = timePart.split(':');
+    if (y && m && d && hh && mm) {
+      return `${d}/${m}/${y} ${hh}:${mm}`;
+    }
+    return isoDate;
   }
 
   onSelectPreconisation(item: Preconisation): void {
@@ -217,6 +246,7 @@ export class SuiviPreconisations implements OnInit {
   onCloseDetail(): void {
     this.selectedPreconisation = null;
     this.selectedDetails = null;
+    this.historique = [];
     this.filtreSelectionne = false;
     this.detailsLoading = false;
   }
@@ -255,7 +285,9 @@ export class SuiviPreconisations implements OnInit {
 
   onPreconisationUpdated(): void {
     this.showEditModal = false;
-    this.onCloseDetail();
+    if (this.selectedPreconisation) {
+      this.details$.next(this.selectedPreconisation.identifiant);
+    }
     this.loadPreconisations(this.page);
   }
 

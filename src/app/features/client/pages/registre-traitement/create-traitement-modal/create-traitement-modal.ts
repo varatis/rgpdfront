@@ -108,6 +108,7 @@ export class CreateTraitementModal implements OnInit {
       transfertsHorsUE: [false],
       paysDestinataires: [null],
       commentaires: [null],
+      motifModification: [''],
     });
   }
 
@@ -319,7 +320,7 @@ export class CreateTraitementModal implements OnInit {
       licieteTraitement, dureeConservation, dureeArchivage, ...reste
     } = this.form.value;
 
-    return {
+    const payload: CreateTraitementPayload = {
       ...reste,
       finalitePrincipale: this.toDefinition(finalitePrincipale, TYPE_FINALITE_PRINCIPALE),
       responsableTraitement: this.toResponsableTraitement(responsableTraitement),
@@ -329,6 +330,10 @@ export class CreateTraitementModal implements OnInit {
       dureeConservation: this.toDuree(dureeConservation, DUREE_CONSERVATION),
       dureeArchivage: this.toDuree(dureeArchivage, DUREE_ARCHIVAGE),
     };
+    if (!this.isEditMode || !payload.motifModification?.trim()) {
+      delete (payload as any).motifModification;
+    }
+    return payload;
   }
 
   // Une valeur vide laisse la référence nulle : le back ne crée alors aucune

@@ -37,6 +37,7 @@ export interface PreconisationWritePayload {
   traitementIdentifiant?: string | null;
   traitementIdFonctionnel?: number | null;
   traitementNom?: string | null;
+  motifModification?: string;
 }
 
 export interface PreconisationDetails extends Preconisation {

@@ -46,6 +46,7 @@ export interface CreateTraitementPayload {
     transfertsHorsUE?: boolean;
     paysDestinataires?: string;
     commentaires?: string;
+    motifModification?: string;
 }
 
 /**
