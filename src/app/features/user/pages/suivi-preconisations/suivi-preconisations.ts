@@ -17,6 +17,7 @@ import {
   PreconisationSortField,
   prioriteClass,
   scaleLabel
+import { HistoriqueEntry } from '../../../../core/models/historique.model';
 } from '../../../../core/models/preconisation.model';
 import { ApiService } from '../../../../services/api.service';
 import { MasterDetailLayout } from '../../../../layout/master-detail-layout/master-detail-layout';
