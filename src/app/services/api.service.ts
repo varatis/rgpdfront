@@ -140,4 +140,13 @@ export class ApiService {
   getPreconisationDetails(identifiant: string): Observable<PreconisationDetails> {
     return this.http.get<PreconisationDetails>(this.apiUrl + 'preconisations/' + identifiant);
   }
+
+  traiterDemande(id: string): Observable<any> {
+
+    return this.http.put(
+      this.apiUrl + 'demandes/' + id + '/traiter',
+      {}
+    );
+
+  }
 }

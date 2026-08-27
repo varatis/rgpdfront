@@ -87,6 +87,27 @@
             {{ selectedDemande.statut === 'TRAITEE' ? 'Traité' : 'Non traité' }}
           </span>
         </div>
+        @if(
+        isAdmin &&
+        selectedDemande?.statut === 'EN_ATTENTE'
+        ) {
+
+        <div class="detail-actions">
+
+          <button
+            class="btn-primary"
+            (click)="validerDemande()">
+
+            <mat-icon>check_circle</mat-icon>
+
+            Valider la demande
+
+          </button>
+
+        </div>
+
+        }
+
       </div>
     </div>
   }
@@ -98,3 +119,5 @@
     (created)="onDemandeCreated()">
   </app-create-demande-modal>
 }
+
+

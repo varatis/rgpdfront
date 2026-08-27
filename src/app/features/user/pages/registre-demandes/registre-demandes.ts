@@ -9,6 +9,7 @@ import {CreateDemandeModal} from './create-demande-modal/create-demande-modal';
 import {ApiService} from '../../../../services/api.service';
 import { Component, OnInit } from '@angular/core';
 import { Demande } from '../../../../core/models/demande.model';
+import { KeycloakService } from '../../../../core/auth/keycloak.service';
 
 
 @Component({
@@ -66,7 +67,8 @@ export class RegistreDemandes implements OnInit{
   demandesTreated: Demande[] = [];
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private keycloakService: KeycloakService
   ) {
 
     // this.demandesPending = [...];
@@ -208,5 +210,39 @@ export class RegistreDemandes implements OnInit{
 
   onDemandeCreated(): void {
     this.loadDemandes();
+  }
+
+  get isAdmin(): boolean {
+
+    const role = this.keycloakService.getUserRole();
+
+    return role === 'admin'
+      || role === 'superadmin';
+  }
+
+  validerDemande(): void {
+
+    if (!this.selectedDemande) {
+      return;
+    }
+
+    this.apiService
+      .traiterDemande(this.selectedDemande.id)
+      .subscribe({
+
+        next: () => {
+
+          this.selectedDemande = null;
+
+          this.loadDemandes();
+
+        },
+
+        error: err => {
+          console.error(err);
+        }
+
+      });
+
   }
 }

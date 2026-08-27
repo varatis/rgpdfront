@@ -1,4 +1,7 @@
-/* --- EMPTY STATE --- */
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -14,56 +17,129 @@
   }
 
   p {
-    font-size: 1rem;
-    color: #6B7280;
     margin: 0;
+    font-size: 1rem;
+    color: #6b7280;
   }
 }
 
-/* --- DETAIL CONTENT --- */
+/* ==========================================================
+   DETAIL PANEL
+========================================================== */
+
 .detail-content {
-   padding: 1.5rem 2rem;
-    border-left: 1px solid #e5e7eb;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  padding: 24px 32px;
+  border-left: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
 
-  .field-group {
-    margin-bottom: 1.5rem;
+/* ==========================================================
+   FIELDS
+========================================================== */
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #f3f4f6;
 
-    label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #6B7280;
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.5px;
-    }
-
-    p {
-      font-size: 0.95rem;
-      color: #111827;
-      margin: 0;
-      line-height: 1.6;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: #FEF3C7;
-      color: #92400E;
-
-      &.badge-success {
-        background: #D1FAE5;
-        color: #065F46;
-      }
-    }
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
   }
+
+  label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #111827;
+    word-break: break-word;
+  }
+}
+
+/* ==========================================================
+   STATUS BADGES
+========================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.detail-actions {
+  margin-top: 24px;
+  padding-top: 20px;
+
+  border-top: 1px solid #e5e7eb;
+
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #2e63cd;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: #244fa8;
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }
