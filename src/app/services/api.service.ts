@@ -142,6 +142,24 @@ export class ApiService {
     return this.http.get<PreconisationDetails>(this.apiUrl + 'preconisations/' + identifiant);
   }
 
+  createPreconisation(payload: PreconisationWritePayload): Observable<PreconisationDetails> {
+    return this.http.post<PreconisationDetails>(this.apiUrl + 'preconisations', payload);
+  }
+
+  updatePreconisation(
+    identifiant: string,
+    payload: PreconisationWritePayload
+  ): Observable<PreconisationDetails> {
+    return this.http.put<PreconisationDetails>(
+      this.apiUrl + 'preconisations/' + identifiant,
+      payload
+    );
+  }
+
+  deletePreconisation(identifiant: string): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + 'preconisations/' + identifiant);
+  }
+
   traiterDemande(id: string): Observable<any> {
 
     return this.http.put(
