@@ -1,0 +1,200 @@
+<div
+  class="modal-backdrop"
+  data-testid="_lst_modal_create_preconisation"
+  (click)="close()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+    <!-- Header : identique au modal du registre des traitements -->
+    <div class="modal-header">
+      <h2 data-testid="_lib_modal_title">
+        {{ isEditMode ? 'Modifier la préconisation' : 'Ajouter une préconisation' }}
+      </h2>
+      <button
+        class="modal-close-btn"
+        data-testid="_btn_modal_close"
+        type="button"
+        (click)="close()"
+        title="Fermer">
+        <mat-icon aria-hidden="true">close</mat-icon>
+      </button>
+    </div>
+
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      @if (loadError) {
+        <div class="load-warning" role="status">{{ loadError }}</div>
+      }
+
+      <div
+        class="form-field"
+        [class.invalid]="invalidStatusCause('libelle')">
+        <label data-testid="_lib_inp_preconisation_libelle" for="inp_preconisation_libelle">
+          Préconisation <span class="required">*</span>
+        </label>
+        <input
+          id="inp_preconisation_libelle"
+          data-testid="_inp_preconisation_libelle"
+          type="text"
+          formControlName="libelle"
+          maxlength="255"
+          autocomplete="off"
+          placeholder="Ex : Mettre en place une politique de mots de passe" />
+        <span class="field-error" data-testid="_val_error_preconisation_libelle">
+          {{ invalidStatusCause('libelle') }}
+        </span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label data-testid="_lib_inp_preconisation_priorite" for="inp_preconisation_priorite">
+            Priorité
+          </label>
+          <select
+            id="inp_preconisation_priorite"
+            data-testid="_inp_preconisation_priorite"
+            formControlName="priorite">
+            <option [ngValue]="null">Non définie</option>
+            @for (priorite of availablePriorites; track priorite) {
+              <option [ngValue]="priorite">{{ scaleValue(priorite) }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label data-testid="_lib_inp_preconisation_complexite" for="inp_preconisation_complexite">
+            Complexité
+          </label>
+          <select
+            id="inp_preconisation_complexite"
+            data-testid="_inp_preconisation_complexite"
+            formControlName="complexite">
+            <option [ngValue]="null">Non définie</option>
+            @for (complexite of availableComplexites; track complexite) {
+              <option [ngValue]="complexite">{{ scaleValue(complexite) }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_preconisation_avancement" for="inp_preconisation_avancement">
+          État d’avancement
+        </label>
+        <input
+          id="inp_preconisation_avancement"
+          data-testid="_inp_preconisation_avancement"
+          type="text"
+          formControlName="etatAvancement"
+          autocomplete="off"
+          placeholder="Ex : À faire, En cours, Réalisée ou 50 %" />
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_preconisation_traitement" for="inp_preconisation_traitement">
+          Traitement lié
+        </label>
+        <select
+          id="inp_preconisation_traitement"
+          data-testid="_inp_preconisation_traitement"
+          formControlName="traitementIdentifiant">
+          <option [ngValue]="null">Préconisation globale au client</option>
+          @for (traitement of traitements; track traitement.identifiant) {
+            <option [ngValue]="traitement.identifiant">
+              {{ traitement.idFonctionnel }} – {{ traitement.nom }}
+            </option>
+          }
+        </select>
+        <span class="field-help">Le rattachement à un traitement est facultatif.</span>
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_preconisation_explication" for="inp_preconisation_explication">
+          Description / explication
+        </label>
+        <textarea
+          id="inp_preconisation_explication"
+          data-testid="_inp_preconisation_explication"
+          formControlName="explication"
+          rows="3"
+          placeholder="Expliquez la mesure à mettre en œuvre"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_preconisation_risque" for="inp_preconisation_risque">
+          Risque encouru
+        </label>
+        <textarea
+          id="inp_preconisation_risque"
+          data-testid="_inp_preconisation_risque"
+          formControlName="risqueEncours"
+          rows="3"
+          placeholder="Décrivez le risque en cas de non-application"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label data-testid="_lib_inp_preconisation_contraintes" for="inp_preconisation_contraintes">
+            Contraintes
+          </label>
+          <textarea
+            id="inp_preconisation_contraintes"
+            data-testid="_inp_preconisation_contraintes"
+            formControlName="contraintes"
+            rows="3"
+            placeholder="Contraintes identifiées"></textarea>
+        </div>
+
+        <div class="form-field">
+          <label data-testid="_lib_inp_preconisation_cout" for="inp_preconisation_cout">
+            Coût
+          </label>
+          <textarea
+            id="inp_preconisation_cout"
+            data-testid="_inp_preconisation_cout"
+            formControlName="cout"
+            rows="3"
+            placeholder="Évaluation du coût"></textarea>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_preconisation_commentaire" for="inp_preconisation_commentaire">
+          Commentaire
+        </label>
+        <textarea
+          id="inp_preconisation_commentaire"
+          data-testid="_inp_preconisation_commentaire"
+          formControlName="commentaire"
+          rows="3"
+          placeholder="Informations complémentaires"></textarea>
+      </div>
+
+      @if (submitError) {
+        <p class="submit-error" role="alert" data-testid="_val_preconisation_submit_error">
+          {{ submitError }}
+        </p>
+      }
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn-secondary"
+          data-testid="_btn_modal_cancel"
+          (click)="close()"
+          [disabled]="isSubmitting">
+          Annuler
+        </button>
+        <button
+          type="submit"
+          class="btn-primary"
+          data-testid="_btn_modal_submit"
+          [disabled]="isSubmitting || loading || !client">
+          @if (isSubmitting) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            Enregistrement…
+          } @else {
+            {{ isEditMode ? 'Enregistrer' : 'Ajouter' }}
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

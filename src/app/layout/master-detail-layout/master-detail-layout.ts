@@ -32,6 +32,7 @@ export class MasterDetailLayout {
   @Input() isDetailOpen: boolean = false;
   @Input() detailTitle: string = 'Détails';
   @Input() isEmpty: boolean = false;
+  @Input() hideDetailHeader = false;
   @Input() isLoading: boolean = false;
   @Output() detailClose = new EventEmitter<void>();
 

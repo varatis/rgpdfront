@@ -86,7 +86,7 @@ export const routes: Routes = [
       {
         path: 'suivi-preconisations',
         canActivate: [roleGuard],
-        data: { roles: ['user', 'client'] },
+        data: { roles: ['admin', 'user', 'client'] },
         loadComponent: () => import('./features/user/pages/suivi-preconisations/suivi-preconisations')
           .then(m => m.SuiviPreconisations)
 
