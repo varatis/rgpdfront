@@ -168,4 +168,22 @@ export class ApiService {
     );
 
   }
+
+  createPreconisation(payload: PreconisationWritePayload): Observable<PreconisationDetails> {
+    return this.http.post<PreconisationDetails>(this.apiUrl + 'preconisations', payload);
+  }
+
+  updatePreconisation(
+    identifiant: string,
+    payload: PreconisationWritePayload
+  ): Observable<PreconisationDetails> {
+    return this.http.put<PreconisationDetails>(
+      this.apiUrl + 'preconisations/' + identifiant,
+      payload
+    );
+  }
+
+  deletePreconisation(identifiant: string): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + 'preconisations/' + identifiant);
+  }
 }
