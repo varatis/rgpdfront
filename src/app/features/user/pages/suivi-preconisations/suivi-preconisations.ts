@@ -106,6 +106,7 @@ export class SuiviPreconisations implements OnInit {
   showCreateModal = false;
   showEditModal = false;
   isDeleting = false;
+  detailTab = 'details';
 
   currentFilters: FiltrePreconisationPayload = {
     libelle: ''
@@ -199,6 +200,10 @@ export class SuiviPreconisations implements OnInit {
     });
 
     this.loadPreconisations(0);
+  }
+
+  selectDetailTab(tab: string): void {
+    this.detailTab = tab;
   }
 
   loadPreconisations(page: number): void {

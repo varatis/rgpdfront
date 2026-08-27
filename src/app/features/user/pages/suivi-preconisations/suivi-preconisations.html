@@ -55,10 +55,15 @@
   @if (detailView; as details) {
     <div slot="detail-content">
       <div class="detail-content">
+        <div class="preco-tabs">
+          <button type="button" [class.active]="detailTab === 'details'" (click)="selectDetailTab('details')">Détails</button>
+          <button type="button" [class.active]="detailTab === 'historique'" (click)="selectDetailTab('historique')">Historique des modifications</button>
+        </div>
         @if (detailsLoading && !selectedDetails) {
         <div class="detail-loading">Chargement des détails...</div>
         }
-        <div class="detail-title">
+                @if (detailTab === 'details') {
+<div class="detail-title">
           <h2 data-testid="_lib_h2_selected_preco_description">Description</h2>
           <p data-testid="_val_selected_preco_description">{{ value(explicationOf(details)) }}</p>
         </div>
@@ -122,7 +127,10 @@
           </div>
         </div>
 
-        <div class="historique-section">
+        
+        }
+        @if (detailTab === 'historique') {
+<div class="historique-section">
           <h2>Historique des modifications</h2>
           @if (historique.length === 0) {
             <p>Aucune modification enregistrée</p>
@@ -142,6 +150,8 @@
             </table>
           }
         </div>
+        }
+
 
       </div>
     </div>
