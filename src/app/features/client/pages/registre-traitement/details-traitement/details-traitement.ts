@@ -126,7 +126,6 @@ export class DetailsTraitementComponent {
 
   formatHistoriqueDate(isoDate: string): string {
     if (!isoDate) return '-';
-    // Expected format: 2026-08-27T14:33:21 (LocalDateTime without timezone)
     const [datePart, timePart] = isoDate.split('T');
     if (!datePart || !timePart) return isoDate;
     const [y, m, d] = datePart.split('-');

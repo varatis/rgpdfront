@@ -72,10 +72,6 @@ export class CompteClient {
 
         const isOk = response.statusFichier === 'OK';
 
-        if (isOk) {
-          // Rechargement des listes après succès
-          // L'export n'est pas disponible pour l'instant.
-        }
 
         this.snackBar.open(
 
