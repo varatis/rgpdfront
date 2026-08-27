@@ -38,7 +38,7 @@ export const CLIENT_NAV_ITEMS: NavItem[] = [
     label: 'Gestion des préconisations',
     route: 'suivi-preconisations',
     icon: 'preconisations',
-    roles: ['user', 'client']
+    roles: ['admin', 'user', 'client']
   },
   {
     label: 'Registre des demandes',
