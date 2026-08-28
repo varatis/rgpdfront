@@ -44,7 +44,7 @@ export const CLIENT_NAV_ITEMS: NavItem[] = [
     label: 'Registre des demandes',
     route: 'registre-demandes',
     icon: 'demandes',
-    roles: []
+    roles: ['admin', 'client', 'user', 'superadmin']
   },
   {
     label: 'Recueil de violation',
