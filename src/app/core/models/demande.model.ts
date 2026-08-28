@@ -25,3 +25,36 @@ export interface Demande {
   clientId: string;
 
 }
+
+/**
+ * Corps attendu par `POST /demandes`.
+ *
+ * Les champs texte non renseignés sont envoyés vides (`''`) plutôt que `null`,
+ * comme le fait déjà le registre : le back les déclare non nuls.
+ * `dateReception` est un `LocalDate` au format ISO aaaa-mm-jj, ou `null`.
+ */
+export interface CreateDemandePayload {
+
+  clientId: string | number;
+
+  typeDemande: string;
+
+  descriptionSynthetique: string;
+
+  origine: string;
+
+  dateReception: string | null;
+
+  servicesConcernes: string;
+
+  detailTraitement: string;
+
+  servicesImpliques: string;
+
+  reponse: string;
+
+  alerteRt: string;
+
+  statut: Demande['statut'];
+
+}
