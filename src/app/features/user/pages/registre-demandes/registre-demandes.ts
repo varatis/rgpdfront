@@ -4,17 +4,18 @@ import { TableColumn, DataTable } from '../../../../shared/components/data-table
 import { HeaderAction } from '../../../../shared/components/header/header';
 import { MasterDetailLayout } from "../../../../layout/master-detail-layout/master-detail-layout";
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import {CreateDemandeModal} from './create-demande-modal/create-demande-modal';
 import {ApiService} from '../../../../services/api.service';
 import { Component, OnInit } from '@angular/core';
 import { Demande } from '../../../../core/models/demande.model';
+import { displayValue } from '../../../../core/models/preconisation.model';
+import { KeycloakService } from '../../../../core/auth/keycloak.service';
 
 
 @Component({
   selector: 'app-registre-demandes',
   standalone: true,
-  imports: [CommonModule,MasterDetailLayout, PageTabsComponent, DataTable, MatIconModule, CreateDemandeModal],
+  imports: [CommonModule,MasterDetailLayout, PageTabsComponent, DataTable, CreateDemandeModal],
   templateUrl: './registre-demandes.html',
   styleUrl: './registre-demandes.scss'
 })
@@ -24,8 +25,8 @@ export class RegistreDemandes implements OnInit{
 
   actions: HeaderAction[] = [
     {
+      // Pas d'icône : le libellé suffit à porter l'action d'ajout.
       label: 'Ajouter une demande',
-      icon: 'add',
       action: 'add',
       color: 'primary'
     },
@@ -58,6 +59,8 @@ export class RegistreDemandes implements OnInit{
   activeTab: 'pending' | 'treated' = 'pending';
   selectedDemande: Demande | null = null;
   showCreateDemandeModal = false;
+  /** Évite double-clic sur « Valider la demande » pendant l'appel au back. */
+  isValidating = false;
   currentPage = 1;
   itemsPerPage = 10;
 
@@ -66,7 +69,8 @@ export class RegistreDemandes implements OnInit{
   demandesTreated: Demande[] = [];
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private keycloakService: KeycloakService
   ) {
 
     // this.demandesPending = [...];
@@ -94,9 +98,9 @@ export class RegistreDemandes implements OnInit{
 
     return demandes.slice(startIndex, endIndex).map(d => ({
       id: d.id,
-      typeDemande: d.typeDemande,
-      descriptionSynthetique: d.descriptionSynthetique,
-      dateReception: this.formatDate(d.dateReception),
+      typeDemande: this.value(d.typeDemande),
+      descriptionSynthetique: this.value(d.descriptionSynthetique),
+      dateReception: this.value(this.formatDate(d.dateReception)),
       _raw: d
     }));
   }
@@ -147,9 +151,20 @@ export class RegistreDemandes implements OnInit{
 
   }
   // Méthodes
-  formatDate(date: any): string {
+  /** Valeur vide affichée en « — », comme dans le suivi des préconisations. */
+  value(value?: string | number | null): string {
+    return displayValue(value);
+  }
+
+  /**
+   * Date de réception libellée. Une date absente ou mal formée rend une chaîne
+   * vide : le `value()` du modèle affiche alors « — » et la page ne plante plus
+   * sur un `Intl.DateTimeFormat.format(Invalid Date)`.
+   */
+  formatDate(date: string | Date | null | undefined): string {
   if (!date) return '';
   const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  if (Number.isNaN(parsedDate.getTime())) return '';
   return new Intl.DateTimeFormat('fr-FR', {
     day: 'numeric',
     month: 'long'
@@ -208,5 +223,44 @@ export class RegistreDemandes implements OnInit{
 
   onDemandeCreated(): void {
     this.loadDemandes();
+  }
+
+  get isAdmin(): boolean {
+
+    const role = this.keycloakService.getUserRole();
+
+    return role === 'admin'
+      || role === 'superadmin';
+  }
+
+  validerDemande(): void {
+
+    if (!this.selectedDemande || this.isValidating) {
+      return;
+    }
+
+    this.isValidating = true;
+
+    this.apiService
+      .traiterDemande(this.selectedDemande.id)
+      .subscribe({
+
+        next: () => {
+
+          this.isValidating = false;
+
+          this.selectedDemande = null;
+
+          this.loadDemandes();
+
+        },
+
+        error: err => {
+          console.error(err);
+          this.isValidating = false;
+        }
+
+      });
+
   }
 }

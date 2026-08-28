@@ -14,7 +14,7 @@ import {
   PreconisationDetails,
   PreconisationWritePayload
 } from '../core/models/preconisation.model';
-import { Demande } from '../core/models/demande.model';
+import { CreateDemandePayload, Demande } from '../core/models/demande.model';
 
 @Injectable({
   providedIn: 'root'
@@ -83,8 +83,8 @@ export class ApiService {
     );
   }
 
-  createDemande(payload: any): Observable<any> {
-    return this.http.post<any>(
+  createDemande(payload: CreateDemandePayload): Observable<Demande> {
+    return this.http.post<Demande>(
       this.apiUrl + 'demandes',
       payload
     );
@@ -140,6 +140,14 @@ export class ApiService {
 
   getPreconisationDetails(identifiant: string): Observable<PreconisationDetails> {
     return this.http.get<PreconisationDetails>(this.apiUrl + 'preconisations/' + identifiant);
+  }
+
+  traiterDemande(id: string): Observable<any> {
+
+    return this.http.put(
+      this.apiUrl + 'demandes/' + id + '/traiter',
+      {}
+    );
   }
 
   createPreconisation(payload: PreconisationWritePayload): Observable<PreconisationDetails> {
