@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -115,4 +115,31 @@ export class CompteClient {
     ].join('\n');
   }
 
+  generateExport(): void {
+    
+    this.apiService.genererFichierRegistretraitement()
+    .subscribe(response => {
+      if (!response.body){
+        alert("An unexpected error occured during the file generation");
+        return;
+      }
+
+      const url = window.URL.createObjectURL(response.body);
+      const a = document.createElement('a');
+      a.href = url;
+
+      var filename = 'Registre_traitement';
+      const contentDisposition = response.headers.get('Content-Disposition');
+      
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (match) { filename = match[1];}
+      }
+
+      a.download = filename;
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    });
+  }
 }

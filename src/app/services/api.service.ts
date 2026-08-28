@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { InfoFichier } from '../core/models/info-fichier.model';
@@ -238,5 +238,9 @@ export class ApiService {
 
   deleteViolation(identifiant: string): Observable<void> {
     return this.http.delete<void>(this.apiUrl + 'violations/' + identifiant);
+  }
+
+  genererFichierRegistretraitement(): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.apiUrl}importFichierRgpd/export`, {responseType: 'blob', observe: 'response'});
   }
 }
