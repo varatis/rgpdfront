@@ -1,181 +1,189 @@
-<div class="modal-backdrop"
-     data-testid="_lst_modal_create_demande"
-     (click)="close()">
+<div
+  class="modal-backdrop"
+  data-testid="_lst_modal_create_demande"
+  (click)="close()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
 
-  <div class="modal-panel"
-       (click)="$event.stopPropagation()">
-
-    <!-- Header -->
-
+    <!-- Header : identique aux modals de préconisation et de traitement -->
     <div class="modal-header">
-
-      <h2 data-testid="_lib_modal_title">
-        Ajouter une demande
-      </h2>
-
+      <h2 data-testid="_lib_modal_title">Ajouter une demande</h2>
       <button
         class="modal-close-btn"
+        data-testid="_btn_modal_close"
         type="button"
-        (click)="close()">
-
-        ✕
+        (click)="close()"
+        title="Fermer">
+        <mat-icon aria-hidden="true">close</mat-icon>
       </button>
-
     </div>
 
     <!-- Form -->
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
-    <form
-      class="modal-body"
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()">
-
-      <div class="form-field">
-
-        <label>
-          Type de demande
-          <span class="required">*</span>
+      <div class="form-field" [class.invalid]="invalidStatusCause('typeDemande')">
+        <label data-testid="_lib_inp_demande_type" for="inp_demande_type">
+          Type de demande <span class="required">*</span>
         </label>
-
         <input
+          id="inp_demande_type"
+          data-testid="_inp_demande_type"
           type="text"
-          formControlName="typeDemande">
-
+          formControlName="typeDemande"
+          maxlength="255"
+          autocomplete="off"
+          placeholder="Ex : Demande d’accès" />
+        <span class="field-error" data-testid="_val_error_demande_type">
+          {{ invalidStatusCause('typeDemande') }}
+        </span>
       </div>
 
-      <div class="form-field">
-
-        <label>
-          Description synthétique
-          <span class="required">*</span>
+      <div class="form-field" [class.invalid]="invalidStatusCause('descriptionSynthetique')">
+        <label data-testid="_lib_inp_demande_description" for="inp_demande_description">
+          Description synthétique <span class="required">*</span>
         </label>
-
         <textarea
+          id="inp_demande_description"
+          data-testid="_inp_demande_description"
+          formControlName="descriptionSynthetique"
           rows="3"
-          formControlName="descriptionSynthetique">
-        </textarea>
-
+          placeholder="Résumé de la demande"></textarea>
+        <span class="field-error" data-testid="_val_error_demande_description">
+          {{ invalidStatusCause('descriptionSynthetique') }}
+        </span>
       </div>
 
       <div class="form-row">
-
         <div class="form-field">
-
-          <label>Origine</label>
-
+          <label data-testid="_lib_inp_demande_origine" for="inp_demande_origine">
+            Origine
+          </label>
           <input
+            id="inp_demande_origine"
+            data-testid="_inp_demande_origine"
             type="text"
-            formControlName="origine">
-
+            formControlName="origine"
+            autocomplete="off"
+            placeholder="Ex : E-mail, téléphone…" />
         </div>
 
+        <!-- Comme la date d’identification du modal traitement : champ date natif,
+             le projet n’utilise pas le datepicker Angular Material. -->
         <div class="form-field">
-
-          <label>Date réception</label>
-
+          <label data-testid="_lib_inp_demande_date_reception" for="inp_demande_date_reception">
+            Date réception
+          </label>
           <input
+            id="inp_demande_date_reception"
+            data-testid="_inp_demande_date_reception"
             type="date"
-            formControlName="dateReception">
-
+            formControlName="dateReception" />
         </div>
-
       </div>
 
       <div class="form-field">
-
-        <label>Services concernés</label>
-
+        <label data-testid="_lib_inp_demande_services_concernes" for="inp_demande_services_concernes">
+          Services concernés
+        </label>
         <textarea
+          id="inp_demande_services_concernes"
+          data-testid="_inp_demande_services_concernes"
+          formControlName="servicesConcernes"
           rows="2"
-          formControlName="servicesConcernes">
-        </textarea>
-
+          placeholder="Ex : Service RH, service paie…"></textarea>
       </div>
 
       <div class="form-field">
-
-        <label>Détail traitement</label>
-
+        <label data-testid="_lib_inp_demande_detail_traitement" for="inp_demande_detail_traitement">
+          Détail traitement
+        </label>
         <textarea
+          id="inp_demande_detail_traitement"
+          data-testid="_inp_demande_detail_traitement"
+          formControlName="detailTraitement"
           rows="2"
-          formControlName="detailTraitement">
-        </textarea>
-
+          placeholder="Détail du traitement de la demande"></textarea>
       </div>
 
       <div class="form-field">
-
-        <label>Services impliqués</label>
-
+        <label data-testid="_lib_inp_demande_services_impliques" for="inp_demande_services_impliques">
+          Services impliqués
+        </label>
         <textarea
+          id="inp_demande_services_impliques"
+          data-testid="_inp_demande_services_impliques"
+          formControlName="servicesImpliques"
           rows="2"
-          formControlName="servicesImpliques">
-        </textarea>
-
+          placeholder="Services impliqués dans le traitement de la demande"></textarea>
       </div>
 
       <div class="form-field">
-
-        <label>Réponse</label>
-
+        <label data-testid="_lib_inp_demande_reponse" for="inp_demande_reponse">
+          Réponse
+        </label>
         <textarea
+          id="inp_demande_reponse"
+          data-testid="_inp_demande_reponse"
+          formControlName="reponse"
           rows="2"
-          formControlName="reponse">
-        </textarea>
-
+          placeholder="Réponse apportée à la demande"></textarea>
       </div>
 
       <div class="form-field">
-
-        <label>Alerte RT</label>
-
+        <label data-testid="_lib_inp_demande_alerte_rt" for="inp_demande_alerte_rt">
+          Alerte RT
+        </label>
         <input
+          id="inp_demande_alerte_rt"
+          data-testid="_inp_demande_alerte_rt"
           type="text"
-          formControlName="alerteRt">
-
+          formControlName="alerteRt"
+          autocomplete="off"
+          placeholder="Ex : Oui, Non…" />
       </div>
 
       <div class="form-field">
-
-        <label>Statut</label>
-
-        <select formControlName="statut">
-
-          <option value="EN_ATTENTE">
-            En attente
-          </option>
-
-          <option value="TRAITEE">
-            Traitée
-          </option>
-
+        <label data-testid="_lib_inp_demande_statut" for="inp_demande_statut">
+          Statut
+        </label>
+        <select
+          id="inp_demande_statut"
+          data-testid="_inp_demande_statut"
+          formControlName="statut">
+          <option value="EN_ATTENTE">En attente</option>
+          <option value="TRAITEE">Traitée</option>
         </select>
-
       </div>
+
+      @if (submitError) {
+        <p class="submit-error" role="alert" data-testid="_val_demande_submit_error">
+          {{ submitError }}
+        </p>
+      }
 
       <div class="modal-footer">
-
         <button
           type="button"
           class="btn-secondary"
-          (click)="close()">
-
+          data-testid="_btn_modal_cancel"
+          (click)="close()"
+          [disabled]="isSubmitting">
           Annuler
-
         </button>
-
         <button
           type="submit"
-          class="btn-primary">
-
-          Ajouter
-
+          class="btn-primary"
+          data-testid="_btn_modal_submit"
+          [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            Enregistrement…
+          } @else {
+            Ajouter
+          }
         </button>
-
       </div>
 
     </form>
 
   </div>
-
 </div>

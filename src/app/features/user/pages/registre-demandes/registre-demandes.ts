@@ -25,7 +25,6 @@ export class RegistreDemandes implements OnInit{
   actions: HeaderAction[] = [
     {
       label: 'Ajouter une demande',
-      icon: 'add',
       action: 'add',
       color: 'primary'
     },
