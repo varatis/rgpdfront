@@ -148,21 +148,48 @@
   gap: 16px;
 }
 
-/* Date de réception : seul champ adossé à Angular Material (datepicker). */
-.date-field {
-  width: 100%;
+/*
+ * Date de réception : datepicker Material sans mat-form-field. La bordure, le
+ * padding et le rayon appartiennent à l'input lui-même (mêmes règles que les
+ * autres saisies du modal), donc la hauteur est strictement celle du champ
+ * « Origine » voisin ; seul le bouton calendrier est posé par-dessus.
+ */
+.date-control {
+  position: relative;
+  display: flex;
+}
 
-  --mat-form-field-container-text-font: 'Montserrat', sans-serif;
-  --mat-form-field-container-text-size: 14px;
-  --mat-form-field-container-height: 38px;
-  --mat-form-field-container-vertical-padding: 7px;
-  --mat-form-field-outlined-container-shape: 6px;
-  --mat-form-field-outlined-outline-color: #d0d0d0;
-  --mat-form-field-outlined-focus-outline-color: #2e63cd;
-  --mat-form-field-outlined-focus-outline-width: 1px;
-  --mat-form-field-outlined-error-outline-color: #d32f2f;
-  --mdc-icon-button-size: 30px;
-  --mdc-icon-button-icon-size: 20px;
+/* Plus forte spécificité que `.form-field input` : seul le padding droit change,
+   la box (padding vertical, police, bordure, rayon) reste celle des autres saisies. */
+.form-field input.date-input {
+  padding-right: 38px;
+}
+
+.form-field .date-toggle {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  color: #777;
+
+  --mat-icon-button-state-layer-size: 26px;
+  --mat-icon-button-icon-size: 18px;
+  /* Cible tactile de 48px sinon : elle mordrait sur le champ. */
+  --mat-icon-button-touch-target-display: none;
+
+  .mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    color: #2e63cd;
+  }
+}
+
+.form-field.invalid .date-toggle {
+  color: #d32f2f;
 }
 
 .field-error {

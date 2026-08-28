@@ -73,21 +73,20 @@
             placeholder="Ex : Email, courrier, portail…" />
         </div>
 
-        <div class="form-field">
+        <div class="form-field" [class.invalid]="invalidStatusCause('dateReception')">
           <label data-testid="_lib_inp_demande_date_reception" for="inp_demande_date_reception">
             Date réception
           </label>
           <!--
-            Date pilotée par le datepicker Material : le modèle porte un objet Date
-            (converti en aaaa-mm-jj à l'envoi) et une saisie non analysable est
-            signalée par Material, ce qui rend le formulaire invalide.
+            Date pilotée par le datepicker Material, mais sans mat-form-field : le
+            champ garde la box CSS des autres saisies du modal (hauteur identique à
+            « Origine »), le bouton calendrier étant posé par-dessus l'input. Une
+            saisie non analysable est signalée par Material (matDatepickerParse),
+            ce qui rend le formulaire invalide et bloque l'envoi.
           -->
-          <mat-form-field
-            class="date-field"
-            appearance="outline"
-            subscriptSizing="dynamic">
+          <div class="date-control">
             <input
-              matInput
+              class="date-input"
               id="inp_demande_date_reception"
               data-testid="_inp_demande_date_reception"
               formControlName="dateReception"
@@ -95,16 +94,17 @@
               placeholder="JJ/MM/AAAA"
               autocomplete="off" />
             <mat-datepicker-toggle
-              matSuffix
+              class="date-toggle"
               data-testid="_btn_demande_date_reception_toggle"
-              [for]="dateReceptionPicker">
+              [for]="dateReceptionPicker"
+              title="Choisir une date dans le calendrier">
               <mat-icon matDatepickerToggleIcon aria-hidden="true">calendar_month</mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #dateReceptionPicker></mat-datepicker>
-            <mat-error data-testid="_val_error_demande_date_reception">
-              Date invalide — format attendu : JJ/MM/AAAA
-            </mat-error>
-          </mat-form-field>
+          </div>
+          <span class="field-error" data-testid="_val_error_demande_date_reception">
+            {{ invalidStatusCause('dateReception') }}
+          </span>
         </div>
       </div>
 

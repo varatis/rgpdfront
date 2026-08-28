@@ -2,9 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { KeycloakService } from '../../../../../core/auth/keycloak.service';
 import { Client } from '../../../../../core/models/client.model';
@@ -36,8 +34,6 @@ interface DemandeFormValue {
     CommonModule,
     ReactiveFormsModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatDatepickerModule,
     MatSnackBarModule,
   ],
@@ -122,6 +118,10 @@ export class CreateDemandeModal {
     }
     if (control.hasError('maxlength')) {
       return 'La limite de caractères est dépassée.';
+    }
+    // Erreur posée par le datepicker Material quand la saisie n'est pas une date.
+    if (control.hasError('matDatepickerParse')) {
+      return 'Date invalide — format attendu : JJ/MM/AAAA.';
     }
     return '';
   }
