@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, output, signal } from '@ang
 import { CommonModule } from '@angular/common';
 
 import { ApiService } from '../../../../../services/api.service';
+import { HistoriqueEntry } from '../../../../../core/models/historique.model';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
 import { NlToBrPipe } from './nl-to-br.pipe';
 import { DateFrPipe } from './date-fr.pipe';
@@ -26,6 +27,7 @@ export class DetailsTraitementComponent {
 
   readonly details = signal<TraitementDetails | undefined>(undefined);
   readonly activeTab = signal('Identification du traitement');
+  readonly historique = signal<HistoriqueEntry[]>([]);
 
   readonly tabs = computed<TabConfig[]>(() =>
     this.userRole() === 'client'
@@ -47,10 +49,12 @@ export class DetailsTraitementComponent {
       }
 
       this.details.set(undefined);
+      this.historique.set([]);
       const subscription = this.apiService.getTraitementDetails(id).subscribe({
         next: (res) => {
           this.details.set(res);
           this.detailsLoaded.emit(res);
+          this.loadHistorique(id);
         },
         error: (err) => console.error(err),
       });
@@ -87,6 +91,49 @@ export class DetailsTraitementComponent {
     }
 
     return String(value);
+  }
+
+
+  reload(): void {
+    const id = this.traitementId();
+    if (id != null) {
+      this.details.set(undefined);
+      this.historique.set([]);
+      this.apiService.getTraitementDetails(id).subscribe({
+        next: (res) => {
+          this.details.set(res);
+          this.detailsLoaded.emit(res);
+          this.loadHistorique(id);
+        },
+        error: (err) => console.error(err),
+      });
+    }
+  }
+
+  private loadHistorique(id: number): void {
+    this.apiService.getTraitementHistorique(id).subscribe({
+      next: (res) => this.historique.set(res ?? []),
+      error: (err) => {
+        if (err?.status === 404) {
+          this.historique.set([]);
+        } else {
+          console.error(err);
+          this.historique.set([]);
+        }
+      }
+    });
+  }
+
+  formatHistoriqueDate(isoDate: string): string {
+    if (!isoDate) return '-';
+    const [datePart, timePart] = isoDate.split('T');
+    if (!datePart || !timePart) return isoDate;
+    const [y, m, d] = datePart.split('-');
+    const [hh, mm] = timePart.split(':');
+    if (y && m && d && hh && mm) {
+      return `${d}/${m}/${y} ${hh}:${mm}`;
+    }
+    return isoDate;
   }
 
   get etablissementsDisplay(): string {

@@ -54,5 +54,24 @@
       </div>
 
     </div>
+
+    @if (showImportWarning) {
+      <div class="import-modal-backdrop" (click)="onCancelImport()">
+        <div class="import-modal-panel" (click)="$event.stopPropagation()">
+          <h2 class="import-modal-title">Remplacement du registre</h2>
+          <p class="import-modal-text">
+            L'import va remplacer l'intégralité des traitements et des préconisations de <strong>{{ importClientName }}</strong> par le contenu du fichier sélectionné. Cette action est irréversible. Nous vous recommandons d'exporter le registre actuel avant de continuer.
+          </p>
+          <div class="import-modal-export">
+            <button type="button" disabled title="Bientôt disponible">Exporter le registre actuel</button>
+          </div>
+          <div class="import-modal-actions">
+            <button type="button" class="import-modal-btn-secondary" (click)="onCancelImport()">Annuler</button>
+            <button type="button" class="import-modal-btn-danger" (click)="onConfirmImport()">Lancer l'import</button>
+          </div>
+        </div>
+      </div>
+    }
+
   </div>
 </div>

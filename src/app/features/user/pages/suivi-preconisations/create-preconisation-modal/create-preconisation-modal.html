@@ -173,6 +173,14 @@
         </p>
       }
 
+            @if (isEditMode) {
+        <div class="form-field">
+          <label data-testid="_lib_inp_motif_modification" for="inp_motif_modification">Motif de la modification</label>
+          <textarea id="inp_motif_modification" data-testid="_inp_motif_modification" formControlName="motifModification" rows="2"
+                    placeholder="Ex. : correction suite à la revue DPO"></textarea>
+        </div>
+      }
+
       <div class="modal-footer">
         <button
           type="button"

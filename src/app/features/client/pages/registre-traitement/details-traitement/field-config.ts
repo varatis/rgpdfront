@@ -60,6 +60,7 @@ export const TAB_IDENTIFICATION: TabConfig = {
   name: 'Identification du traitement',
   fields: [
     text('ID', 'idFonctionnel', 'id', '5%'),
+    text('Version', 'version', 'version', '10%'),
     custom('Etablissement(s)', 'etablissements', 'etablissements', '40%', 'etablissementsDisplay'),
     html('Données concernées', 'donneesConcernees', 'donnees_concernees', '40%'),
     text('Nom du traitement', 'nom', 'nom', '40%'),
@@ -131,9 +132,15 @@ export const TAB_ANALYSE: TabConfig = {
   fields: [],
 };
 
+export const TAB_HISTORIQUE: TabConfig = {
+  name: 'Historique des modifications',
+  fields: [],
+};
+
 export const ALL_TABS: TabConfig[] = [
   TAB_IDENTIFICATION,
   TAB_DONNEES_PERSO,
   TAB_DESCRIPTION,
   TAB_ANALYSE,
+  TAB_HISTORIQUE,
 ];

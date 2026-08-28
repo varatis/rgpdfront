@@ -14,6 +14,8 @@ import { ApiService } from '../../../../services/api.service';
 })
 export class CompteClient {
   selectedFile?: File;
+  showImportWarning = false;
+  importClientName = '';
 
   constructor(private apiService: ApiService, private snackBar: MatSnackBar) { }
   onFileSelected(event: Event): void {
@@ -51,12 +53,25 @@ export class CompteClient {
     if (!this.selectedFile) {
       return;
     }
+    this.importClientName = this.extractClientName(this.selectedFile.name);
+    this.showImportWarning = true;
+  }
 
+  onCancelImport(): void {
+    this.showImportWarning = false;
+  }
+
+  onConfirmImport(): void {
+    this.showImportWarning = false;
+    if (!this.selectedFile) {
+      return;
+    }
     this.apiService.uploadRgpdFile(this.selectedFile).subscribe({
 
       next: (response) => {
 
         const isOk = response.statusFichier === 'OK';
+
 
         this.snackBar.open(
 
@@ -78,6 +93,7 @@ export class CompteClient {
         );
 
         this.selectedFile = undefined;
+        this.showImportWarning = false;
       },
 
       error: (error) => {
@@ -98,4 +114,10 @@ export class CompteClient {
     });
   }
 
+
+  private extractClientName(fileName: string): string {
+    const base = fileName.split('.')[0] || fileName;
+    const parts = base.split('_');
+    return (parts[0] || 'ce client').trim();
+  }
 }

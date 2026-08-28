@@ -11,7 +11,22 @@
   </div>
 
   <div class="content">
-    @if (activeTabConfig(); as tabConfig) {
+    @if (activeTab() === 'Historique des modifications') {
+      <div class="tab-content historique-content">
+        @if (historique().length === 0) {
+          <p class="historique-vide">Aucune modification enregistrée</p>
+        } @else {
+          <div class="historique-liste">
+            @for (item of historique(); track $index) {
+              <div class="historique-item">
+                <div class="historique-date">{{ formatHistoriqueDate(item.date) }}</div>
+                <div class="historique-motif">{{ item.motif }}</div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    } @else if (activeTabConfig(); as tabConfig) {
       <div class="tab-content">
         @for (field of tabConfig.fields; track field.testIdSuffix) {
           <div class="detail-title">

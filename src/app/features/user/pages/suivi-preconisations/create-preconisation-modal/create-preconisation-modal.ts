@@ -21,6 +21,7 @@ interface PreconisationFormValue {
   commentaire: string | null;
   etatAvancement: string | null;
   traitementIdentifiant: string | null;
+  motifModification: string;
 }
 
 @Component({
@@ -63,7 +64,8 @@ export class CreatePreconisationModal implements OnInit {
       complexite: [null],
       commentaire: [''],
       etatAvancement: [''],
-      traitementIdentifiant: [null]
+      traitementIdentifiant: [null],
+      motifModification: ['']
     });
   }
 
@@ -95,7 +97,8 @@ export class CreatePreconisationModal implements OnInit {
         complexite: this.preconisationToEdit.complexite ?? null,
         commentaire: this.preconisationToEdit.commentaire ?? '',
         etatAvancement: this.preconisationToEdit.etatAvancement ?? '',
-        traitementIdentifiant: this.preconisationToEdit.traitementIdentifiant ?? null
+        traitementIdentifiant: this.preconisationToEdit.traitementIdentifiant ?? null,
+        motifModification: ''
       });
     }
 
@@ -136,6 +139,7 @@ export class CreatePreconisationModal implements OnInit {
     this.submitError = null;
 
     const value = this.form.getRawValue() as PreconisationFormValue;
+    const valueMotif = value.motifModification?.trim();
     const payload: PreconisationWritePayload = {
       // Le back génère l’UUID de la nouvelle entité, mais son DTO le déclare
       // non nul : fournir un UUID ici rend le contrat valide dans les deux cas.
@@ -153,6 +157,11 @@ export class CreatePreconisationModal implements OnInit {
       traitementIdentifiant: value.traitementIdentifiant || null
     };
 
+    if (!this.isEditMode || !valueMotif) {
+      delete (payload as any).motifModification;
+    } else {
+      payload.motifModification = valueMotif;
+    }
     const request$ = this.isEditMode
       ? this.apiService.updatePreconisation(this.preconisationToEdit!.identifiant, payload)
       : this.apiService.createPreconisation(payload);

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Header, HeaderAction } from '../../../../shared/components/header/header';
 import { TableTraitement, SortColumn, SortDirection, SortEvent } from './table-traitement/table-traitement';
@@ -80,6 +80,7 @@ export class RegistreTraitement implements OnInit {
   showCreateModal = false;
   showEditModal = false;
   currentTraitementDetails: TraitementDetails | undefined;
+  @ViewChild(DetailsTraitementComponent) detailsComp!: DetailsTraitementComponent;
 
   ngOnInit(): void {
     this.load$.pipe(
@@ -186,6 +187,7 @@ export class RegistreTraitement implements OnInit {
 
   onTraitementUpdated(): void {
     this.loadTraitements(this.page);
+    this.detailsComp?.reload();
   }
 
   onDeleteClick(): void {

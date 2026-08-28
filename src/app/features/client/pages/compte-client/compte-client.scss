@@ -147,3 +147,76 @@
   font-size: 13px;
   color: #374151;
 }
+.import-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.import-modal-panel {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+}
+
+.import-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #111827;
+}
+
+.import-modal-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.import-modal-export {
+  margin: 16px 0;
+}
+
+.import-modal-export button {
+  padding: 8px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+  font-size: 13px;
+}
+
+.import-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.import-modal-btn-secondary {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #fff;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.import-modal-btn-danger {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}

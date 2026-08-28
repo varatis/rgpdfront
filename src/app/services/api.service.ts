@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { HistoriqueEntry } from '../core/models/historique.model';
 import { InfoFichier } from '../core/models/info-fichier.model';
 import { CreateTraitementPayload, Traitement, TraitementDetails } from '../core/models/traitement.model';
 import { PageResponse } from '../core/models/page-response.model';
@@ -158,5 +159,13 @@ export class ApiService {
 
   deletePreconisation(identifiant: string): Observable<void> {
     return this.http.delete<void>(this.apiUrl + 'preconisations/' + identifiant);
+  }
+
+  getTraitementHistorique(id: number): Observable<HistoriqueEntry[]> {
+    return this.http.get<HistoriqueEntry[]>(this.apiUrl + "traitements/" + id + "/historique");
+  }
+
+  getPreconisationHistorique(identifiant: string): Observable<HistoriqueEntry[]> {
+    return this.http.get<HistoriqueEntry[]>(this.apiUrl + "preconisations/" + identifiant + "/historique");
   }
 }
