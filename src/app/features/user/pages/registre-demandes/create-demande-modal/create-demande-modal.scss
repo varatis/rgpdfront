@@ -1,57 +1,95 @@
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+/* Même présentation que les modales préconisation / registre des traitements. */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  background: rgba(0, 0, 0, 0.45);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow: hidden;
   background: white;
   border-radius: 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-  width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  padding: 20px 24px;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: 20px 24px 16px;
   border-bottom: 1px solid #e0e0e0;
 
   h2 {
     margin: 0;
+    color: #1a1a1a;
     font-size: 17px;
     font-weight: 600;
   }
 }
 
 .modal-close-btn {
-  background: none;
+  padding: 4px 6px;
   border: none;
-  cursor: pointer;
+  border-radius: 4px;
+  background: none;
+  color: #777;
   font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
 
-  &:hover {
+  .mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    background: #ffebee;
     color: #d32f2f;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 }
 
 .modal-body {
-  padding: 24px;
-
   display: flex;
   flex-direction: column;
   gap: 18px;
-
+  min-height: 0;
+  padding: 24px;
   overflow-y: auto;
 }
 
@@ -61,24 +99,46 @@
   gap: 6px;
 
   label {
+    color: #444;
     font-size: 13px;
     font-weight: 600;
-    color: #444;
+
+    .required {
+      margin-left: 2px;
+      color: #d32f2f;
+    }
   }
 
   input,
   textarea,
   select {
-    padding: 10px 12px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 9px 12px;
     border: 1px solid #d0d0d0;
     border-radius: 6px;
+    background: #fff;
+    color: #1a1a1a;
+    font-family: inherit;
     font-size: 14px;
+    resize: vertical;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &::placeholder {
+      color: #aaa;
+    }
 
     &:focus {
       outline: none;
-      border-color: #2E63CD;
+      border-color: #2e63cd;
       box-shadow: 0 0 0 3px rgba(46, 99, 205, 0.12);
     }
+  }
+
+  &.invalid input,
+  &.invalid textarea,
+  &.invalid select {
+    border-color: #d32f2f;
   }
 }
 
@@ -88,35 +148,153 @@
   gap: 16px;
 }
 
+/*
+ * Date de réception : datepicker Material sans mat-form-field. La bordure, le
+ * padding et le rayon appartiennent à l'input lui-même (mêmes règles que les
+ * autres saisies du modal), donc la hauteur est strictement celle du champ
+ * « Origine » voisin ; seul le bouton calendrier est posé par-dessus.
+ */
+.date-control {
+  position: relative;
+  display: flex;
+}
+
+/* Plus forte spécificité que `.form-field input` : seul le padding droit change,
+   la box (padding vertical, police, bordure, rayon) reste celle des autres saisies. */
+.form-field input.date-input {
+  padding-right: 38px;
+}
+
+.form-field .date-toggle {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  color: #777;
+
+  --mat-icon-button-state-layer-size: 26px;
+  --mat-icon-button-icon-size: 18px;
+  /* Cible tactile de 48px sinon : elle mordrait sur le champ. */
+  --mat-icon-button-touch-target-display: none;
+
+  .mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    color: #2e63cd;
+  }
+}
+
+.form-field.invalid .date-toggle {
+  color: #d32f2f;
+}
+
+.field-error {
+  min-height: 16px;
+  color: #d32f2f;
+  font-size: 12px;
+}
+
+.load-warning {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid #ffe0b2;
+  border-radius: 6px;
+  background: #fff8e1;
+  color: #8a5a00;
+  font-size: 13px;
+}
+
+.submit-error {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid #ffcdd2;
+  border-radius: 6px;
+  background: #ffebee;
+  color: #c62828;
+  font-size: 13px;
+}
+
 .modal-footer {
   display: flex;
   justify-content: flex-end;
+  flex-shrink: 0;
   gap: 10px;
-  margin-top: 10px;
+  padding-top: 4px;
 }
 
-.btn-primary,
-.btn-secondary {
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-
+.btn-secondary,
 .btn-primary {
-  background: #2E63CD;
-  color: white;
-}
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
 
-.btn-primary:hover {
-  background: #244fa8;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 
 .btn-secondary {
   background: #f0f0f0;
+  color: #444;
+
+  &:hover:not(:disabled) {
+    background: #e0e0e0;
+  }
 }
 
-.btn-secondary:hover {
-  background: #e0e0e0;
+.btn-primary {
+  background: #2e63cd;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: #244fa8;
+  }
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  .modal-backdrop {
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .modal-panel {
+    max-height: calc(100vh - 24px);
+  }
+
+  .modal-header,
+  .modal-body {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }

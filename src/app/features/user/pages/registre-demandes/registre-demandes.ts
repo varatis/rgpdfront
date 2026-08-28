@@ -4,7 +4,6 @@ import { TableColumn, DataTable } from '../../../../shared/components/data-table
 import { HeaderAction } from '../../../../shared/components/header/header';
 import { MasterDetailLayout } from "../../../../layout/master-detail-layout/master-detail-layout";
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import {CreateDemandeModal} from './create-demande-modal/create-demande-modal';
 import {ApiService} from '../../../../services/api.service';
 import { Component, OnInit } from '@angular/core';
@@ -15,7 +14,7 @@ import { KeycloakService } from '../../../../core/auth/keycloak.service';
 @Component({
   selector: 'app-registre-demandes',
   standalone: true,
-  imports: [CommonModule,MasterDetailLayout, PageTabsComponent, DataTable, MatIconModule, CreateDemandeModal],
+  imports: [CommonModule,MasterDetailLayout, PageTabsComponent, DataTable, CreateDemandeModal],
   templateUrl: './registre-demandes.html',
   styleUrl: './registre-demandes.scss'
 })
@@ -25,8 +24,8 @@ export class RegistreDemandes implements OnInit{
 
   actions: HeaderAction[] = [
     {
+      // Pas d'icône : le libellé suffit à porter l'action d'ajout.
       label: 'Ajouter une demande',
-      icon: 'add',
       action: 'add',
       color: 'primary'
     },
@@ -59,6 +58,8 @@ export class RegistreDemandes implements OnInit{
   activeTab: 'pending' | 'treated' = 'pending';
   selectedDemande: Demande | null = null;
   showCreateDemandeModal = false;
+  /** Évite double-clic sur « Valider la demande » pendant l'appel au back. */
+  isValidating = false;
   currentPage = 1;
   itemsPerPage = 10;
 
@@ -222,15 +223,19 @@ export class RegistreDemandes implements OnInit{
 
   validerDemande(): void {
 
-    if (!this.selectedDemande) {
+    if (!this.selectedDemande || this.isValidating) {
       return;
     }
+
+    this.isValidating = true;
 
     this.apiService
       .traiterDemande(this.selectedDemande.id)
       .subscribe({
 
         next: () => {
+
+          this.isValidating = false;
 
           this.selectedDemande = null;
 
@@ -240,6 +245,7 @@ export class RegistreDemandes implements OnInit{
 
         error: err => {
           console.error(err);
+          this.isValidating = false;
         }
 
       });

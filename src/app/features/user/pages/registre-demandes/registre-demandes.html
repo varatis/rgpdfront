@@ -37,75 +37,71 @@
     </div>
   }
 
-  <!-- Détails -->
-  @if(selectedDemande) {
+  <!-- Détails : même présentation que le suivi des préconisations -->
+  @if (selectedDemande) {
     <div slot="detail-content">
       <div class="detail-content">
-        <div class="field-group">
-          <label data-testid="_lib_label_type_demande">Type de demande</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_type_demande">Type de demande</h2>
           <p data-testid="_val_demande_type">{{ selectedDemande.typeDemande }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_description_synthetique">Description synthétique de la demande</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_description_synthetique">Description synthétique de la demande</h2>
           <p data-testid="_val_demande_description">{{ selectedDemande.descriptionSynthetique }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_origine">Origine de la demande</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_origine">Origine de la demande</h2>
           <p data-testid="_val_demande_origine">{{ selectedDemande.origine }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_date_reception">Date de réception de la demande</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_date_reception">Date de réception de la demande</h2>
           <p data-testid="_val_demande_date_reception">{{ formatDate(selectedDemande.dateReception) }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_services_concernes">Services et traitement concernés par la demande</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_services_concernes">Services et traitement concernés par la demande</h2>
           <p data-testid="_val_demande_services_concernes">{{ selectedDemande.servicesConcernes }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_detail_traitement">Détail de traitement de la demande</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_detail_traitement">Détail de traitement de la demande</h2>
           <p data-testid="_val_demande_detail_traitement">{{ selectedDemande.detailTraitement }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_services_impliques">Services impliqués dans le traitement de la demande</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_services_impliques">Services impliqués dans le traitement de la demande</h2>
           <p data-testid="_val_demande_services_impliques">{{ selectedDemande.servicesImpliques }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_reponse">Réponse à la demande</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_reponse">Réponse à la demande</h2>
           <p data-testid="_val_demande_reponse">{{ selectedDemande.reponse }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_alerte_rt">Alerte du RT</label>
+        <div class="detail-title">
+          <h2 data-testid="_lib_label_alerte_rt">Alerte du RT</h2>
           <p data-testid="_val_demande_alerte_rt">{{ selectedDemande.alerteRt }}</p>
         </div>
-        <div class="field-group">
-          <label data-testid="_lib_label_statut">Statut de la demande</label>
-          <span
-            data-testid="_val_demande_statut"
-            class="badge"
-            [class.badge-success]="selectedDemande.statut === 'TRAITEE'"
-          >
-            {{ selectedDemande.statut === 'TRAITEE' ? 'Traité' : 'Non traité' }}
-          </span>
-        </div>
-        @if(
-        isAdmin &&
-        selectedDemande?.statut === 'EN_ATTENTE'
-        ) {
 
-        <div class="detail-actions">
-
-          <button
-            class="btn-primary"
-            (click)="validerDemande()">
-
-            <mat-icon>check_circle</mat-icon>
-
-            Valider la demande
-
-          </button>
-
+        <div class="status-badges">
+          <div class="badge-item">
+            <h2 data-testid="_lib_label_statut">Statut de la demande</h2>
+            <span
+              data-testid="_val_demande_statut"
+              class="badge"
+              [class.badge-success]="selectedDemande.statut === 'TRAITEE'"
+              [class.badge-warning]="selectedDemande.statut !== 'TRAITEE'">
+              {{ selectedDemande.statut === 'TRAITEE' ? 'Traité' : 'Non traité' }}
+            </span>
+          </div>
         </div>
 
+        @if (isAdmin && selectedDemande.statut === 'EN_ATTENTE') {
+          <div class="detail-actions">
+            <button
+              type="button"
+              class="btn-primary"
+              data-testid="_btn_valider_demande"
+              [disabled]="isValidating"
+              (click)="validerDemande()">
+              Valider la demande
+            </button>
+          </div>
         }
 
       </div>

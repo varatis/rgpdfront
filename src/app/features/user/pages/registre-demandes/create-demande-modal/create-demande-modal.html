@@ -1,181 +1,218 @@
-<div class="modal-backdrop"
-     data-testid="_lst_modal_create_demande"
-     (click)="close()">
-
-  <div class="modal-panel"
-       (click)="$event.stopPropagation()">
-
-    <!-- Header -->
-
+<div
+  class="modal-backdrop"
+  data-testid="_lst_modal_create_demande"
+  (click)="close()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+    <!-- Header : identique aux modales préconisation / traitement -->
     <div class="modal-header">
-
-      <h2 data-testid="_lib_modal_title">
-        Ajouter une demande
-      </h2>
-
+      <h2 data-testid="_lib_modal_title">Ajouter une demande</h2>
       <button
         class="modal-close-btn"
+        data-testid="_btn_modal_close"
         type="button"
-        (click)="close()">
-
-        ✕
+        (click)="close()"
+        [disabled]="isSubmitting"
+        title="Fermer">
+        <mat-icon aria-hidden="true">close</mat-icon>
       </button>
-
     </div>
 
-    <!-- Form -->
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      @if (loadError) {
+        <div class="load-warning" role="status">{{ loadError }}</div>
+      }
 
-    <form
-      class="modal-body"
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()">
-
-      <div class="form-field">
-
-        <label>
-          Type de demande
-          <span class="required">*</span>
+      <div
+        class="form-field"
+        [class.invalid]="invalidStatusCause('typeDemande')">
+        <label data-testid="_lib_inp_demande_type" for="inp_demande_type">
+          Type de demande <span class="required">*</span>
         </label>
-
         <input
+          id="inp_demande_type"
+          data-testid="_inp_demande_type"
           type="text"
-          formControlName="typeDemande">
-
+          formControlName="typeDemande"
+          [attr.maxlength]="typeDemandeMaxLength"
+          autocomplete="off"
+          placeholder="Ex : Demande d’accès aux données" />
+        <span class="field-error" data-testid="_val_error_demande_type">
+          {{ invalidStatusCause('typeDemande') }}
+        </span>
       </div>
 
-      <div class="form-field">
-
-        <label>
-          Description synthétique
-          <span class="required">*</span>
+      <div
+        class="form-field"
+        [class.invalid]="invalidStatusCause('descriptionSynthetique')">
+        <label data-testid="_lib_inp_demande_description" for="inp_demande_description">
+          Description synthétique <span class="required">*</span>
         </label>
-
         <textarea
+          id="inp_demande_description"
+          data-testid="_inp_demande_description"
+          formControlName="descriptionSynthetique"
+          [attr.maxlength]="descriptionMaxLength"
           rows="3"
-          formControlName="descriptionSynthetique">
-        </textarea>
-
+          placeholder="Résumez la demande reçue"></textarea>
+        <span class="field-error" data-testid="_val_error_demande_description">
+          {{ invalidStatusCause('descriptionSynthetique') }}
+        </span>
       </div>
 
       <div class="form-row">
-
         <div class="form-field">
-
-          <label>Origine</label>
-
+          <label data-testid="_lib_inp_demande_origine" for="inp_demande_origine">
+            Origine
+          </label>
           <input
+            id="inp_demande_origine"
+            data-testid="_inp_demande_origine"
             type="text"
-            formControlName="origine">
+            formControlName="origine"
+            autocomplete="off"
+            placeholder="Ex : Email, courrier, portail…" />
+        </div>
 
+        <div class="form-field" [class.invalid]="invalidStatusCause('dateReception')">
+          <label data-testid="_lib_inp_demande_date_reception" for="inp_demande_date_reception">
+            Date réception
+          </label>
+          <!--
+            Date pilotée par le datepicker Material, mais sans mat-form-field : le
+            champ garde la box CSS des autres saisies du modal (hauteur identique à
+            « Origine »), le bouton calendrier étant posé par-dessus l'input. Une
+            saisie non analysable est signalée par Material (matDatepickerParse),
+            ce qui rend le formulaire invalide et bloque l'envoi.
+          -->
+          <div class="date-control">
+            <input
+              class="date-input"
+              id="inp_demande_date_reception"
+              data-testid="_inp_demande_date_reception"
+              formControlName="dateReception"
+              [matDatepicker]="dateReceptionPicker"
+              placeholder="JJ/MM/AAAA"
+              autocomplete="off" />
+            <mat-datepicker-toggle
+              class="date-toggle"
+              data-testid="_btn_demande_date_reception_toggle"
+              [for]="dateReceptionPicker"
+              title="Choisir une date dans le calendrier">
+              <mat-icon matDatepickerToggleIcon aria-hidden="true">calendar_month</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #dateReceptionPicker></mat-datepicker>
+          </div>
+          <span class="field-error" data-testid="_val_error_demande_date_reception">
+            {{ invalidStatusCause('dateReception') }}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_demande_services_concernes" for="inp_demande_services_concernes">
+          Services concernés
+        </label>
+        <textarea
+          id="inp_demande_services_concernes"
+          data-testid="_inp_demande_services_concernes"
+          formControlName="servicesConcernes"
+          rows="2"
+          placeholder="Services et traitements visés par la demande"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_demande_detail_traitement" for="inp_demande_detail_traitement">
+          Détail traitement
+        </label>
+        <textarea
+          id="inp_demande_detail_traitement"
+          data-testid="_inp_demande_detail_traitement"
+          formControlName="detailTraitement"
+          rows="2"
+          placeholder="Actions menées pour traiter la demande"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_demande_services_impliques" for="inp_demande_services_impliques">
+          Services impliqués
+        </label>
+        <textarea
+          id="inp_demande_services_impliques"
+          data-testid="_inp_demande_services_impliques"
+          formControlName="servicesImpliques"
+          rows="2"
+          placeholder="Services participants au traitement"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label data-testid="_lib_inp_demande_reponse" for="inp_demande_reponse">
+          Réponse
+        </label>
+        <textarea
+          id="inp_demande_reponse"
+          data-testid="_inp_demande_reponse"
+          formControlName="reponse"
+          rows="2"
+          placeholder="Réponse apportée au demandeur"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label data-testid="_lib_inp_demande_alerte_rt" for="inp_demande_alerte_rt">
+            Alerte RT
+          </label>
+          <input
+            id="inp_demande_alerte_rt"
+            data-testid="_inp_demande_alerte_rt"
+            type="text"
+            formControlName="alerteRt"
+            autocomplete="off"
+            placeholder="Ex : Information du responsable de traitement" />
         </div>
 
         <div class="form-field">
-
-          <label>Date réception</label>
-
-          <input
-            type="date"
-            formControlName="dateReception">
-
+          <label data-testid="_lib_inp_demande_statut" for="inp_demande_statut">
+            Statut
+          </label>
+          <select
+            id="inp_demande_statut"
+            data-testid="_inp_demande_statut"
+            formControlName="statut">
+            @for (statut of statutOptions; track statut.value) {
+              <option [ngValue]="statut.value">{{ statut.label }}</option>
+            }
+          </select>
         </div>
-
       </div>
 
-      <div class="form-field">
-
-        <label>Services concernés</label>
-
-        <textarea
-          rows="2"
-          formControlName="servicesConcernes">
-        </textarea>
-
-      </div>
-
-      <div class="form-field">
-
-        <label>Détail traitement</label>
-
-        <textarea
-          rows="2"
-          formControlName="detailTraitement">
-        </textarea>
-
-      </div>
-
-      <div class="form-field">
-
-        <label>Services impliqués</label>
-
-        <textarea
-          rows="2"
-          formControlName="servicesImpliques">
-        </textarea>
-
-      </div>
-
-      <div class="form-field">
-
-        <label>Réponse</label>
-
-        <textarea
-          rows="2"
-          formControlName="reponse">
-        </textarea>
-
-      </div>
-
-      <div class="form-field">
-
-        <label>Alerte RT</label>
-
-        <input
-          type="text"
-          formControlName="alerteRt">
-
-      </div>
-
-      <div class="form-field">
-
-        <label>Statut</label>
-
-        <select formControlName="statut">
-
-          <option value="EN_ATTENTE">
-            En attente
-          </option>
-
-          <option value="TRAITEE">
-            Traitée
-          </option>
-
-        </select>
-
-      </div>
+      @if (submitError) {
+        <p class="submit-error" role="alert" data-testid="_val_demande_submit_error">
+          {{ submitError }}
+        </p>
+      }
 
       <div class="modal-footer">
-
         <button
           type="button"
           class="btn-secondary"
-          (click)="close()">
-
+          data-testid="_btn_modal_cancel"
+          (click)="close()"
+          [disabled]="isSubmitting">
           Annuler
-
         </button>
-
         <button
           type="submit"
-          class="btn-primary">
-
-          Ajouter
-
+          class="btn-primary"
+          data-testid="_btn_modal_submit"
+          [disabled]="isSubmitting || loading || !client">
+          @if (isSubmitting) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            Enregistrement…
+          } @else {
+            Ajouter
+          }
         </button>
-
       </div>
-
     </form>
-
   </div>
-
 </div>
