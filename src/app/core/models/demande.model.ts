@@ -35,7 +35,8 @@ export interface Demande {
  */
 export interface CreateDemandePayload {
 
-  clientId: string | number;
+  /** Résolu depuis le groupe Keycloak ; nul si le back n'a pas répondu. */
+  clientId: string | number | null;
 
   typeDemande: string;
 

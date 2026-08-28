@@ -5,7 +5,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { KeycloakService } from '../../../../../core/auth/keycloak.service';
-import { Client } from '../../../../../core/models/client.model';
 import { CreateDemandePayload, Demande } from '../../../../../core/models/demande.model';
 import {
   provideFrenchDatepicker,
@@ -61,11 +60,8 @@ export class CreateDemandeModal {
     { value: 'TRAITEE', label: 'Traitée' },
   ];
 
-  client: Client | null = null;
-  loading = true;
   isSubmitting = false;
   submitError: string | null = null;
-  loadError: string | null = null;
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -86,25 +82,21 @@ export class CreateDemandeModal {
     });
   }
 
+  /**
+   * Récupère l'identifiant du client du groupe Keycloak « /clients/<nom> » pour
+   * le porter sur la demande. Comportement inchangé par rapport à l'existant :
+   * une résolution qui échoue se limite à un log console, sans message à
+   * l'écran ni blocage du formulaire.
+   */
   ngOnInit(): void {
     const clientName = this.keycloakService.getClientName();
     if (!clientName) {
-      this.loading = false;
-      this.loadError = 'Le client de l’utilisateur connecté est introuvable.';
       return;
     }
 
     this.apiService.getClientByNom(clientName).subscribe({
-      next: client => {
-        this.client = client;
-        this.loading = false;
-        this.form.patchValue({ clientId: client.id });
-      },
-      error: error => {
-        console.error(error);
-        this.loading = false;
-        this.loadError = 'Impossible de récupérer le client associé.';
-      },
+      next: client => this.form.patchValue({ clientId: client.id }),
+      error: error => console.error(error),
     });
   }
 
@@ -131,10 +123,7 @@ export class CreateDemandeModal {
       this.form.markAllAsTouched();
       return;
     }
-    if (!this.client) {
-      this.submitError = 'Le client associé à la demande est introuvable.';
-      return;
-    }
+
     this.isSubmitting = true;
     this.submitError = null;
 
@@ -174,7 +163,7 @@ export class CreateDemandeModal {
     const value = this.form.getRawValue() as DemandeFormValue;
 
     return {
-      clientId: this.client!.id,
+      clientId: value.clientId,
       typeDemande: this.text(value.typeDemande),
       descriptionSynthetique: this.text(value.descriptionSynthetique),
       origine: this.text(value.origine),

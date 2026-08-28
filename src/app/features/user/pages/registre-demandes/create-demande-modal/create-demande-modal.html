@@ -18,10 +18,6 @@
     </div>
 
     <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-      @if (loadError) {
-        <div class="load-warning" role="status">{{ loadError }}</div>
-      }
-
       <div
         class="form-field"
         [class.invalid]="invalidStatusCause('typeDemande')">
@@ -204,7 +200,7 @@
           type="submit"
           class="btn-primary"
           data-testid="_btn_modal_submit"
-          [disabled]="isSubmitting || loading || !client">
+          [disabled]="isSubmitting">
           @if (isSubmitting) {
             <span class="btn-spinner" aria-hidden="true"></span>
             Enregistrement…
