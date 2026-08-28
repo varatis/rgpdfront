@@ -168,13 +168,4 @@ export class ApiService {
   deletePreconisation(identifiant: string): Observable<void> {
     return this.http.delete<void>(this.apiUrl + 'preconisations/' + identifiant);
   }
-
-  traiterDemande(id: string): Observable<any> {
-
-    return this.http.put(
-      this.apiUrl + 'demandes/' + id + '/traiter',
-      {}
-    );
-
-  }
 }
