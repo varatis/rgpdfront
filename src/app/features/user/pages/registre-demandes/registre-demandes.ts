@@ -8,6 +8,7 @@ import {CreateDemandeModal} from './create-demande-modal/create-demande-modal';
 import {ApiService} from '../../../../services/api.service';
 import { Component, OnInit } from '@angular/core';
 import { Demande } from '../../../../core/models/demande.model';
+import { displayValue } from '../../../../core/models/preconisation.model';
 import { KeycloakService } from '../../../../core/auth/keycloak.service';
 
 
@@ -97,9 +98,9 @@ export class RegistreDemandes implements OnInit{
 
     return demandes.slice(startIndex, endIndex).map(d => ({
       id: d.id,
-      typeDemande: d.typeDemande,
-      descriptionSynthetique: d.descriptionSynthetique,
-      dateReception: this.formatDate(d.dateReception),
+      typeDemande: this.value(d.typeDemande),
+      descriptionSynthetique: this.value(d.descriptionSynthetique),
+      dateReception: this.value(this.formatDate(d.dateReception)),
       _raw: d
     }));
   }
@@ -150,9 +151,20 @@ export class RegistreDemandes implements OnInit{
 
   }
   // Méthodes
-  formatDate(date: any): string {
+  /** Valeur vide affichée en « — », comme dans le suivi des préconisations. */
+  value(value?: string | number | null): string {
+    return displayValue(value);
+  }
+
+  /**
+   * Date de réception libellée. Une date absente ou mal formée rend une chaîne
+   * vide : le `value()` du modèle affiche alors « — » et la page ne plante plus
+   * sur un `Intl.DateTimeFormat.format(Invalid Date)`.
+   */
+  formatDate(date: string | Date | null | undefined): string {
   if (!date) return '';
   const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  if (Number.isNaN(parsedDate.getTime())) return '';
   return new Intl.DateTimeFormat('fr-FR', {
     day: 'numeric',
     month: 'long'

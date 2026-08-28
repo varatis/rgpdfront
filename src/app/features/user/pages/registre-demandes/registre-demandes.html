@@ -43,39 +43,39 @@
       <div class="detail-content">
         <div class="detail-title">
           <h2 data-testid="_lib_label_type_demande">Type de demande</h2>
-          <p data-testid="_val_demande_type">{{ selectedDemande.typeDemande }}</p>
+          <p data-testid="_val_demande_type">{{ value(selectedDemande.typeDemande) }}</p>
         </div>
         <div class="detail-title">
           <h2 data-testid="_lib_label_description_synthetique">Description synthétique de la demande</h2>
-          <p data-testid="_val_demande_description">{{ selectedDemande.descriptionSynthetique }}</p>
+          <p data-testid="_val_demande_description">{{ value(selectedDemande.descriptionSynthetique) }}</p>
         </div>
         <div class="detail-title">
           <h2 data-testid="_lib_label_origine">Origine de la demande</h2>
-          <p data-testid="_val_demande_origine">{{ selectedDemande.origine }}</p>
+          <p data-testid="_val_demande_origine">{{ value(selectedDemande.origine) }}</p>
         </div>
         <div class="detail-title">
           <h2 data-testid="_lib_label_date_reception">Date de réception de la demande</h2>
-          <p data-testid="_val_demande_date_reception">{{ formatDate(selectedDemande.dateReception) }}</p>
+          <p data-testid="_val_demande_date_reception">{{ value(formatDate(selectedDemande.dateReception)) }}</p>
         </div>
         <div class="detail-title">
           <h2 data-testid="_lib_label_services_concernes">Services et traitement concernés par la demande</h2>
-          <p data-testid="_val_demande_services_concernes">{{ selectedDemande.servicesConcernes }}</p>
+          <p data-testid="_val_demande_services_concernes">{{ value(selectedDemande.servicesConcernes) }}</p>
         </div>
         <div class="detail-title">
           <h2 data-testid="_lib_label_detail_traitement">Détail de traitement de la demande</h2>
-          <p data-testid="_val_demande_detail_traitement">{{ selectedDemande.detailTraitement }}</p>
+          <p data-testid="_val_demande_detail_traitement">{{ value(selectedDemande.detailTraitement) }}</p>
         </div>
         <div class="detail-title">
           <h2 data-testid="_lib_label_services_impliques">Services impliqués dans le traitement de la demande</h2>
-          <p data-testid="_val_demande_services_impliques">{{ selectedDemande.servicesImpliques }}</p>
+          <p data-testid="_val_demande_services_impliques">{{ value(selectedDemande.servicesImpliques) }}</p>
         </div>
         <div class="detail-title">
           <h2 data-testid="_lib_label_reponse">Réponse à la demande</h2>
-          <p data-testid="_val_demande_reponse">{{ selectedDemande.reponse }}</p>
+          <p data-testid="_val_demande_reponse">{{ value(selectedDemande.reponse) }}</p>
         </div>
         <div class="detail-title">
           <h2 data-testid="_lib_label_alerte_rt">Alerte du RT</h2>
-          <p data-testid="_val_demande_alerte_rt">{{ selectedDemande.alerteRt }}</p>
+          <p data-testid="_val_demande_alerte_rt">{{ value(selectedDemande.alerteRt) }}</p>
         </div>
 
         <div class="status-badges">
