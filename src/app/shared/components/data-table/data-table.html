@@ -1,10 +1,35 @@
-<div class="data-table-container">
-  <table class="data-table">
+<div class="data-table-container" #container>
+  <table class="data-table" data-testid="_lst_data_table" [style.min-width.px]="tableMinWidth()">
     <thead>
       <tr>
-        @for (col of columns(); track col.key) {
-          <th [style.flex-grow]="col.width ? '0' : '1'" [style.flex-basis]="col.width || '0'">
-            <div class="header-content">{{ col.label }}</div>
+        @for (col of visibleColumns(); track col.key) {
+          <th
+            [style.width]="columnWidth(col)"
+            [class.sortable]="col.sortable"
+            [attr.title]="col.label"
+            [attr.data-testid]="(col.sortable ? '_btn_sort_' : '_lib_col_') + col.key"
+            (click)="onSort(col)">
+            <span class="header-content">
+              <span class="header-label">{{ col.label }}</span>
+              @if (col.sortable) {
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField() === col.key"
+                  [class.desc]="sortField() === col.key && sortDirection() === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              }
+            </span>
           </th>
         }
         <th class="detail-col"></th>
@@ -12,14 +37,16 @@
     </thead>
     <tbody>
       @for (row of data(); track row[trackKey()]) {
-        <tr (click)="rowClick.emit(row)">
-          @for (col of columns(); track col.key) {
-            <td [style.flex-grow]="col.width ? '0' : '1'" [style.flex-basis]="col.width || '0'">
+        <tr [attr.data-testid]="'_lst_row_' + row[trackKey()]" (click)="rowClick.emit(row)">
+          @for (col of visibleColumns(); track col.key) {
+            <td
+              [attr.title]="row[col.key]"
+              [attr.data-testid]="'_val_' + col.key + '_' + row[trackKey()]">
               {{ row[col.key] }}
             </td>
           }
           <td class="detail-col">
-            <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
           </td>

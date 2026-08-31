@@ -1,58 +1,59 @@
 <div class="page-container">
-  <!-- Header -->
-
-
   <div class="split-layout" [class.split-active]="isDetailOpen">
     <!-- Section gauche -->
     <div class="left-section">
-        <app-header
-    [title]="title"
-    [icon]="iconSvg"
-    [actions]="actions"
-    (actionClick)="onHeaderAction($event)">
-  </app-header>
-      <div class="main-content-wrapper">
+      <app-header
+        [title]="title"
+        [icon]="iconSvg || icon"
+        [actions]="actions"
+        (actionClick)="onHeaderAction($event)">
+      </app-header>
 
-        <!-- Tabs -->
+      <div class="main-content-wrapper">
+        <!-- Onglets -->
         <ng-content select="[slot='tabs']"></ng-content>
+
+        <ng-content select="[slot='list-header']"></ng-content>
 
         <div class="content-body">
           <!-- Liste/Table -->
           <ng-content select="[slot='list-items']"></ng-content>
 
-          <!-- Pagination -->
-          <ng-content select="[slot='pagination']"></ng-content>
-
           <!-- État vide -->
           <ng-content select="[slot='empty-state']"></ng-content>
+
+          <!-- Pagination -->
+          <ng-content select="[slot='pagination']"></ng-content>
         </div>
       </div>
     </div>
 
     <!-- Section droite : Détails -->
-     @if(isDetailOpen) {
-    <div class="right-section">
-      @if (!hideDetailHeader) {
-      <div class="detail-header">
-        <div class="detail-actions">
-          <ng-content select="[slot='detail-actions']"></ng-content>
-          <button
-            class="icon-btn close"
-            type="button"
-            data-testid="_btn_fermer_detail"
-            title="Fermer"
-            (click)="onCloseDetail()">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-        <div class="detail-title">
-          <h2>{{ detailTitle }}</h2>
-        </div>
-      </div>
-      }
+    @if (isDetailOpen) {
+      <div class="right-section">
+        @if (!hideDetailHeader) {
+          <div class="detail-header">
+            <div class="detail-actions">
+              <!-- Actions propres à la page (modifier, supprimer…), posées avant la fermeture. -->
+              <ng-content select="[slot='detail-actions']"></ng-content>
+              <button
+                type="button"
+                class="icon-btn close"
+                title="Fermer"
+                aria-label="Fermer le détail"
+                data-testid="_btn_fermer_detail"
+                (click)="onCloseDetail()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <div class="detail-title">
+              <h2 data-testid="_lib_detail_title">{{ detailTitle }}</h2>
+            </div>
+          </div>
+        }
 
-      <ng-content select="[slot='detail-content']"></ng-content>
-    </div>
-  }
+        <ng-content select="[slot='detail-content']"></ng-content>
+      </div>
+    }
   </div>
 </div>

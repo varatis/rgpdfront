@@ -1,0 +1,150 @@
+<!-- Le titre « Filtres » et la fermeture sont portés par l'en-tête du panneau de détail. -->
+<div class="filtres-container">
+
+  <div class="filtres-body">
+
+    <div class="filter-control">
+      <span class="filter-label" id="date-label" data-testid="_lib_filtre_date">Date de la violation</span>
+      <div class="filter-range" role="group" aria-labelledby="date-label">
+        <mat-form-field class="filter-field" appearance="outline">
+          <mat-label>Du</mat-label>
+          <input
+            matInput
+            id="dateViolationDebut"
+            data-testid="_inp_filtre_date_debut"
+            [matDatepicker]="calendrierDebut"
+            [max]="dateViolationFin"
+            [(ngModel)]="dateViolationDebut"
+            (keyup.enter)="onApply()" />
+          <mat-datepicker-toggle matIconSuffix [for]="calendrierDebut" />
+          <mat-datepicker #calendrierDebut />
+        </mat-form-field>
+        <mat-form-field class="filter-field" appearance="outline">
+          <mat-label>Au</mat-label>
+          <input
+            matInput
+            id="dateViolationFin"
+            data-testid="_inp_filtre_date_fin"
+            [matDatepicker]="calendrierFin"
+            [min]="dateViolationDebut"
+            [(ngModel)]="dateViolationFin"
+            (keyup.enter)="onApply()" />
+          <mat-datepicker-toggle matIconSuffix [for]="calendrierFin" />
+          <mat-datepicker #calendrierFin />
+        </mat-form-field>
+      </div>
+      @if (datesIncoherentes) {
+        <p class="filter-error" data-testid="_lib_erreur_filtre_date">
+          La date de début doit précéder la date de fin.
+        </p>
+      }
+    </div>
+
+    <div class="filter-control">
+      <label class="filter-label" for="natureViolation" data-testid="_lib_filtre_nature">
+        Nature de la violation DCP
+      </label>
+      <mat-form-field class="filter-field" appearance="outline">
+        <input
+          matInput
+          id="natureViolation"
+          type="text"
+          data-testid="_inp_filtre_nature"
+          [(ngModel)]="natureViolation"
+          placeholder="Rechercher une nature de violation..."
+          autocomplete="off"
+          (keyup.enter)="onApply()" />
+      </mat-form-field>
+    </div>
+
+    <div class="filter-control">
+      <label class="filter-label" for="donneesConcernees" data-testid="_lib_filtre_donnees">
+        Données concernées
+      </label>
+      <mat-form-field class="filter-field" appearance="outline">
+        <input
+          matInput
+          id="donneesConcernees"
+          type="text"
+          data-testid="_inp_filtre_donnees"
+          [(ngModel)]="donneesConcernees"
+          placeholder="Rechercher des données concernées..."
+          autocomplete="off"
+          (keyup.enter)="onApply()" />
+      </mat-form-field>
+    </div>
+
+    <div class="filter-control">
+      <span class="filter-label" id="personnes-label" data-testid="_lib_filtre_personnes">
+        Personnes concernées
+      </span>
+      <div class="filter-range" role="group" aria-labelledby="personnes-label">
+        <mat-form-field class="filter-field" appearance="outline">
+          <mat-label>Minimum</mat-label>
+          <input
+            matInput
+            id="nombrePersonnesConcerneesMin"
+            type="number"
+            min="0"
+            data-testid="_inp_filtre_personnes_min"
+            [(ngModel)]="nombrePersonnesConcerneesMin"
+            placeholder="0"
+            (keyup.enter)="onApply()" />
+        </mat-form-field>
+        <mat-form-field class="filter-field" appearance="outline">
+          <mat-label>Maximum</mat-label>
+          <input
+            matInput
+            id="nombrePersonnesConcerneesMax"
+            type="number"
+            min="0"
+            data-testid="_inp_filtre_personnes_max"
+            [(ngModel)]="nombrePersonnesConcerneesMax"
+            placeholder="Illimité"
+            (keyup.enter)="onApply()" />
+        </mat-form-field>
+      </div>
+      @if (nombresIncoherents) {
+        <p class="filter-error" data-testid="_lib_erreur_filtre_personnes">
+          Le minimum doit être inférieur au maximum.
+        </p>
+      }
+    </div>
+
+    <div class="filter-control">
+      <span class="filter-label" id="risque-label" data-testid="_lib_filtre_risque">
+        Risque élevé pour les droits et libertés
+      </span>
+      <div class="segmented" role="group" aria-labelledby="risque-label">
+        @for (option of risqueOptions; track option.key) {
+          <button
+            type="button"
+            class="segmented-option"
+            [class.active]="risqueEleveDroitsLibertes === option.value"
+            [attr.aria-pressed]="risqueEleveDroitsLibertes === option.value"
+            [attr.data-testid]="'_btn_filtre_risque_' + option.key"
+            (click)="onSelectRisque(option.value)">
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <div class="filtres-footer">
+    <button mat-button type="button" data-testid="_btn_reset_filtre_violation" (click)="onReset()">
+      Réinitialiser les filtres
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      data-testid="_btn_apply_filtre_violation"
+      [disabled]="bornesIncoherentes"
+      (click)="onApply()">
+      <mat-icon aria-hidden="true">filter_alt</mat-icon>
+      Appliquer les filtres
+    </button>
+  </div>
+</div>

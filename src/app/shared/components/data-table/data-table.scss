@@ -1,27 +1,69 @@
+/* Le conteneur défile horizontalement dès que la table atteint sa largeur minimale
+   (panneau de détail ou de filtres ouvert, fenêtre étroite) : les colonnes gardent
+   alors leurs largeurs au lieu d'être écrasées par `table-layout: fixed`. */
 .data-table-container {
   overflow-x: auto;
-  flex-grow: 1;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  display: table;
+  table-layout: fixed;
 
-  thead {
-    background: #F9FAFB;
-    border-bottom: 2px solid #E5E7EB;
+  /* Sans `border-box`, la largeur déclarée d'une colonne exclut ses 30px de padding :
+     les largeurs posées par les pages — et le minimum calculé par le composant — ne
+     correspondraient pas à la place réellement occupée. */
+  th,
+  td {
+    box-sizing: border-box;
   }
 
   thead th {
     padding: 12px 15px;
     text-align: left;
+    vertical-align: bottom;
     font-weight: 600;
-    color: #6B7280;
-    text-transform: uppercase;
     font-size: 11px;
     letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #6B7280;
+    background: #fff;
     border-bottom: 1px solid #E5E7EB;
+    user-select: none;
+
+    &.sortable {
+      cursor: pointer;
+
+      &:hover {
+        color: #374151;
+      }
+    }
+  }
+
+  /* Flux en ligne (et non flex) : quand un libellé passe sur deux lignes, la flèche de
+     tri suit le dernier mot au lieu d'être repoussée à droite de la colonne. */
+  .header-content {
+    display: block;
+  }
+
+  .header-label {
+    overflow-wrap: break-word;
+  }
+
+  .sort-icon {
+    display: inline-block;
+    margin-left: 6px;
+    vertical-align: middle;
+    color: #9CA3AF;
+    transition: transform 0.15s ease, color 0.15s ease;
+
+    &.active {
+      color: #2563EB;
+    }
+
+    &.desc {
+      transform: rotate(180deg);
+    }
   }
 
   tbody tr {
@@ -42,14 +84,27 @@
     padding: 12px 15px;
     font-size: 0.875rem;
     color: #111827;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .detail-col {
-    width: 30px;
+  /* Colonne du chevron : elle ne contient qu'une icône, donc pas de padding à gauche et
+     surtout pas l'ellipse héritée de `tbody td` — faute de place, elle affichait un « … »
+     à droite de chaque ligne. Les sélecteurs reprennent `thead`/`tbody` pour passer devant
+     les règles ci-dessus : l'encapsulation Angular ajoute un attribut à chaque compound,
+     ce qui rend `.data-table tbody td` plus spécifique qu'une simple classe. */
+  thead th.detail-col,
+  tbody td.detail-col {
+    width: 40px;
+    padding-left: 0;
+    padding-right: 12px;
     text-align: right;
+    overflow: visible;
   }
 
   .chevron {
     color: #9CA3AF;
+    vertical-align: middle;
   }
 }

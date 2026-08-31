@@ -11,8 +11,10 @@ export interface PageTab {
 template: `<div class="tabs-header">
       @for (tab of tabs; track tab.key) {
         <button
+          type="button"
           class="tab-btn"
           [class.active]="activeTabKey === tab.key"
+          [attr.data-testid]="'_btn_tab_' + tab.key"
           (click)="onSelectTab(tab.key)">
           {{ tab.label }} ({{ tab.count }})
         </button>

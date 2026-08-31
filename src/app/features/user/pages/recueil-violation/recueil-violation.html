@@ -1,16 +1,39 @@
 <app-master-detail-layout
   [title]="pageTitle"
-  [iconSvg]="icon"
+  [icon]="icon"
   [actions]="actions"
-  [tabs]="pageTabs"
-  [activeTabKey]="activeTab"
-  [isDetailOpen]="!!selectedViolation"
-  [detailTitle]="selectedViolation ? 'Violation #' + selectedViolation.id : 'Détails'"
+  [isDetailOpen]="isDetailOpen"
+  [detailTitle]="detailTitle"
   (actionClick)="onHeaderAction($event)"
-  (tabChange)="setActiveTab($event)"
   (detailClose)="onCloseDetail()">
 
-  <!-- Tabs -->
+  <!-- Actions du détail : modification et suppression réservées à l'admin.
+       Un seul nœud par bloc @if : Angular ne projette pas un bloc qui en compte plusieurs. -->
+  @if (isAdmin && selectedViolation && !filtreSelectionne) {
+    <button
+      slot="detail-actions"
+      type="button"
+      class="detail-action-btn"
+      title="Modifier"
+      data-testid="_btn_modifier_violation"
+      [disabled]="!selectedDetails"
+      (click)="onEditViolation()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  }
+  @if (isAdmin && selectedViolation && !filtreSelectionne) {
+    <button
+      slot="detail-actions"
+      type="button"
+      class="detail-action-btn danger"
+      title="Supprimer"
+      data-testid="_btn_supprimer_violation"
+      (click)="onDeleteViolation()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  }
+
+  <!-- Onglets -->
   <app-page-tabs
     slot="tabs"
     [tabs]="pageTabs"
@@ -23,37 +46,118 @@
     slot="list-items"
     [columns]="tableColumns"
     [data]="displayedViolations"
-    (rowClick)="onSelectViolation($event)">
+    [trackKey]="'identifiant'"
+    (rowClick)="onSelectViolation($event)"
+    (sortChange)="onSortChange($event)">
   </app-data-table>
 
-  <!-- État vide -->
-  <div slot="empty-state" *ngIf="displayedViolations.length === 0">
-    <div class="empty-state">
-      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M72.584 63.167L66.667 57.25V26.667H36.167L22.834 13.333H32.334L39.001 20H66.667C68.501 20 70.07 20.653 71.376 21.958C72.681 23.264 73.334 24.833 73.334 26.667V60C73.334 60.611 73.278 61.181 73.167 61.708C73.056 62.236 72.862 62.722 72.584 63.167ZM68.251 77.667L57.251 66.667H13.334C11.501 66.667 9.931 66.014 8.626 64.708C7.32 63.403 6.667 61.833 6.667 60V20C6.667 18.167 7.32 16.597 8.626 15.292C9.931 13.986 11.501 13.333 13.334 13.333L20.001 20H13.334V60H50.584L2.334 11.667L7.001 7L73.001 73L68.251 77.667Z" fill="#A0A1A5"/>
-      </svg>
-      <p data-testid="_lib_empty_violations">Aucune violation en cours de traitement</p>
+  <!-- État vide / chargement -->
+  @if (loading && displayedViolations.length === 0) {
+    <div slot="empty-state" class="empty-state">
+      <p data-testid="_lib_loading_violations">Chargement des violations…</p>
     </div>
-  </div>
+  } @else if (!loading && displayedViolations.length === 0) {
+    <div slot="empty-state" class="empty-state">
+      <mat-icon aria-hidden="true">folder_off</mat-icon>
+      <p data-testid="_lib_empty_violations">{{ emptyMessage }}</p>
+    </div>
+  }
 
-  <!-- Détails -->
-  <div slot="detail-content" *ngIf="selectedViolation">
-    <div class="field-group">
-      <label data-testid="_lib_label_violation_id">ID</label>
-      <p data-testid="_val_violation_id">{{ selectedViolation.id }}</p>
+  <!-- Pagination -->
+  <app-pagination
+    slot="pagination"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [pageSize]="size"
+    (pageChange)="goToPage($event)">
+  </app-pagination>
+
+  <!-- Filtres -->
+  @if (filtreSelectionne) {
+    <div slot="detail-content">
+      <app-filtre-violation
+        [filters]="currentFilters"
+        (filtreChange)="onFiltreChange($event)"
+        (filtreClose)="onFiltreClose()">
+      </app-filtre-violation>
     </div>
-    <div class="field-group">
-      <label data-testid="_lib_label_violation_nature">Nature</label>
-      <p data-testid="_val_violation_nature">{{ selectedViolation.nature }}</p>
+  } @else if (detailView; as violation) {
+    <div slot="detail-content" class="detail-content">
+      @if (detailsLoading && !selectedDetails) {
+        <p class="detail-loading" data-testid="_lib_loading_violation_detail">Chargement des détails…</p>
+      }
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_date">Date de la violation</h2>
+        <p data-testid="_val_violation_date">{{ formatDate(violation.dateViolation) }}</p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_nature">Nature de la violation DCP</h2>
+        <p data-testid="_val_violation_nature">{{ value(violation.natureViolation) }}</p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_donnees">Données concernées</h2>
+        <p data-testid="_val_violation_donnees">{{ value(violation.donneesConcernees) }}</p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_nombre_donnees">Nombre approximatif de données concernées</h2>
+        <p data-testid="_val_violation_nombre_donnees">
+          {{ detailField(violation, 'nombreApproximatifDonneesConcernees') }}
+        </p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_categories_personnes">Catégories de personnes concernées</h2>
+        <p data-testid="_val_violation_categories_personnes">
+          {{ detailField(violation, 'categoriesPersonnesConcernees') }}
+        </p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_nombre_personnes">Nombre de personnes concernées</h2>
+        <p data-testid="_val_violation_nombre_personnes">{{ value(violation.nombrePersonnesConcernees) }}</p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_consequences">Conséquences</h2>
+        <p data-testid="_val_violation_consequences">{{ detailField(violation, 'consequences') }}</p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_mesures">Mesures prises ou prévues</h2>
+        <p data-testid="_val_violation_mesures">{{ detailField(violation, 'mesuresPrisesPrevues') }}</p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_risque">Risque élevé pour les droits et libertés</h2>
+        <p data-testid="_val_violation_risque">{{ formatBoolean(violation.risqueEleveDroitsLibertes) }}</p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_information_cnil">Information de la CNIL</h2>
+        <p data-testid="_val_violation_information_cnil">{{ detailField(violation, 'informationCnil') }}</p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_communication">Communication aux personnes et date</h2>
+        <p data-testid="_val_violation_communication">
+          {{ detailField(violation, 'communicationPersonnesEffectueeEtDate') }}
+        </p>
+      </div>
+      <div class="detail-title">
+        <h2 data-testid="_lib_violation_commentaires">Commentaires</h2>
+        <p data-testid="_val_violation_commentaires">{{ detailField(violation, 'commentaires') }}</p>
+      </div>
     </div>
-    <div class="field-group">
-      <label data-testid="_lib_label_violation_date">Date</label>
-      <p data-testid="_val_violation_date">{{ formatDate(selectedViolation.date) }}</p>
-    </div>
-    <div class="field-group">
-      <label data-testid="_lib_label_violation_description">Description</label>
-      <p data-testid="_val_violation_description">{{ selectedViolation.description }}</p>
-    </div>
-  </div>
+  }
 
 </app-master-detail-layout>
+
+<!-- Modal : modifier une violation -->
+@if (editionOuverte && selectedDetails) {
+  <app-violation-modal
+    [violation]="selectedDetails"
+    (saved)="onViolationUpdated($event)"
+    (closed)="onEditClose()">
+  </app-violation-modal>
+}
+
+<!-- Modal : déclarer une violation -->
+@if (creationOuverte) {
+  <app-violation-modal
+    (saved)="onViolationCreated($event)"
+    (closed)="onCreateClose()">
+  </app-violation-modal>
+}

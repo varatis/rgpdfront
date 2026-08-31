@@ -36,6 +36,15 @@
     flex-direction: column;
   }
 
+  /* `app-data-table` n'a pas de zone de défilement propre : elle défile dans la place
+     que lui laissent les onglets et la pagination. */
+  app-data-table {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  app-page-tabs,
   app-pagination {
     flex-shrink: 0;
   }
@@ -45,7 +54,7 @@
   width: 60%;
 }
 
-/* --- PANNEAU DE DROITE --- */
+/* --- PANNEAU DE DROITE (DÉTAIL) --- */
 .right-section {
   width: 40%;
   background: white;

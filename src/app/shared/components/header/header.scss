@@ -8,6 +8,26 @@
   min-height: 64px;
 }
 
+// Variante utilisée quand l'en-tête est posé directement sur le fond de page
+// (et non dans une carte blanche) : cf. app-master-detail-layout.
+:host(.on-surface) {
+  .header {
+    background: transparent;
+    border-bottom: none;
+    padding: 0 4px;
+    min-height: 40px;
+  }
+
+  .actions button {
+    white-space: nowrap;
+
+    .material-icons {
+      font-size: 18px;
+      width: 18px;
+    }
+  }
+}
+
 .left {
   display: flex;
   align-items: center;

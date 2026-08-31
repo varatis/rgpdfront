@@ -15,6 +15,14 @@ import {
   PreconisationWritePayload
 } from '../core/models/preconisation.model';
 import { CreateDemandePayload, Demande } from '../core/models/demande.model';
+import {
+  CreateViolationPayload,
+  Violation,
+  ViolationDetails,
+  ViolationSortField,
+  ViolationStatut
+} from '../core/models/violation.model';
+import { FiltreViolationPayload } from '../core/models/filtre-violation.payload';
 
 @Injectable({
   providedIn: 'root'
@@ -166,5 +174,69 @@ export class ApiService {
 
   deletePreconisation(identifiant: string): Observable<void> {
     return this.http.delete<void>(this.apiUrl + 'preconisations/' + identifiant);
+  }
+
+  getViolations(
+    page: number,
+    size: number,
+    sortField: ViolationSortField = 'dateViolation',
+    sortDirection: 'asc' | 'desc' = 'desc',
+    clientNom?: string,
+    statut?: ViolationStatut,
+    filters?: Partial<FiltreViolationPayload>
+  ): Observable<PageResponse<Violation>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sort', `${sortField},${sortDirection}`);
+
+    if (clientNom) {
+      params = params.set('clientNom', clientNom);
+    }
+    if (statut) {
+      params = params.set('statut', statut);
+    }
+    if (filters?.natureViolation) {
+      params = params.set('natureViolation', filters.natureViolation);
+    }
+    if (filters?.donneesConcernees) {
+      params = params.set('donneesConcernees', filters.donneesConcernees);
+    }
+    if (filters?.risqueEleveDroitsLibertes != null) {
+      params = params.set('risqueEleveDroitsLibertes', filters.risqueEleveDroitsLibertes);
+    }
+    if (filters?.dateViolationDebut) {
+      params = params.set('dateViolationDebut', filters.dateViolationDebut);
+    }
+    if (filters?.dateViolationFin) {
+      params = params.set('dateViolationFin', filters.dateViolationFin);
+    }
+    if (filters?.nombrePersonnesConcerneesMin != null) {
+      params = params.set('nombrePersonnesConcerneesMin', filters.nombrePersonnesConcerneesMin);
+    }
+    if (filters?.nombrePersonnesConcerneesMax != null) {
+      params = params.set('nombrePersonnesConcerneesMax', filters.nombrePersonnesConcerneesMax);
+    }
+
+    return this.http.get<PageResponse<Violation>>(
+      this.apiUrl + 'violations',
+      { params }
+    );
+  }
+
+  getViolationDetails(identifiant: string): Observable<ViolationDetails> {
+    return this.http.get<ViolationDetails>(this.apiUrl + 'violations/' + identifiant);
+  }
+
+  updateViolation(identifiant: string, payload: ViolationDetails): Observable<ViolationDetails> {
+    return this.http.put<ViolationDetails>(this.apiUrl + 'violations/' + identifiant, payload);
+  }
+
+  createViolation(payload: CreateViolationPayload): Observable<ViolationDetails> {
+    return this.http.post<ViolationDetails>(this.apiUrl + 'violations', payload);
+  }
+
+  deleteViolation(identifiant: string): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + 'violations/' + identifiant);
   }
 }

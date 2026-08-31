@@ -63,7 +63,7 @@ export const routes: Routes = [
       {
         path: 'recueil-violation',
         canActivate: [roleGuard],
-        data: { roles: [] },
+        data: { roles: ['admin', 'client', 'superadmin'] },
         loadComponent: () => import('./features/user/pages/recueil-violation/recueil-violation')
           .then(m => m.RecueilViolation)
 

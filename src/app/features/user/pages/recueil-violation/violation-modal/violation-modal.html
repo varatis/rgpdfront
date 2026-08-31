@@ -1,0 +1,186 @@
+<div class="modal-backdrop" data-testid="_lst_modal_violation" (click)="close()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 data-testid="_lib_modal_title">{{ modalTitle }}</h2>
+      <button
+        class="modal-close-btn"
+        type="button"
+        data-testid="_btn_modal_close"
+        title="Fermer"
+        (click)="close()">✕</button>
+    </div>
+
+    <!-- Form -->
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="inp_date_violation" data-testid="_lib_inp_date_violation">
+            Date de la violation@if (!isEditMode) {<span class="required"> *</span>}
+          </label>
+          <input
+            id="inp_date_violation"
+            type="date"
+            data-testid="_inp_date_violation"
+            [class.invalid]="isInvalid('dateViolation')"
+            formControlName="dateViolation" />
+        </div>
+
+        <div class="form-field">
+          <label for="inp_statut" data-testid="_lib_inp_statut">Statut</label>
+          <select id="inp_statut" data-testid="_inp_statut" formControlName="statut">
+            @for (statut of statuts; track statut.value) {
+              <option [value]="statut.value">{{ statut.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="inp_nature_violation" data-testid="_lib_inp_nature_violation">
+          Nature de la violation DCP@if (!isEditMode) {<span class="required"> *</span>}
+        </label>
+        <input
+          id="inp_nature_violation"
+          type="text"
+          data-testid="_inp_nature_violation"
+          [class.invalid]="isInvalid('natureViolation')"
+          formControlName="natureViolation"
+          placeholder="Ex : perte d'un ordinateur portable non chiffré"
+          autocomplete="off" />
+      </div>
+
+      <div class="form-field">
+        <label for="inp_donnees_concernees" data-testid="_lib_inp_donnees_concernees">Données concernées</label>
+        <input
+          id="inp_donnees_concernees"
+          type="text"
+          data-testid="_inp_donnees_concernees"
+          formControlName="donneesConcernees"
+          autocomplete="off" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="inp_nombre_donnees" data-testid="_lib_inp_nombre_donnees">
+            Nombre approximatif de données concernées
+          </label>
+          <input
+            id="inp_nombre_donnees"
+            type="number"
+            min="0"
+            data-testid="_inp_nombre_donnees"
+            formControlName="nombreApproximatifDonneesConcernees" />
+        </div>
+
+        <div class="form-field">
+          <label for="inp_nombre_personnes" data-testid="_lib_inp_nombre_personnes">
+            Nombre de personnes concernées
+          </label>
+          <input
+            id="inp_nombre_personnes"
+            type="number"
+            min="0"
+            data-testid="_inp_nombre_personnes"
+            formControlName="nombrePersonnesConcernees" />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="inp_categories_personnes" data-testid="_lib_inp_categories_personnes">
+          Catégories de personnes concernées
+        </label>
+        <input
+          id="inp_categories_personnes"
+          type="text"
+          data-testid="_inp_categories_personnes"
+          formControlName="categoriesPersonnesConcernees"
+          autocomplete="off" />
+      </div>
+
+      <div class="form-field">
+        <label for="inp_consequences" data-testid="_lib_inp_consequences">Conséquences</label>
+        <textarea
+          id="inp_consequences"
+          rows="3"
+          data-testid="_inp_consequences"
+          formControlName="consequences"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="inp_mesures" data-testid="_lib_inp_mesures">Mesures prises ou prévues</label>
+        <textarea
+          id="inp_mesures"
+          rows="3"
+          data-testid="_inp_mesures"
+          formControlName="mesuresPrisesPrevues"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="inp_risque" data-testid="_lib_inp_risque">Risque élevé pour les droits et libertés</label>
+        <select id="inp_risque" data-testid="_inp_risque" formControlName="risqueEleveDroitsLibertes">
+          <option value="">Non renseigné</option>
+          <option value="true">Oui</option>
+          <option value="false">Non</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="inp_information_cnil" data-testid="_lib_inp_information_cnil">Information de la CNIL</label>
+        <input
+          id="inp_information_cnil"
+          type="text"
+          data-testid="_inp_information_cnil"
+          formControlName="informationCnil"
+          autocomplete="off" />
+      </div>
+
+      <div class="form-field">
+        <label for="inp_communication" data-testid="_lib_inp_communication">
+          Communication aux personnes et date
+        </label>
+        <input
+          id="inp_communication"
+          type="text"
+          data-testid="_inp_communication"
+          formControlName="communicationPersonnesEffectueeEtDate"
+          autocomplete="off" />
+      </div>
+
+      <div class="form-field">
+        <label for="inp_commentaires" data-testid="_lib_inp_commentaires">Commentaires</label>
+        <textarea
+          id="inp_commentaires"
+          rows="3"
+          data-testid="_inp_commentaires"
+          formControlName="commentaires"></textarea>
+      </div>
+
+      @if (submitError) {
+        <p class="submit-error" data-testid="_val_submit_error">{{ submitError }}</p>
+      }
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn-secondary"
+          data-testid="_btn_modal_cancel"
+          [disabled]="isSubmitting"
+          (click)="close()">
+          Annuler
+        </button>
+        <button type="submit" class="btn-primary" data-testid="_btn_modal_submit" [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            <span class="btn-spinner"></span>
+            Enregistrement…
+          } @else {
+            Enregistrer
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
