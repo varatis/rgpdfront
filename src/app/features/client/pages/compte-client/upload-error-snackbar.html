@@ -1,0 +1,23 @@
+<div class="upload-error-snackbar">
+  <span class="message" data-testid="_val_erreur_import">{{ data.message }}</span>
+  <div class="actions">
+    <button
+      mat-button
+      type="button"
+      class="action-btn"
+      data-testid="_btn_copier_log"
+      (click)="copyLog()"
+    >
+      {{ copied ? 'Copié' : 'Copier le log' }}
+    </button>
+    <button
+      mat-button
+      type="button"
+      class="action-btn"
+      data-testid="_btn_fermer_erreur"
+      (click)="close()"
+    >
+      Fermer
+    </button>
+  </div>
+</div>

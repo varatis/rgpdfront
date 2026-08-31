@@ -40,6 +40,8 @@
     .nav-icon {
       width: 20px;
       height: 20px;
+      font-size: 20px;
+      line-height: 20px;
       flex-shrink: 0;
     }
 
@@ -269,9 +271,13 @@
       border-radius: 8px;
       transition: all 0.2s;
 
+      /* Idem : la boîte et la glyphe doivent faire la même taille, sinon `overflow:
+         hidden` de `mat-icon` rogne les icônes pleines (`error`). */
       .nav-icon {
         width: 20px;
         height: 20px;
+        font-size: 20px;
+        line-height: 20px;
         flex-shrink: 0;
       }
 

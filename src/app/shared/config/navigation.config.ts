@@ -50,7 +50,7 @@ export const CLIENT_NAV_ITEMS: NavItem[] = [
     label: 'Recueil de violation',
     route: 'recueil-violation',
     icon: 'violation',
-    roles: []
+    roles: ['admin', 'client', 'superadmin']
   },
   {
     label: 'Sous-traitant DCP',

@@ -1,0 +1,115 @@
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+.filtres-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Le panneau de détail ne pose aucune marge : le contenu porte la sienne. */
+.filtres-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.filter-control {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.filter-label {
+  color: #252a34;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.filter-field {
+  width: 100%;
+  margin: 0;
+
+  --mat-form-field-outlined-container-shape: 24px;
+
+  ::ng-deep .mat-mdc-form-field-infix {
+    min-height: 46px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+
+/* Bornes « du / au » et « min / max » : deux champs de largeur égale sur une ligne. */
+.filter-range {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  /* Les deux bornes passent l'une sous l'autre quand le panneau devient trop étroit.
+     La base tient compte du bouton calendrier en suffixe. */
+  .filter-field {
+    flex: 1 1 170px;
+    min-width: 0;
+  }
+}
+
+.filter-error {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #c62828;
+}
+
+/* Tri-état « Tous / Oui / Non » : le back distingue l'absence de critère de `false`. */
+.segmented {
+  display: flex;
+  border: 1px solid #d6d9de;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.segmented-option {
+  flex: 1;
+  padding: 11px 12px;
+  border: 0;
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+  color: #252a34;
+  cursor: pointer;
+
+  & + .segmented-option {
+    border-left: 1px solid #d6d9de;
+  }
+
+  &:hover:not(.active) {
+    background: #f4f6f8;
+  }
+
+  &.active {
+    background: #1976d2;
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+.filtres-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 24px;
+  border-top: 1px solid #eef0f3;
+  margin-top: auto;
+  flex-shrink: 0;
+
+  button mat-icon {
+    margin-right: 4px;
+  }
+}

@@ -4,6 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../../../services/api.service';
+import { InfoFichier } from '../../../../core/models/info-fichier.model';
+import { UploadErrorSnackbar } from './upload-error-snackbar';
 
 @Component({
   selector: 'app-compte-client',
@@ -58,24 +60,30 @@ export class CompteClient {
 
         const isOk = response.statusFichier === 'OK';
 
-        this.snackBar.open(
-
-          isOk
-            ? `Fichier importé avec succès : ${response.nomFichier}`
-            : response.statusFichier,
-
-          'Fermer',
-
-          {
-            duration: 5000,
+        if (isOk) {
+          this.snackBar.open(
+            `Fichier importé avec succès : ${response.nomFichier}`,
+            'Fermer',
+            {
+              duration: 5000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-success']
+            }
+          );
+        } else {
+          // Statut KO : la snackbar reste ouverte jusqu'à fermeture manuelle
+          // (pas de `duration`) et propose de copier le log complet de l'erreur.
+          this.snackBar.openFromComponent(UploadErrorSnackbar, {
+            data: {
+              message: response.statusFichier || 'Échec de l’import du fichier',
+              log: this.buildErrorLog(response)
+            },
             horizontalPosition: 'right',
             verticalPosition: 'top',
-
-            panelClass: isOk
-              ? ['snackbar-success']
-              : ['snackbar-error']
-          }
-        );
+            panelClass: ['snackbar-error']
+          });
+        }
 
         this.selectedFile = undefined;
       },
@@ -96,6 +104,15 @@ export class CompteClient {
         );
       }
     });
+  }
+
+  private buildErrorLog(info: InfoFichier): string {
+    return [
+      `Fichier : ${info.nomFichier ?? ''}`,
+      `Date de réception : ${info.dateReception ?? ''}`,
+      `Date de fin de traitement : ${info.dateFinTraitement ?? ''}`,
+      `Statut : ${info.statusFichier ?? ''}`
+    ].join('\n');
   }
 
 }
