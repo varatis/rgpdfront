@@ -54,119 +54,142 @@
 
   @if (detailView; as details) {
     <div slot="detail-content">
-      <div class="detail-content">
-        @if (detailsLoading && !selectedDetails) {
-        <div class="detail-loading">Chargement des détails...</div>
-        }
-        <div class="detail-title">
-          <h2 data-testid="_lib_h2_selected_preco_description">Description</h2>
-          <p data-testid="_val_selected_preco_description">{{ value(explicationOf(details)) }}</p>
+      <div class="tabs-container" data-testid="_lst_tabs_preconisation">
+        <div class="tabs">
+          @for (tab of detailTabs; track tab; let i = $index) {
+            <button
+              [attr.data-testid]="'_btn_tab_preconisation_' + i"
+              [class.active]="activeDetailTab === tab"
+              (click)="selectDetailTab(tab, $event)">
+              {{ tab }}
+            </button>
+          }
         </div>
-        <div class="detail-title">
-          <h2 data-testid="_lib_h2_selected_preco_risque">Risque encouru</h2>
-          <p data-testid="_val_selected_preco_risque">{{ value(risqueOf(details)) }}</p>
-        </div>
-        <div class="detail-title">
-          <h2 data-testid="_lib_h2_selected_preco_contrainte">Contrainte</h2>
-          <p data-testid="_val_selected_preco_contrainte">{{ value(contraintesOf(details)) }}</p>
-        </div>
-        <div class="detail-title">
-          <h2 data-testid="_lib_h2_selected_preco_cout">Coût</h2>
-          <p data-testid="_val_selected_preco_cout">{{ value(coutOf(details)) }}</p>
-        </div>
-        <div class="detail-title">
-          <h2 data-testid="_lib_h2_selected_preco_commentaire">Commentaire</h2>
-          <p data-testid="_val_selected_preco_commentaire">{{ value(commentaireOf(details)) }}</p>
-        </div>
-        <div class="detail-title">
-          <h2 data-testid="_lib_h2_selected_preco_historique">Historique des modifications</h2>
-          @let historyEntries = historiqueModificationsOf(details);
-          <div class="history-list" data-testid="_val_selected_preco_historique">
-            @if (historyEntries.length === 0) {
-              <p class="history-empty">—</p>
-            } @else {
-              @for (entry of historyEntries; track $index) {
-                <article class="history-card">
-                  <div class="history-meta">
-                    <span class="history-badge">{{ entry.date }}</span>
-                  </div>
-                  <div class="history-grid">
-                    @if (entry.fields.length > 0) {
-                      <div class="history-row">
-                        <span class="history-label">Champs modifiés</span>
-                        <span class="history-value">
-                          @for (fieldName of entry.fields; track $index) {
-                            <span class="history-line">{{ fieldName }}</span>
-                          }
-                        </span>
-                      </div>
-                    }
 
-                    @if (entry.changes.length > 0) {
-                      <div class="history-row">
-                        <span class="history-label">Modification</span>
-                        <span class="history-value">
-                          @for (change of entry.changes; track $index) {
-                            <span class="history-line">{{ change }}</span>
-                          }
-                        </span>
-                      </div>
-                    }
+        <div class="content">
+          @if (detailsLoading && !selectedDetails) {
+            <div class="detail-loading">Chargement des détails...</div>
+          }
 
-                    @if (entry.reason) {
-                      <div class="history-row">
-                        <span class="history-label">Motif de modifications</span>
-                        <span class="history-value">{{ entry.reason }}</span>
+          @if (activeDetailTab === detailInfoTab) {
+            <div class="tab-content">
+              <div class="detail-title">
+                <h2 data-testid="_lib_h2_selected_preco_description">Description</h2>
+                <p data-testid="_val_selected_preco_description">{{ value(explicationOf(details)) }}</p>
+              </div>
+              <div class="detail-title">
+                <h2 data-testid="_lib_h2_selected_preco_risque">Risque encouru</h2>
+                <p data-testid="_val_selected_preco_risque">{{ value(risqueOf(details)) }}</p>
+              </div>
+              <div class="detail-title">
+                <h2 data-testid="_lib_h2_selected_preco_contrainte">Contrainte</h2>
+                <p data-testid="_val_selected_preco_contrainte">{{ value(contraintesOf(details)) }}</p>
+              </div>
+              <div class="detail-title">
+                <h2 data-testid="_lib_h2_selected_preco_cout">Coût</h2>
+                <p data-testid="_val_selected_preco_cout">{{ value(coutOf(details)) }}</p>
+              </div>
+              <div class="detail-title">
+                <h2 data-testid="_lib_h2_selected_preco_commentaire">Commentaire</h2>
+                <p data-testid="_val_selected_preco_commentaire">{{ value(commentaireOf(details)) }}</p>
+              </div>
+              <div class="detail-title">
+                <h2 data-testid="_lib_h2_selected_preco_traitement">Traitement lié</h2>
+                <p data-testid="_val_selected_preco_traitement">{{ traitementLie(details) }}</p>
+              </div>
+              <div class="status-badges">
+                <div class="badge-item">
+                  <h2 data-testid="_lib_h2_selected_selected_preco_priorite">Priorité</h2>
+                  <span
+                    data-testid="_val_selected_selected_preco_priorite"
+                    class="badge"
+                    [ngClass]="getPrioriteClass(details.priorite)">
+                    {{ scaleValue(details.prioriteLabel || details.priorite) }}
+                  </span>
+                </div>
+                <div class="badge-item">
+                  <h2 data-testid="_lib_h2_selected_preco_complexite">Complexité</h2>
+                  <span
+                    data-testid="_val_selected_preco_complexite"
+                    class="badge"
+                    [ngClass]="getComplexiteClass(details.complexite)">
+                    {{ value(details.complexiteLabel || details.complexite) }}
+                  </span>
+                </div>
+                <div class="badge-item">
+                  <h2 data-testid="_lib_h2_selected_preco_avancement">Avancement</h2>
+                  @let percent = getAvancementPercent(details.etatAvancement);
+                  @if (percent !== null) {
+                    <div class="progress-container">
+                      <div class="progress-bar">
+                        <div class="progress-fill" [style.width.%]="percent"></div>
                       </div>
+                      <span data-testid="_val_selected_preco_avancement" class="progress-text">{{ percent }}%</span>
+                    </div>
+                  } @else {
+                    <span
+                      data-testid="_val_selected_preco_avancement"
+                      class="badge"
+                      [ngClass]="getAvancementClass(details.etatAvancement)">
+                      {{ value(details.etatAvancement) }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+
+          @if (activeDetailTab === detailHistoryTab) {
+            @let historyEntries = historiqueModificationsOf(details);
+            <div class="tab-content">
+              <div class="detail-title">
+                <h2 data-testid="_lib_h2_selected_preco_historique">Historique des modifications</h2>
+                <div class="history-list" data-testid="_val_selected_preco_historique">
+                  @if (historyEntries.length === 0) {
+                    <p class="history-empty">—</p>
+                  } @else {
+                    @for (entry of historyEntries; track $index) {
+                      <article class="history-card">
+                        <div class="history-meta">
+                          <span class="history-badge">{{ entry.date }}</span>
+                        </div>
+                        <div class="history-grid">
+                          @if (entry.fields.length > 0) {
+                            <div class="history-row">
+                              <span class="history-label">Champs modifiés</span>
+                              <span class="history-value">
+                                @for (fieldName of entry.fields; track $index) {
+                                  <span class="history-line">{{ fieldName }}</span>
+                                }
+                              </span>
+                            </div>
+                          }
+
+                          @if (entry.changes.length > 0) {
+                            <div class="history-row">
+                              <span class="history-label">Modification</span>
+                              <span class="history-value">
+                                @for (change of entry.changes; track $index) {
+                                  <span class="history-line">{{ change }}</span>
+                                }
+                              </span>
+                            </div>
+                          }
+
+                          @if (entry.reason) {
+                            <div class="history-row">
+                              <span class="history-label">Motif de modifications</span>
+                              <span class="history-value">{{ entry.reason }}</span>
+                            </div>
+                          }
+                        </div>
+                      </article>
                     }
-                  </div>
-                </article>
-              }
-            }
-          </div>
-        </div>
-        <div class="detail-title">
-          <h2 data-testid="_lib_h2_selected_preco_traitement">Traitement lié</h2>
-          <p data-testid="_val_selected_preco_traitement">{{ traitementLie(details) }}</p>
-        </div>
-        <div class="status-badges">
-          <div class="badge-item">
-            <h2 data-testid="_lib_h2_selected_selected_preco_priorite">Priorité</h2>
-            <span
-              data-testid="_val_selected_selected_preco_priorite"
-              class="badge"
-              [ngClass]="getPrioriteClass(details.priorite)">
-              {{ scaleValue(details.prioriteLabel || details.priorite) }}
-            </span>
-          </div>
-          <div class="badge-item">
-            <h2 data-testid="_lib_h2_selected_preco_complexite">Complexité</h2>
-            <span
-              data-testid="_val_selected_preco_complexite"
-              class="badge"
-              [ngClass]="getComplexiteClass(details.complexite)">
-              {{ value(details.complexiteLabel || details.complexite) }}
-            </span>
-          </div>
-          <div class="badge-item">
-            <h2 data-testid="_lib_h2_selected_preco_avancement">Avancement</h2>
-            @let percent = getAvancementPercent(details.etatAvancement);
-            @if (percent !== null) {
-            <div class="progress-container">
-              <div class="progress-bar">
-                <div class="progress-fill" [style.width.%]="percent"></div>
+                  }
+                </div>
               </div>
-              <span data-testid="_val_selected_preco_avancement" class="progress-text">{{ percent }}%</span>
-              </div>
-            } @else {
-            <span
-              data-testid="_val_selected_preco_avancement"
-              class="badge"
-              [ngClass]="getAvancementClass(details.etatAvancement)">
-                {{ value(details.etatAvancement) }}
-              </span>
-            }
-          </div>
+            </div>
+          }
         </div>
       </div>
     </div>

@@ -53,6 +53,10 @@ import { Modal } from '../../../../shared/components/modal/modal';
   styleUrl: './suivi-preconisations.scss'
 })
 export class SuiviPreconisations implements OnInit {
+  readonly detailInfoTab = 'Informations de la préconisation';
+  readonly detailHistoryTab = 'Historique des modifications';
+  readonly detailTabs = [this.detailInfoTab, this.detailHistoryTab];
+
   private readonly apiService = inject(ApiService);
   private readonly keycloakService = inject(KeycloakService);
   private readonly destroyRef = inject(DestroyRef);
@@ -122,6 +126,7 @@ export class SuiviPreconisations implements OnInit {
   loading = false;
   detailsLoading = false;
   error: string | null = null;
+  activeDetailTab = this.detailInfoTab;
 
   get isDetailOpen(): boolean {
     return !!this.selectedPreconisation;
@@ -212,6 +217,7 @@ export class SuiviPreconisations implements OnInit {
     }
 
     this.filtreSelectionne = false;
+    this.activeDetailTab = this.detailInfoTab;
     this.selectedPreconisation = item;
     this.selectedDetails = null;
     this.details$.next(item.identifiant);
@@ -222,6 +228,16 @@ export class SuiviPreconisations implements OnInit {
     this.selectedDetails = null;
     this.filtreSelectionne = false;
     this.detailsLoading = false;
+    this.activeDetailTab = this.detailInfoTab;
+  }
+
+  selectDetailTab(tab: string, event?: MouseEvent): void {
+    this.activeDetailTab = tab;
+    event?.target && (event.target as HTMLElement).scrollIntoView({
+      behavior: 'smooth',
+      inline: 'nearest',
+      block: 'nearest',
+    });
   }
 
   onHeaderAction(action: string): void {
