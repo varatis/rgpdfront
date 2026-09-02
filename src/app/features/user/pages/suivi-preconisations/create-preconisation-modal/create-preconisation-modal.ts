@@ -254,6 +254,15 @@ export class CreatePreconisationModal implements OnInit {
     }
   }
 
+  onEnterSubmit(event: Event): void {
+    if (!(event instanceof KeyboardEvent) || event.defaultPrevented || this.shouldIgnoreEnterSubmit(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    this.onSubmit();
+  }
+
   scaleValue(value?: string | null): string {
     return scaleLabel(value);
   }
@@ -435,6 +444,20 @@ export class CreatePreconisationModal implements OnInit {
     }
 
     return value ?? null;
+  }
+
+  private shouldIgnoreEnterSubmit(event: KeyboardEvent): boolean {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return false;
+    }
+
+    const tagName = target.tagName.toLowerCase();
+    if (tagName === 'textarea' || tagName === 'button') {
+      return true;
+    }
+
+    return false;
   }
 
   private getErrorMessage(error: { status?: number; error?: unknown }): string {

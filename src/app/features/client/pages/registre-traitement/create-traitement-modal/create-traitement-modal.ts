@@ -245,6 +245,15 @@ export class CreateTraitementModal implements OnInit {
     this.closed.emit();
   }
 
+  onEnterSubmit(event: Event): void {
+    if (!(event instanceof KeyboardEvent) || event.defaultPrevented || this.shouldIgnoreEnterSubmit(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    this.onSubmit();
+  }
+
   onSubmit(): void {
     this.notificationModificationRequired = false;
     this.updateNotificationModificationValidation();
@@ -513,6 +522,29 @@ export class CreateTraitementModal implements OnInit {
     }
 
     return value ?? null;
+  }
+
+  private shouldIgnoreEnterSubmit(event: KeyboardEvent): boolean {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return false;
+    }
+
+    const tagName = target.tagName.toLowerCase();
+    if (tagName === 'textarea') {
+      return true;
+    }
+
+    if (tagName === 'button') {
+      return true;
+    }
+
+    if (tagName === 'input') {
+      const inputType = (target as HTMLInputElement).type?.toLowerCase();
+      return inputType === 'checkbox';
+    }
+
+    return false;
   }
 
   private isSameEtablissement(a: Etablissement, b: Etablissement): boolean {
