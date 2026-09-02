@@ -15,6 +15,9 @@ import { Subject } from 'rxjs';
 import { debounceTime, switchMap, finalize } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PageResponse } from '../../../../core/models/page-response.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Modal} from '../../../../shared/components/modal/modal';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-registre-traitement',
@@ -28,6 +31,8 @@ export class RegistreTraitement implements OnInit {
   private keycloakService = inject(KeycloakService);
   private destroyRef = inject(DestroyRef);
   private load$ = new Subject<number>();
+  private snackBar: MatSnackBar = inject(MatSnackBar);
+  readonly dialog = inject(MatDialog);
 
   title = 'Registre des activités de traitement';
   icon = `
@@ -190,26 +195,59 @@ export class RegistreTraitement implements OnInit {
     this.loadTraitements(this.page);
   }
 
+  deleteTraitementModal(): void {
+    let dialogRef = this.dialog.open(Modal, {
+      data: { title: "Confirmation de la suppression du traitement", 
+              message: "Êtes-vous sûr de vouloir supprimer ce traitement ?",
+              confirmText: "Confirmer", cancelText: "Annuler"}
+      });
+
+    dialogRef.afterClosed().subscribe(confirmStatus => {
+      if(confirmStatus) this.deletionConfirmed();
+    });
+
+  }
+  
   onDeleteClick(): void {
     if (!this.isAdmin || !this.traitementSelectionne) {
       return;
     }
-
-    const confirmed = window.confirm(
-      `Supprimer le traitement ${this.traitementSelectionne.idFonctionnel} ?`
-    );
-
-    if (!confirmed) {
+    this.deleteTraitementModal();
+  }
+  
+  deletionConfirmed(): void {
+    if (!this.isAdmin || !this.traitementSelectionne) {
       return;
     }
-
     this.apiService.deleteTraitement(this.traitementSelectionne.identifiant)
       .subscribe({
         next: () => {
           this.closeDetail();
           this.loadTraitements(this.page);
+          this.snackBar.open(
+            'Le traitement  été effectué avec succès',
+            'Fermer',
+            {
+              duration: 5000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-success']
+            }
+          );
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          this.snackBar.open(
+            'Une erreur est survenue lors de la suppression traitement',
+            'Fermer',
+            {
+              duration: 5000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-error']
+            }
+          );
+          console.error(err);
+        }
       });
   }
 
