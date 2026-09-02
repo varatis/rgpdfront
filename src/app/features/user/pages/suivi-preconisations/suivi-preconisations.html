@@ -199,7 +199,7 @@
 
 @if (filtreSelectionne) {
 <div class="filter-modal" role="dialog" aria-modal="true" aria-labelledby="filter-title">
-  <button class="filter-backdrop" type="button" aria-label="Fermer les filtres" (click)="onFiltreClose()"></button>
+  <div class="filter-backdrop" aria-hidden="true"></div>
   <div class="filter-panel">
     <app-filtre-preconisation
       [filters]="currentFilters"

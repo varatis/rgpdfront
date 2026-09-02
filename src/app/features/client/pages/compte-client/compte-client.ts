@@ -260,6 +260,7 @@ export class CompteClient {
       maxWidth: '96vw',
       maxHeight: '92vh',
       autoFocus: false,
+      disableClose: true,
       panelClass: 'import-warning-dialog',
       data: { apercu }
     });
