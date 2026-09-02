@@ -95,9 +95,16 @@
   cursor: pointer;
   transition: all 0.2s ease;
 
-  &:hover {
-    border-color: #b8bec8;
-    background: #fafafa;
+  &:hover,
+  &.drag-over {
+    border-color: #2e63cd;
+    background: #f5f9ff;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: #2e63cd;
+    box-shadow: 0 0 0 3px rgba(46, 99, 205, 0.12);
   }
 }
 

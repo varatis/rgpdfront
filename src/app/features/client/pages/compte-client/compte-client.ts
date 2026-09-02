@@ -22,15 +22,18 @@ export class CompteClient {
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly keycloakService = inject(KeycloakService);
+  private dragDepth = 0;
 
   @ViewChild('fileInput') private fileInput?: ElementRef<HTMLInputElement>;
 
   readonly clientName = this.keycloakService.getClientName();
+  readonly allowedExtensions = ['xlsx', 'xls'];
 
   selectedFile?: File;
   importApercu: ImportApercu | null = null;
   isUploading = false;
   isLoadingPreview = false;
+  isDragOver = false;
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -39,19 +42,46 @@ export class CompteClient {
       return;
     }
 
-    const file = input.files[0];
-    const allowedExtensions = ['xlsx', 'xls'];
-    const extension = file.name.split('.').pop()?.toLowerCase();
+    this.processSelectedFile(input.files[0], input);
+  }
 
-    if (!extension || !allowedExtensions.includes(extension)) {
-      this.showErrorSnackbar('Veuillez sélectionner un fichier Excel (.xlsx, .xls)');
-      this.resetSelectedFile(input);
+  onDragEnter(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragDepth += 1;
+    this.isDragOver = true;
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'copy';
+    }
+    this.isDragOver = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragDepth = Math.max(0, this.dragDepth - 1);
+    if (this.dragDepth === 0) {
+      this.isDragOver = false;
+    }
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragDepth = 0;
+    this.isDragOver = false;
+
+    const file = event.dataTransfer?.files?.[0];
+    if (!file) {
       return;
     }
 
-    this.selectedFile = file;
-    this.importApercu = null;
-    this.loadImportApercu(file);
+    this.processSelectedFile(file);
   }
 
   uploadFile(): void {
@@ -118,6 +148,25 @@ export class CompteClient {
         this.showErrorSnackbar('Une erreur est survenue lors de la génération du fichier de registre de traitement');
       }
     });
+  }
+
+  private processSelectedFile(file: File, input?: HTMLInputElement): void {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+
+    if (!extension || !this.allowedExtensions.includes(extension)) {
+      this.showErrorSnackbar('Veuillez sélectionner un fichier Excel (.xlsx, .xls)');
+      this.resetSelectedFile(input);
+      return;
+    }
+
+    this.selectedFile = file;
+    this.importApercu = null;
+
+    if (input) {
+      input.value = '';
+    }
+
+    this.loadImportApercu(file);
   }
 
   private loadImportApercu(file: File): void {
@@ -293,6 +342,8 @@ export class CompteClient {
     this.selectedFile = undefined;
     this.importApercu = null;
     this.isLoadingPreview = false;
+    this.isDragOver = false;
+    this.dragDepth = 0;
 
     if (input) {
       input.value = '';
