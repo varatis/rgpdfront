@@ -16,7 +16,8 @@ import {
   PreconisationDetails,
   PreconisationSortField,
   prioriteClass,
-  scaleLabel
+  scaleLabel,
+  splitPreconisationCommentaire
 } from '../../../../core/models/preconisation.model';
 import { ApiService } from '../../../../services/api.service';
 import { MasterDetailLayout } from '../../../../layout/master-detail-layout/master-detail-layout';
@@ -394,7 +395,15 @@ export class SuiviPreconisations implements OnInit {
   }
 
   commentaireOf(details: PreconisationDetails | Preconisation): string | undefined {
-    return 'commentaire' in details ? details.commentaire : undefined;
+    return 'commentaire' in details
+      ? splitPreconisationCommentaire(details.commentaire).commentaire
+      : undefined;
+  }
+
+  historiqueModificationsOf(details: PreconisationDetails | Preconisation): string | undefined {
+    return 'commentaire' in details
+      ? splitPreconisationCommentaire(details.commentaire).historique
+      : undefined;
   }
 
   private normalizeScales<T extends Preconisation>(item: T): T {

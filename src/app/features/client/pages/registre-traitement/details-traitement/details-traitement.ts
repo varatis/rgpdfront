@@ -24,6 +24,7 @@ export class DetailsTraitementComponent {
   });
 
   readonly traitementId = input<number>();
+  readonly refreshToken = input<number>(0);
   readonly userRole = input<UserRole>('client');
   readonly detailsLoaded = output<TraitementDetails>();
 
@@ -43,6 +44,7 @@ export class DetailsTraitementComponent {
   constructor() {
     effect((onCleanup) => {
       const id = this.traitementId();
+      this.refreshToken();
 
       if (id == null) {
         this.details.set(undefined);

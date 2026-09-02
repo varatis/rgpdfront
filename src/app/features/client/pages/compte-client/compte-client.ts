@@ -207,7 +207,11 @@ export class CompteClient {
 
   private openImportWarningModal(apercu: ImportApercu): void {
     const dialogRef = this.dialog.open(ImportWarningModal, {
-      width: 'min(720px, calc(100vw - 32px))',
+      width: 'min(760px, calc(100vw - 24px))',
+      maxWidth: '96vw',
+      maxHeight: '92vh',
+      autoFocus: false,
+      panelClass: 'import-warning-dialog',
       data: { apercu }
     });
 

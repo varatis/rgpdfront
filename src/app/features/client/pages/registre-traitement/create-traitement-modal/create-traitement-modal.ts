@@ -5,7 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../../../../services/api.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { CreateTraitementPayload, Traitement, TraitementDetails } from '../../../../../core/models/traitement.model';
 import { Etablissement } from '../../../../../core/models/etablissement.model';
 import {
@@ -76,6 +77,7 @@ export class CreateTraitementModal implements OnInit {
       finalitePrincipale: [null, Validators.maxLength(this.validatorFinaliteMaxLength)],
       dateMiseAJour: [null],
       historiqueModifications: [null],
+      notificationModification: [null],
       dataProtectionOfficer: [null],
       responsableTraitement: [null],
       gestionnaireMiseEnOeuvre: [null],
@@ -232,11 +234,23 @@ export class CreateTraitementModal implements OnInit {
     this.submitError = null;
 
     const payload = this.buildPayload();
+    const notificationModification = this.form.get('notificationModification')?.value?.trim();
 
     const call$: Observable<Traitement | TraitementDetails> = this.isEditMode
       ? this.apiService.updateTraitement(
         this.traitementToEdit!.idFonctionnel,
         payload
+      ).pipe(
+        switchMap((resultat) => {
+          if (!notificationModification) {
+            return of(resultat);
+          }
+
+          return this.apiService.addTraitementHistorique(
+            this.traitementToEdit!.idFonctionnel,
+            { motif: notificationModification }
+          ).pipe(switchMap(() => of(resultat)));
+        })
       )
       : this.apiService.createTraitement(payload);
 
@@ -316,7 +330,7 @@ export class CreateTraitementModal implements OnInit {
   private buildPayload(): CreateTraitementPayload {
     const {
       finalitePrincipale, responsableTraitement, sensibilite, etudeImpact,
-      licieteTraitement, dureeConservation, dureeArchivage, ...reste
+      licieteTraitement, dureeConservation, dureeArchivage, notificationModification, ...reste
     } = this.form.value;
 
     return {

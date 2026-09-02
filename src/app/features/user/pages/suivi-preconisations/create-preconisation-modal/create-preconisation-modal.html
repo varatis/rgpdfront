@@ -167,6 +167,23 @@
           placeholder="Informations complémentaires"></textarea>
       </div>
 
+      @if (isEditMode) {
+        <div class="form-field">
+          <label data-testid="_lib_inp_preconisation_notification_modification" for="inp_preconisation_notification_modification">
+            Notifier la modification
+          </label>
+          <textarea
+            id="inp_preconisation_notification_modification"
+            data-testid="_inp_preconisation_notification_modification"
+            formControlName="notificationModification"
+            rows="3"
+            placeholder="Décrivez la modification à historiser"></textarea>
+          <span class="field-help">
+            Cette note sera ajoutée à l'historique des modifications de la préconisation.
+          </span>
+        </div>
+      }
+
       @if (submitError) {
         <p class="submit-error" role="alert" data-testid="_val_preconisation_submit_error">
           {{ submitError }}

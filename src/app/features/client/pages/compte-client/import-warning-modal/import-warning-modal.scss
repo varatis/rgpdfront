@@ -1,13 +1,18 @@
 .modal-container {
-  min-width: min(720px, calc(100vw - 48px));
-  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  width: min(760px, calc(100vw - 24px));
+  max-width: 100%;
+  max-height: min(92vh, 900px);
 }
 
 mat-dialog-content {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-width: min(640px, calc(100vw - 64px));
+  min-width: 0;
+  max-height: calc(92vh - 170px);
+  overflow: auto;
   padding-top: 8px;
 }
 
@@ -19,6 +24,7 @@ mat-dialog-content {
   color: #9a3412;
   line-height: 1.5;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .summary-grid {
@@ -57,16 +63,20 @@ mat-dialog-content {
 }
 
 mat-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  padding-top: 12px;
 }
 
 @media (max-width: 768px) {
   .modal-container {
-    min-width: auto;
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
   }
 
   mat-dialog-content {
-    min-width: auto;
+    max-height: calc(100vh - 210px);
   }
 
   .summary-grid {

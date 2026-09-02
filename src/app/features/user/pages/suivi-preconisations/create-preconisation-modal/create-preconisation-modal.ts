@@ -1,14 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { catchError, of } from 'rxjs';
-import { ApiService } from '../../../../../services/api.service';
 import { KeycloakService } from '../../../../../core/auth/keycloak.service';
 import { Client } from '../../../../../core/models/client.model';
-import { PreconisationDetails, PreconisationWritePayload, scaleLabel } from '../../../../../core/models/preconisation.model';
+import {
+  appendPreconisationHistorique,
+  buildPreconisationCommentaire,
+  PreconisationDetails,
+  PreconisationWritePayload,
+  scaleLabel,
+  splitPreconisationCommentaire,
+} from '../../../../../core/models/preconisation.model';
 import { Traitement } from '../../../../../core/models/traitement.model';
-import { MatIconModule } from '@angular/material/icon';
+import { ApiService } from '../../../../../services/api.service';
 
 interface PreconisationFormValue {
   libelle: string;
@@ -19,6 +26,7 @@ interface PreconisationFormValue {
   priorite: string | null;
   complexite: string | null;
   commentaire: string | null;
+  notificationModification: string | null;
   etatAvancement: string | null;
   traitementIdentifiant: string | null;
 }
@@ -62,6 +70,7 @@ export class CreatePreconisationModal implements OnInit {
       priorite: [null],
       complexite: [null],
       commentaire: [''],
+      notificationModification: [''],
       etatAvancement: [''],
       traitementIdentifiant: [null]
     });
@@ -85,6 +94,8 @@ export class CreatePreconisationModal implements OnInit {
 
   ngOnInit(): void {
     if (this.preconisationToEdit) {
+      const commentaire = splitPreconisationCommentaire(this.preconisationToEdit.commentaire);
+
       this.form.patchValue({
         libelle: this.preconisationToEdit.libelle,
         explication: this.preconisationToEdit.explication ?? '',
@@ -93,7 +104,8 @@ export class CreatePreconisationModal implements OnInit {
         cout: this.preconisationToEdit.cout ?? '',
         priorite: this.preconisationToEdit.priorite ?? null,
         complexite: this.preconisationToEdit.complexite ?? null,
-        commentaire: this.preconisationToEdit.commentaire ?? '',
+        commentaire: commentaire.commentaire ?? '',
+        notificationModification: '',
         etatAvancement: this.preconisationToEdit.etatAvancement ?? '',
         traitementIdentifiant: this.preconisationToEdit.traitementIdentifiant ?? null
       });
@@ -137,8 +149,6 @@ export class CreatePreconisationModal implements OnInit {
 
     const value = this.form.getRawValue() as PreconisationFormValue;
     const payload: PreconisationWritePayload = {
-      // Le back génère l’UUID de la nouvelle entité, mais son DTO le déclare
-      // non nul : fournir un UUID ici rend le contrat valide dans les deux cas.
       identifiant: this.preconisationToEdit?.identifiant ?? crypto.randomUUID(),
       libelle: value.libelle.trim(),
       explication: this.optionalText(value.explication),
@@ -147,7 +157,7 @@ export class CreatePreconisationModal implements OnInit {
       cout: this.optionalText(value.cout),
       priorite: this.optionalText(value.priorite),
       complexite: this.optionalText(value.complexite),
-      commentaire: this.optionalText(value.commentaire),
+      commentaire: this.buildCommentairePayload(value),
       etatAvancement: this.optionalText(value.etatAvancement),
       client: this.client,
       traitementIdentifiant: value.traitementIdentifiant || null
@@ -219,8 +229,6 @@ export class CreatePreconisationModal implements OnInit {
     this.client = client;
     this.loading = true;
 
-    // Le back expose les traitements sous forme paginée et exige le nom du
-    // client, comme pour le registre de traitement existant.
     this.apiService.getTraitements(0, 1000, 'nom', 'asc', client.nom).pipe(
       catchError(error => {
         console.error(error);
@@ -247,6 +255,27 @@ export class CreatePreconisationModal implements OnInit {
     return text || null;
   }
 
+  private buildCommentairePayload(value: PreconisationFormValue): string | null {
+    const commentaire = this.optionalText(value.commentaire);
+    const notification = this.optionalText(value.notificationModification);
+
+    if (!this.isEditMode) {
+      return commentaire;
+    }
+
+    const parsedExisting = splitPreconisationCommentaire(this.preconisationToEdit?.commentaire);
+    const commentaireAvecHistorique = buildPreconisationCommentaire(
+      commentaire,
+      parsedExisting.historique
+    );
+
+    return appendPreconisationHistorique(
+      commentaireAvecHistorique,
+      notification,
+      this.keycloakService.getUserName() ?? this.keycloakService.getUserEmail()
+    );
+  }
+
   private getErrorMessage(error: { status?: number; error?: unknown }): string {
     if (error?.status === 409) {
       return typeof error.error === 'string'
@@ -259,3 +288,4 @@ export class CreatePreconisationModal implements OnInit {
     return 'Une erreur est survenue. Veuillez réessayer.';
   }
 }
+

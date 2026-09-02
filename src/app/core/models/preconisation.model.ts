@@ -48,6 +48,87 @@ export interface PreconisationDetails extends Preconisation {
   traitementIdFonctionnel?: number;
 }
 
+export interface ParsedPreconisationCommentaire {
+  commentaire?: string;
+  historique?: string;
+}
+
+export const PRECONISATION_HISTORY_TITLE = 'Historique des modifications';
+
+export function splitPreconisationCommentaire(value?: string | null): ParsedPreconisationCommentaire {
+  const text = value?.trim();
+  if (!text) {
+    return {};
+  }
+
+  const marker = PRECONISATION_HISTORY_TITLE;
+  const markerIndex = text.indexOf(marker);
+
+  if (markerIndex === -1) {
+    return { commentaire: text };
+  }
+
+  const commentaire = text.slice(0, markerIndex).trim();
+  const historique = text.slice(markerIndex + marker.length).replace(/^[:\s-]+/, '').trim();
+
+  return {
+    commentaire: commentaire || undefined,
+    historique: historique || undefined,
+  };
+}
+
+export function buildPreconisationCommentaire(
+  commentaire?: string | null,
+  historique?: string | null,
+): string | null {
+  const commentText = commentaire?.trim() || '';
+  const historyText = historique?.trim() || '';
+
+  if (!commentText && !historyText) {
+    return null;
+  }
+
+  if (!historyText) {
+    return commentText || null;
+  }
+
+  return [commentText, `${PRECONISATION_HISTORY_TITLE} :\n${historyText}`]
+    .filter(Boolean)
+    .join('\n\n');
+}
+
+export function appendPreconisationHistorique(
+  commentaire?: string | null,
+  note?: string | null,
+  auteur?: string | null,
+  date: Date = new Date(),
+): string | null {
+  const parsed = splitPreconisationCommentaire(commentaire);
+  const noteText = note?.trim();
+
+  if (!noteText) {
+    return buildPreconisationCommentaire(parsed.commentaire, parsed.historique);
+  }
+
+  const horodatage = new Intl.DateTimeFormat('fr-FR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  }).format(date);
+
+  const entry = [horodatage, auteur?.trim() || null]
+    .filter(Boolean)
+    .join(' — ');
+
+  const nextHistory = [
+    parsed.historique,
+    entry ? `${entry} : ${noteText}` : noteText,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  return buildPreconisationCommentaire(parsed.commentaire, nextHistory);
+}
+
 export function foldLabel(value?: string | null): string {
   return (value ?? '')
     .normalize('NFD')

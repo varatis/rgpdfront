@@ -4,3 +4,8 @@ export interface Historisation {
   motif?: string | null;
   auteur?: string | null;
 }
+
+export interface HistorisationCreationPayload {
+  motif: string;
+  date?: string | null;
+}
