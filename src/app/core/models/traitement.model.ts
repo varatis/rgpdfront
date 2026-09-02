@@ -47,6 +47,41 @@ export interface CreateTraitementPayload {
   transfertsHorsUE?: boolean;
   paysDestinataires?: string;
   commentaires?: string;
+
+  // Colonnes complémentaires du registre (RG5)
+  impactTraitement?: number | null;
+  detournementFinalite?: number | null;
+  scoreDetournementFinalite?: number | null;
+  collecteDcpInappropriees?: number | null;
+  scoreCollecteDcpInappropriees?: number | null;
+  conservationExcessiveDcp?: number | null;
+  scoreConservationExcessiveDcp?: number | null;
+  securisationInsuffisanteDcp?: number | null;
+  scoreSecurisationInsuffisanteDcp?: number | null;
+  vicesConsentement?: number | null;
+  scoreVicesConsentement?: number | null;
+  manqueTransparence?: number | null;
+  scoreManqueTransparence?: number | null;
+  incapaciteExerciceDroits?: number | null;
+  scoreIncapaciteExerciceDroits?: number | null;
+  transfertTiersMalEncadre?: number | null;
+  scoreTransfertTiersMalEncadre?: number | null;
+  transfertHorsUeAbusif?: number | null;
+  scoreTransfertHorsUeAbusif?: number | null;
+  defautPreuve?: number | null;
+  scoreDefautPreuve?: number | null;
+  scoreGlobal?: number | null;
+  commentairesAnalyse?: string | null;
+  expositionTraitement?: number | null;
+  critereEvaluationScoring?: boolean | null;
+  critereDecisionAutomatique?: boolean | null;
+  critereSurveillanceSystematique?: boolean | null;
+  critereCollecteDonneesSensibles?: boolean | null;
+  critereCollecteLargeEchelle?: boolean | null;
+  critereCroisementDonnees?: boolean | null;
+  criterePersonnesVulnerables?: boolean | null;
+  critereUsageInnovant?: boolean | null;
+  critereExclusionBeneficeDroit?: boolean | null;
 }
 
 /**

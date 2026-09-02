@@ -39,6 +39,19 @@ interface PreconisationFormValue {
   styleUrl: './create-preconisation-modal.scss'
 })
 export class CreatePreconisationModal implements OnInit {
+  private static readonly CHAMPS_EDITABLES = [
+    'libelle',
+    'explication',
+    'risqueEncours',
+    'contraintes',
+    'cout',
+    'priorite',
+    'complexite',
+    'commentaire',
+    'etatAvancement',
+    'traitementIdentifiant',
+  ] as const;
+
   @Input() preconisationToEdit: PreconisationDetails | undefined;
   @Output() closed = new EventEmitter<void>();
   @Output() created = new EventEmitter<void>();
@@ -59,6 +72,8 @@ export class CreatePreconisationModal implements OnInit {
   isSubmitting = false;
   submitError: string | null = null;
   loadError: string | null = null;
+  notificationModificationRequired = false;
+  private initialEditSnapshot: string | null = null;
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -78,10 +93,6 @@ export class CreatePreconisationModal implements OnInit {
 
   get isEditMode(): boolean {
     return !!this.preconisationToEdit;
-  }
-
-  get modalTitle(): string {
-    return this.isEditMode ? 'Modifier la préconisation' : 'Ajouter une préconisation';
   }
 
   get availablePriorites(): string[] {
@@ -109,6 +120,7 @@ export class CreatePreconisationModal implements OnInit {
         etatAvancement: this.preconisationToEdit.etatAvancement ?? '',
         traitementIdentifiant: this.preconisationToEdit.traitementIdentifiant ?? null
       });
+      this.captureInitialEditSnapshot();
     }
 
     const clientFromDetails = this.preconisationToEdit?.client;
@@ -135,6 +147,8 @@ export class CreatePreconisationModal implements OnInit {
   }
 
   onSubmit(): void {
+    this.notificationModificationRequired = false;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -144,10 +158,17 @@ export class CreatePreconisationModal implements OnInit {
       return;
     }
 
+    const value = this.form.getRawValue() as PreconisationFormValue;
+    const notificationModification = this.optionalText(value.notificationModification);
+
+    if (this.isEditMode && this.hasEditableChanges() && !notificationModification) {
+      this.notificationModificationRequired = true;
+      return;
+    }
+
     this.isSubmitting = true;
     this.submitError = null;
 
-    const value = this.form.getRawValue() as PreconisationFormValue;
     const payload: PreconisationWritePayload = {
       identifiant: this.preconisationToEdit?.identifiant ?? crypto.randomUUID(),
       libelle: value.libelle.trim(),
@@ -225,6 +246,12 @@ export class CreatePreconisationModal implements OnInit {
     return '';
   }
 
+  notificationModificationError(): string {
+    return this.notificationModificationRequired
+      ? 'Ce champ est requis si vous modifiez le formulaire.'
+      : '';
+  }
+
   private setClientAndLoadTreatments(client: Client): void {
     this.client = client;
     this.loading = true;
@@ -264,16 +291,35 @@ export class CreatePreconisationModal implements OnInit {
     }
 
     const parsedExisting = splitPreconisationCommentaire(this.preconisationToEdit?.commentaire);
-    const commentaireAvecHistorique = buildPreconisationCommentaire(
-      commentaire,
-      parsedExisting.historique
+    const commentaireAvecHistorique = buildPreconisationCommentaire(commentaire, parsedExisting.historique);
+
+    return appendPreconisationHistorique(commentaireAvecHistorique, notification);
+  }
+
+  private captureInitialEditSnapshot(): void {
+    this.initialEditSnapshot = this.computeEditableSnapshot();
+  }
+
+  private hasEditableChanges(): boolean {
+    return this.initialEditSnapshot !== null && this.initialEditSnapshot !== this.computeEditableSnapshot();
+  }
+
+  private computeEditableSnapshot(): string {
+    const raw = this.form.getRawValue() as PreconisationFormValue;
+    const normalized = Object.fromEntries(
+      CreatePreconisationModal.CHAMPS_EDITABLES.map(champ => [champ, this.normalizeSnapshotValue(raw[champ])])
     );
 
-    return appendPreconisationHistorique(
-      commentaireAvecHistorique,
-      notification,
-      this.keycloakService.getUserName() ?? this.keycloakService.getUserEmail()
-    );
+    return JSON.stringify(normalized);
+  }
+
+  private normalizeSnapshotValue(value: unknown): unknown {
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      return trimmed === '' ? null : trimmed;
+    }
+
+    return value ?? null;
   }
 
   private getErrorMessage(error: { status?: number; error?: unknown }): string {
@@ -288,4 +334,3 @@ export class CreatePreconisationModal implements OnInit {
     return 'Une erreur est survenue. Veuillez réessayer.';
   }
 }
-
