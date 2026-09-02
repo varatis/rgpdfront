@@ -5,6 +5,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../../../services/api.service';
 import { InfoFichier } from '../../../../core/models/info-fichier.model';
+import { KeycloakService } from '../../../../core/auth/keycloak.service';
 import { UploadErrorSnackbar } from './upload-error-snackbar';
 
 @Component({
@@ -16,6 +17,8 @@ import { UploadErrorSnackbar } from './upload-error-snackbar';
 })
 export class CompteClient {
   selectedFile?: File;
+  private keycloakService = inject(KeycloakService);
+  public clientName = this.keycloakService.getClientName();
 
   constructor(private apiService: ApiService, private snackBar: MatSnackBar) { }
   onFileSelected(event: Event): void {
