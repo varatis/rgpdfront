@@ -134,6 +134,7 @@
 .upload-infos {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 
   small {
     display: block;
@@ -143,12 +144,30 @@
 }
 
 .selected-file {
-  margin-top: 12px;
   font-size: 13px;
   color: #374151;
 }
 
+.preview-info,
+.preview-warning {
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.preview-info {
+  color: #1f2937;
+  background: #eff6ff;
+}
+
+.preview-warning {
+  color: #9a3412;
+  background: #fff7ed;
+}
+
 .inline {
   display: flex;
-  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 12px;
 }

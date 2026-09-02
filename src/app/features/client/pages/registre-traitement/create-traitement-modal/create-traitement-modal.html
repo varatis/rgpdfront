@@ -125,6 +125,22 @@
                       placeholder="Ex : v1.0 - création initiale"></textarea>
           </div>
 
+          @if (isEditMode) {
+            <div class="form-field" [class.invalid]="notificationModificationRequired">
+              <label data-testid="_lib_inp_notification_modification" for="inp_notification_modification">
+                Motif de modifications
+                @if (notificationModificationMandatory) {
+                  <span class="required">*</span>
+                }
+              </label>
+              <textarea id="inp_notification_modification" data-testid="_inp_notification_modification"
+                        formControlName="notificationModification" rows="3"
+                        placeholder="Décrivez la modification à ajouter à l'historique"></textarea>
+              <span class="field-help">Cette note sera ajoutée à l'historique du traitement.</span>
+              <span class="field-error" data-testid="_val_error_notification_modification">{{ notificationModificationError() }}</span>
+            </div>
+          }
+
         </div>
       }
 

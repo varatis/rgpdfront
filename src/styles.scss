@@ -164,3 +164,11 @@ html, body {
 .snackbar-success .mat-mdc-button {
   color: #ffffff !important;
 }
+
+.import-warning-dialog .mat-mdc-dialog-surface {
+  overflow: hidden;
+}
+
+.import-warning-dialog .mat-mdc-dialog-content {
+  max-height: none;
+}

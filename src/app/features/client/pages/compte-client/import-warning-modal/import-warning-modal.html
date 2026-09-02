@@ -1,0 +1,55 @@
+<div class="modal-container">
+  <h2 mat-dialog-title data-testid="_lib_modal_import_titre">
+    Remplacer le registre actuel ?
+  </h2>
+
+  <mat-dialog-content>
+    <p class="warning-message" data-testid="_val_modal_import_avertissement">
+      {{ data.apercu.avertissement || 'Cet import va remplacer les données existantes du registre.' }}
+    </p>
+
+    <div class="summary-grid">
+      <div class="summary-item">
+        <span class="label">Fichier</span>
+        <strong>{{ value(data.apercu.nomFichier) }}</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">Client</span>
+        <strong>{{ value(data.apercu.clientNom) }}</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">Version actuelle</span>
+        <strong>{{ value(data.apercu.versionActuelle) }}</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">Version du fichier</span>
+        <strong>{{ value(data.apercu.versionFichier) }}</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">Traitements existants</span>
+        <strong>{{ data.apercu.nombreTraitementsExistants ?? 0 }}</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">Préconisations existantes</span>
+        <strong>{{ data.apercu.nombrePreconisationsExistantes ?? 0 }}</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">Violations existantes</span>
+        <strong>{{ data.apercu.nombreViolationsExistantes ?? 0 }}</strong>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" data-testid="_btn_annuler_import" (click)="close('cancel')">
+      Annuler
+    </button>
+    <button mat-stroked-button type="button" color="primary" data-testid="_btn_exporter_avant_import" (click)="close('export')">
+      Exporter avant import
+    </button>
+    <button mat-raised-button type="button" color="warn" data-testid="_btn_confirmer_import" (click)="close('confirm')">
+      Remplacer le registre
+    </button>
+  </mat-dialog-actions>
+</div>

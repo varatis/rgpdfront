@@ -1,14 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { catchError, of } from 'rxjs';
-import { ApiService } from '../../../../../services/api.service';
 import { KeycloakService } from '../../../../../core/auth/keycloak.service';
 import { Client } from '../../../../../core/models/client.model';
-import { PreconisationDetails, PreconisationWritePayload, scaleLabel } from '../../../../../core/models/preconisation.model';
+import {
+  appendPreconisationHistorique,
+  buildPreconisationCommentaire,
+  PreconisationDetails,
+  PreconisationWritePayload,
+  scaleLabel,
+  splitPreconisationCommentaire,
+} from '../../../../../core/models/preconisation.model';
 import { Traitement } from '../../../../../core/models/traitement.model';
-import { MatIconModule } from '@angular/material/icon';
+import { ApiService } from '../../../../../services/api.service';
 
 interface PreconisationFormValue {
   libelle: string;
@@ -19,6 +26,7 @@ interface PreconisationFormValue {
   priorite: string | null;
   complexite: string | null;
   commentaire: string | null;
+  notificationModification: string | null;
   etatAvancement: string | null;
   traitementIdentifiant: string | null;
 }
@@ -31,6 +39,32 @@ interface PreconisationFormValue {
   styleUrl: './create-preconisation-modal.scss'
 })
 export class CreatePreconisationModal implements OnInit {
+  private static readonly CHAMPS_EDITABLES = [
+    'libelle',
+    'explication',
+    'risqueEncours',
+    'contraintes',
+    'cout',
+    'priorite',
+    'complexite',
+    'commentaire',
+    'etatAvancement',
+    'traitementIdentifiant',
+  ] as const;
+
+  private static readonly CHAMP_LABELS: Record<string, string> = {
+    libelle: 'Préconisation',
+    explication: 'Description / explication',
+    risqueEncours: 'Risque encouru',
+    contraintes: 'Contraintes',
+    cout: 'Coût',
+    priorite: 'Priorité',
+    complexite: 'Complexité',
+    commentaire: 'Commentaire',
+    etatAvancement: 'État d’avancement',
+    traitementIdentifiant: 'Traitement lié',
+  };
+
   @Input() preconisationToEdit: PreconisationDetails | undefined;
   @Output() closed = new EventEmitter<void>();
   @Output() created = new EventEmitter<void>();
@@ -51,6 +85,10 @@ export class CreatePreconisationModal implements OnInit {
   isSubmitting = false;
   submitError: string | null = null;
   loadError: string | null = null;
+  notificationModificationRequired = false;
+  notificationModificationMandatory = false;
+  private initialEditSnapshot: string | null = null;
+  private initialEditState: Record<string, unknown> | null = null;
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -62,6 +100,7 @@ export class CreatePreconisationModal implements OnInit {
       priorite: [null],
       complexite: [null],
       commentaire: [''],
+      notificationModification: [''],
       etatAvancement: [''],
       traitementIdentifiant: [null]
     });
@@ -69,10 +108,6 @@ export class CreatePreconisationModal implements OnInit {
 
   get isEditMode(): boolean {
     return !!this.preconisationToEdit;
-  }
-
-  get modalTitle(): string {
-    return this.isEditMode ? 'Modifier la préconisation' : 'Ajouter une préconisation';
   }
 
   get availablePriorites(): string[] {
@@ -85,6 +120,8 @@ export class CreatePreconisationModal implements OnInit {
 
   ngOnInit(): void {
     if (this.preconisationToEdit) {
+      const commentaire = splitPreconisationCommentaire(this.preconisationToEdit.commentaire);
+
       this.form.patchValue({
         libelle: this.preconisationToEdit.libelle,
         explication: this.preconisationToEdit.explication ?? '',
@@ -93,11 +130,18 @@ export class CreatePreconisationModal implements OnInit {
         cout: this.preconisationToEdit.cout ?? '',
         priorite: this.preconisationToEdit.priorite ?? null,
         complexite: this.preconisationToEdit.complexite ?? null,
-        commentaire: this.preconisationToEdit.commentaire ?? '',
+        commentaire: commentaire.commentaire ?? '',
+        notificationModification: '',
         etatAvancement: this.preconisationToEdit.etatAvancement ?? '',
         traitementIdentifiant: this.preconisationToEdit.traitementIdentifiant ?? null
       });
+      this.captureInitialEditSnapshot();
     }
+
+    this.updateNotificationModificationValidation();
+    this.form.valueChanges.subscribe(() => {
+      this.updateNotificationModificationValidation();
+    });
 
     const clientFromDetails = this.preconisationToEdit?.client;
     if (clientFromDetails) {
@@ -123,8 +167,12 @@ export class CreatePreconisationModal implements OnInit {
   }
 
   onSubmit(): void {
+    this.notificationModificationRequired = false;
+    this.updateNotificationModificationValidation();
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.notificationModificationRequired = this.form.get('notificationModification')?.hasError('required') ?? false;
       return;
     }
     if (!this.client) {
@@ -132,13 +180,13 @@ export class CreatePreconisationModal implements OnInit {
       return;
     }
 
+    const value = this.form.getRawValue() as PreconisationFormValue;
+    const notificationModification = this.optionalText(value.notificationModification);
+
     this.isSubmitting = true;
     this.submitError = null;
 
-    const value = this.form.getRawValue() as PreconisationFormValue;
     const payload: PreconisationWritePayload = {
-      // Le back génère l’UUID de la nouvelle entité, mais son DTO le déclare
-      // non nul : fournir un UUID ici rend le contrat valide dans les deux cas.
       identifiant: this.preconisationToEdit?.identifiant ?? crypto.randomUUID(),
       libelle: value.libelle.trim(),
       explication: this.optionalText(value.explication),
@@ -147,7 +195,7 @@ export class CreatePreconisationModal implements OnInit {
       cout: this.optionalText(value.cout),
       priorite: this.optionalText(value.priorite),
       complexite: this.optionalText(value.complexite),
-      commentaire: this.optionalText(value.commentaire),
+      commentaire: this.buildCommentairePayload(value),
       etatAvancement: this.optionalText(value.etatAvancement),
       client: this.client,
       traitementIdentifiant: value.traitementIdentifiant || null
@@ -215,12 +263,31 @@ export class CreatePreconisationModal implements OnInit {
     return '';
   }
 
+  notificationModificationError(): string {
+    return this.notificationModificationRequired
+      ? 'Le champ Motif de modifications est requis si vous modifiez le formulaire.'
+      : '';
+  }
+
+  private updateNotificationModificationValidation(): void {
+    const control = this.form.get('notificationModification');
+    if (!control) {
+      return;
+    }
+
+    this.notificationModificationMandatory = this.isEditMode && this.hasEditableChanges();
+    control.setValidators(this.notificationModificationMandatory ? [Validators.required] : []);
+    control.updateValueAndValidity({ emitEvent: false });
+
+    if (!this.notificationModificationMandatory || (control.value?.trim?.() ?? '')) {
+      this.notificationModificationRequired = false;
+    }
+  }
+
   private setClientAndLoadTreatments(client: Client): void {
     this.client = client;
     this.loading = true;
 
-    // Le back expose les traitements sous forme paginée et exige le nom du
-    // client, comme pour le registre de traitement existant.
     this.apiService.getTraitements(0, 1000, 'nom', 'asc', client.nom).pipe(
       catchError(error => {
         console.error(error);
@@ -245,6 +312,108 @@ export class CreatePreconisationModal implements OnInit {
   private optionalText(value: string | null | undefined): string | null {
     const text = value?.trim() ?? '';
     return text || null;
+  }
+
+  private buildCommentairePayload(value: PreconisationFormValue): string | null {
+    const commentaire = this.optionalText(value.commentaire);
+    const notification = this.optionalText(value.notificationModification);
+
+    if (!this.isEditMode) {
+      return commentaire;
+    }
+
+    const parsedExisting = splitPreconisationCommentaire(this.preconisationToEdit?.commentaire);
+    const commentaireAvecHistorique = buildPreconisationCommentaire(commentaire, parsedExisting.historique);
+    const summary = this.buildHistorySummary();
+
+    return appendPreconisationHistorique(
+      commentaireAvecHistorique,
+      notification,
+      summary.fields,
+      summary.changes
+    );
+  }
+
+  private captureInitialEditSnapshot(): void {
+    this.initialEditState = this.buildEditableState();
+    this.initialEditSnapshot = JSON.stringify(this.initialEditState);
+  }
+
+  private hasEditableChanges(): boolean {
+    return this.initialEditSnapshot !== null && this.initialEditSnapshot !== JSON.stringify(this.buildEditableState());
+  }
+
+  private buildEditableState(): Record<string, unknown> {
+    const raw = this.form.getRawValue() as PreconisationFormValue;
+
+    return Object.fromEntries(
+      CreatePreconisationModal.CHAMPS_EDITABLES.map(champ => [champ, this.normalizeSnapshotValue(raw[champ])])
+    );
+  }
+
+  private buildHistorySummary(): { fields: string[]; changes: string[] } {
+    const currentState = this.buildEditableState();
+    const initialState = this.initialEditState ?? {};
+    const fields: string[] = [];
+    const changes: string[] = [];
+
+    CreatePreconisationModal.CHAMPS_EDITABLES.forEach(champ => {
+      const before = initialState[champ];
+      const after = currentState[champ];
+
+      if (JSON.stringify(before) === JSON.stringify(after)) {
+        return;
+      }
+
+      fields.push(CreatePreconisationModal.CHAMP_LABELS[champ] ?? champ);
+      changes.push(`${this.prettyValue(champ, before)} → ${this.prettyValue(champ, after)}`);
+    });
+
+    return { fields, changes };
+  }
+
+  private prettyValue(field: string, value: unknown): string {
+    if (value == null || value === '') {
+      return 'vide';
+    }
+
+    if (field === 'priorite' || field === 'complexite') {
+      return scaleLabel(String(value));
+    }
+
+    if (field === 'traitementIdentifiant') {
+      return this.resolveTraitementLabel(String(value));
+    }
+
+    return String(value);
+  }
+
+  private resolveTraitementLabel(identifiant: string): string {
+    const traitement = this.traitements.find(item => item.identifiant === identifiant)
+      ?? (this.preconisationToEdit?.traitementIdentifiant === identifiant
+        ? {
+            identifiant,
+            idFonctionnel: this.preconisationToEdit.traitementIdFonctionnel,
+            nom: this.preconisationToEdit.traitementNom,
+          }
+        : undefined);
+
+    if (!traitement) {
+      return identifiant || 'vide';
+    }
+
+    return traitement.idFonctionnel != null && traitement.nom
+      ? `${traitement.idFonctionnel} - ${traitement.nom}`
+      : (traitement.nom ?? identifiant);
+  }
+
+  private normalizeSnapshotValue(value: unknown): unknown {
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      return trimmed === '' ? null : trimmed;
+    }
+
+    return value ?? null;
   }
 
   private getErrorMessage(error: { status?: number; error?: unknown }): string {
