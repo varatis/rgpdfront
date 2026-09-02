@@ -1,6 +1,5 @@
 <div class="page-container">
   <div class="split-layout" [class.split-active]="isDetailOpen">
-    <!-- Section gauche -->
     <div class="left-section">
       <app-header
         [title]="title"
@@ -10,31 +9,25 @@
       </app-header>
 
       <div class="main-content-wrapper">
-        <!-- Onglets -->
         <ng-content select="[slot='tabs']"></ng-content>
 
         <ng-content select="[slot='list-header']"></ng-content>
 
         <div class="content-body">
-          <!-- Liste/Table -->
           <ng-content select="[slot='list-items']"></ng-content>
 
-          <!-- État vide -->
           <ng-content select="[slot='empty-state']"></ng-content>
 
-          <!-- Pagination -->
           <ng-content select="[slot='pagination']"></ng-content>
         </div>
       </div>
     </div>
 
-    <!-- Section droite : Détails -->
     @if (isDetailOpen) {
       <div class="right-section">
         @if (!hideDetailHeader) {
           <div class="detail-header">
             <div class="detail-actions">
-              <!-- Actions propres à la page (modifier, supprimer…), posées avant la fermeture. -->
               <ng-content select="[slot='detail-actions']"></ng-content>
               <button
                 type="button"

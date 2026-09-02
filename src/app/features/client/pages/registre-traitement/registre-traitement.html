@@ -1,8 +1,6 @@
 <div class="page-container">
-  <!-- Layout complet avec header et contenu -->
   <div class="split-layout" [class.split-active]="traitementSelectionne">
 
-    <!-- Partie gauche : Header + Table + Pagination -->
     <div class="left-section">
       <app-header
         [title]="title"
@@ -42,19 +40,16 @@
       </app-pagination>
     </div>
 
-    <!-- Partie droite : détails -->
     @if (traitementSelectionne) {
       <div class="right-section">
         <div class="detail-header">
           <div class="detail-actions">
             @if (isAdmin) {
-              <!-- Bouton Modifier -->
               <button data-testid="_btn_modifier_traitement" class="icon-btn edit" title="Modifier"
                       (click)="onModifyClick()" [disabled]="!currentTraitementDetails">
                 <mat-icon >edit</mat-icon>
               </button>
 
-              <!-- Bouton Supprimer -->
               <button data-testid="_btn_supprimer_traitement" class="icon-btn delete" title="Supprimer"
                       (click)="onDeleteClick()">
                 <mat-icon >delete</mat-icon>
@@ -91,7 +86,6 @@
   }
 </div>
 
-<!-- Modal : Ajouter un traitement -->
 @if (showCreateModal) {
   <app-create-traitement-modal
     (closed)="showCreateModal = false"
@@ -99,7 +93,6 @@
   </app-create-traitement-modal>
 }
 
-<!-- Modal : Modifier un traitement -->
 @if (showEditModal) {
   <app-create-traitement-modal
     [traitementToEdit]="currentTraitementDetails"

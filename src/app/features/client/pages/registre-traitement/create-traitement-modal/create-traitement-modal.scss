@@ -31,7 +31,6 @@
   to   { transform: translateY(0);    opacity: 1; }
 }
 
-// ── Header ────────────────────────────────────────────────────────
 .modal-header {
   display: flex;
   align-items: center;
@@ -65,7 +64,6 @@
   }
 }
 
-// ── Tab bar ───────────────────────────────────────────────────────
 .modal-tabs {
   display: flex;
   border-bottom: 1px solid #e0e0e0;
@@ -95,7 +93,6 @@
   }
 }
 
-// ── Form body ─────────────────────────────────────────────────────
 .modal-body {
   padding: 24px;
   overflow-y: auto;
@@ -164,7 +161,6 @@
   font-size: 12px;
 }
 
-// ── Etablissements chip input ────────────────────────────────────
 .chip-input {
   display: flex;
   flex-wrap: wrap;
@@ -291,7 +287,6 @@
   color: #c62828;
 }
 
-// ── Footer ────────────────────────────────────────────────────────
 .modal-footer {
   display: flex;
   justify-content: flex-end;

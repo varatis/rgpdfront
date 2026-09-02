@@ -31,10 +31,6 @@ import { FiltreViolationPayload } from '../core/models/filtre-violation.payload'
 export class ApiService {
   private apiUrl = environment.apiURL;
 
-  /**
-   * Colonnes de la liste dont la propriété persistée n'est plus une chaîne :
-   * le tri doit porter sur la valeur textuelle de l'entité référencée.
-   */
   private static readonly SORT_PROPERTIES: Record<string, string> = {
     finalitePrincipale: 'finalitePrincipale.valeur',
   };

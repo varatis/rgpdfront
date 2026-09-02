@@ -1,13 +1,11 @@
 <div class="modal-backdrop" data-testid="_lst_modal_create_traitement">
   <div class="modal-panel">
 
-    <!-- Header -->
     <div class="modal-header">
       <h2 data-testid="_lib_modal_title">{{ isEditMode ? 'Modifier le traitement' : 'Ajouter un traitement' }}</h2>
       <button class="modal-close-btn" data-testid="_btn_modal_close" type="button" (click)="close()" title="Fermer">✕</button>
     </div>
 
-    <!-- Tab bar -->
     <div class="modal-tabs" data-testid="_lst_modal_tabs">
       @for (tab of tabs; track tab; let i = $index) {
         <button
@@ -20,7 +18,6 @@
       }
     </div>
 
-    <!-- Form -->
     <form
       class="modal-body"
       [formGroup]="form"
@@ -28,7 +25,6 @@
       (keydown.enter)="onEnterSubmit($event)"
       novalidate>
 
-      <!-- ── Tab 1 : Identification ──────────────────────────────── -->
       @if (activeTab === 0) {
         <div class="tab-content" data-testid="_lst_modal_tab_identification">
 
@@ -150,7 +146,6 @@
         </div>
       }
 
-      <!-- ── Tab 2 : Données personnelles ───────────────────────── -->
       @if (activeTab === 1) {
         <div class="tab-content" data-testid="_lst_modal_tab_donnees">
 
@@ -226,7 +221,6 @@
         </div>
       }
 
-      <!-- ── Tab 3 : Description ─────────────────────────────────── -->
       @if (activeTab === 2) {
         <div class="tab-content" data-testid="_lst_modal_tab_description">
 

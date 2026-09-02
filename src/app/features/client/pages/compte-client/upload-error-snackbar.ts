@@ -3,9 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 
 export interface UploadErrorSnackbarData {
-  /** Message affiché à l'utilisateur (statut du fichier renvoyé par le backend). */
   message: string;
-  /** Détail complet de l'erreur, copié dans le presse-papier via « Copier le log ». */
   log: string;
 }
 

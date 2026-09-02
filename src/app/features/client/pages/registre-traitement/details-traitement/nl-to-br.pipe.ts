@@ -1,18 +1,5 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-/**
- * Pipe réutilisable qui transforme les séparateurs textuels en <br>.
- *
- * Modes disponibles :
- *   'default'  → supprime les tirets de début de ligne, remplace virgules et sauts de ligne par <br>
- *   'newline'  → remplace uniquement les sauts de ligne par <br>
- *   'list'     → supprime les tirets de début de ligne puis joint avec <br>
- *
- * Usage dans un template :
- *   [innerHTML]="value | nlToBr"
- *   [innerHTML]="value | nlToBr:'list'"
- *   [innerHTML]="value | nlToBr:'newline'"
- */
 @Pipe({ name: 'nlToBr', standalone: true })
 export class NlToBrPipe implements PipeTransform {
   private readonly sanitizer = inject(DomSanitizer);

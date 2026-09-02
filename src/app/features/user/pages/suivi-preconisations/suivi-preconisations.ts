@@ -89,11 +89,6 @@ export class SuiviPreconisations implements OnInit {
     testId: '_btn_ajouter_preconisation'
   };
 
-  /**
-   * Comme pour le registre des traitements, seul un administrateur reçoit
-   * l’action d’écriture. La liste et le détail restent disponibles pour les
-   * rôles user/client.
-   */
   get isAdmin(): boolean {
     return this.keycloakService.getUserRole() === 'admin';
   }
@@ -331,8 +326,6 @@ export class SuiviPreconisations implements OnInit {
   }
 
   onExportGlobal(): void {
-    // L'export n'est pas encore exposé par le back. L'action reste affichée
-    // pour conserver la navigation actuelle, sans inventer un endpoint.
   }
 
   onFiltreChange(filtre: FiltrePreconisationPayload): void {

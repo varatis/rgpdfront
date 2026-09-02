@@ -1,12 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-/**
- * Transforme true/false (boolean ou string) en "Oui" / "Non".
- * Retourne '-' si la valeur est vide ou non reconnue.
- *
- * Usage :
- *   {{ value | boolFr }}
- */
 @Pipe({ name: 'boolFr', standalone: true })
 export class BoolFrPipe implements PipeTransform {
   transform(value: boolean | string | null | undefined): string {
