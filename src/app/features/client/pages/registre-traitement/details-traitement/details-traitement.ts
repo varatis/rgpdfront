@@ -1,12 +1,11 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { ApiService } from '../../../../../services/api.service';
 import { TraitementDetails } from '../../../../../core/models/traitement.model';
-import { NlToBrPipe } from './nl-to-br.pipe';
+import { BoolFrPipe } from './bool-fr.pipe';
 import { DateFrPipe } from './date-fr.pipe';
 import { ALL_TABS, TabConfig } from './field-config';
-import { BoolFrPipe } from './bool-fr.pipe';
+import { NlToBrPipe } from './nl-to-br.pipe';
 
 type UserRole = 'client' | 'admin' | 'superadmin';
 
@@ -19,6 +18,10 @@ type UserRole = 'client' | 'admin' | 'superadmin';
 })
 export class DetailsTraitementComponent {
   private readonly apiService = inject(ApiService);
+  private readonly historyDateFormatter = new Intl.DateTimeFormat('fr-FR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  });
 
   readonly traitementId = input<number>();
   readonly userRole = input<UserRole>('client');
@@ -71,8 +74,6 @@ export class DetailsTraitementComponent {
       return undefined;
     }
 
-    // La clé peut désigner un champ imbriqué (ex. 'finalitePrincipale.valeur') :
-    // les champs adossés à un référentiel client sont renvoyés sous forme d'objet.
     const value = key.split('.').reduce<unknown>(
       (current, segment) =>
         current == null ? current : (current as Record<string, unknown>)[segment],
@@ -89,9 +90,52 @@ export class DetailsTraitementComponent {
     return String(value);
   }
 
+  customValue(getter: string): string {
+    switch (getter) {
+      case 'etablissementsDisplay':
+        return this.etablissementsDisplay;
+      case 'historiqueDisplay':
+        return this.historiqueDisplay;
+      default:
+        return '-';
+    }
+  }
+
   get etablissementsDisplay(): string {
     const list = this.details()?.etablissements;
-    return list?.length ? list.map(etablissement => etablissement.nom).join('<br>') : '-';
+    return list?.length ? list.map(etablissement => etablissement.nom).join('\n') : '-';
+  }
+
+  get historiqueDisplay(): string {
+    const details = this.details();
+    if (!details) {
+      return '-';
+    }
+
+    const historiqueCalcule = (details.historiqueTraitement ?? [])
+      .map(entree => {
+        const motif = entree?.motif?.trim();
+        if (!motif) {
+          return null;
+        }
+
+        const prefixe = [
+          this.formatHistoriqueDate(entree?.date),
+          entree?.auteur?.trim() || 'Auteur inconnu'
+        ].filter(Boolean).join(' — ');
+
+        return prefixe ? `${prefixe} : ${motif}` : motif;
+      })
+      .filter((value): value is string => !!value)
+      .join('\n');
+
+    const historiqueImporte = details.historiqueModifications?.trim();
+
+    if (historiqueCalcule && historiqueImporte) {
+      return `${historiqueCalcule}\n\nHistorique importé :\n${historiqueImporte}`;
+    }
+
+    return historiqueCalcule || historiqueImporte || '-';
   }
 
   selectTab(tab: string, event: MouseEvent): void {
@@ -101,5 +145,18 @@ export class DetailsTraitementComponent {
       inline: 'nearest',
       block: 'nearest',
     });
+  }
+
+  private formatHistoriqueDate(value: string | Date | null | undefined): string {
+    if (!value) {
+      return '';
+    }
+
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return String(value);
+    }
+
+    return this.historyDateFormatter.format(date);
   }
 }

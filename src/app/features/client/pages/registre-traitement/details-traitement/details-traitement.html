@@ -19,7 +19,6 @@
               {{ field.label }}
             </h2>
 
-            <!-- Texte simple -->
             @if (field.render.kind === 'text') {
               <p
                 [attr.data-testid]="'_val_detail_' + field.testIdSuffix"
@@ -30,7 +29,6 @@
               </p>
             }
 
-            <!-- Date format français -->
             @if (field.render.kind === 'date') {
               <p
                 [attr.data-testid]="'_val_detail_' + field.testIdSuffix"
@@ -41,7 +39,6 @@
               </p>
             }
 
-            <!-- HTML via pipe nlToBr -->
             @if (field.render.kind === 'html') {
               <p
                 [attr.data-testid]="'_val_detail_' + field.testIdSuffix"
@@ -52,13 +49,12 @@
               </p>
             }
 
-            <!-- Custom : établissements -->
-            @if (field.render.kind === 'custom' && field.render.getter === 'etablissementsDisplay') {
+            @if (field.render.kind === 'custom') {
               <p
                 [attr.data-testid]="'_val_detail_' + field.testIdSuffix"
                 [class.skeleton]="!details()"
                 [style.--skeleton-width]="field.skeletonWidth"
-                [innerHTML]="etablissementsDisplay"
+                [innerHTML]="customValue(field.render.getter) | nlToBr : 'newline'"
                 style="margin: 0; padding-top: 5px">
               </p>
             }

@@ -19,8 +19,6 @@ export interface TabConfig {
   fields: FieldConfig[];
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────
-
 const text = (label: string, key: string, testId: string, width: string): FieldConfig => ({
   label, key, testIdSuffix: testId, skeletonWidth: width,
   render: { kind: 'text' },
@@ -54,8 +52,6 @@ const custom = (
   render: { kind: 'custom', getter },
 });
 
-// ─── Onglets ────────────────────────────────────────────────────────
-
 export const TAB_IDENTIFICATION: TabConfig = {
   name: 'Identification du traitement',
   fields: [
@@ -65,7 +61,7 @@ export const TAB_IDENTIFICATION: TabConfig = {
     text('Nom du traitement', 'nom', 'nom', '40%'),
     date("Date d'identification du traitement", 'dateIdentification', 'date_identification', '20%'),
     date('Date de mise à jour', 'dateMiseAJour', 'date_maj', '20%'),
-    html('Historique des modifications', 'historiqueModifications', 'historique', '40%'),
+    custom('Historique des modifications', 'historiqueTraitement', 'historique', '90%', 'historiqueDisplay'),
     text('Data Protection Officer', 'dataProtectionOfficer', 'dpo', '40%'),
     text('Responsable de traitement', 'responsableTraitement.valeur', 'responsable_traitement', '40%'),
     html('Gestionnaire de la mise en œuvre du traitement', 'gestionnaireMiseEnOeuvre', 'gestionnaire', '40%'),
@@ -114,7 +110,7 @@ export const TAB_DESCRIPTION: TabConfig = {
          'dispositionsSecuriteDonneesNumerique', 'dispositions_securite_numerique', '90%', 'default', 2),
     text('Hébergement', 'hebergement', 'hebergement', '30%'),
     text('Durée de conservation', 'dureeConservation.valeur', 'duree_conservation', '20%'),
-    bool('Archivage ? (Oui / Non)', 'archivage', 'archivage', '10%'),    
+    bool('Archivage ? (Oui / Non)', 'archivage', 'archivage', '10%'),
     text("Durée d'archivage", 'dureeArchivage.valeur', 'duree_archivage', '80%'),
     html('Catégories de destinataires', 'categoriesDestinataires',
          'categories_destinataires', '20%'),

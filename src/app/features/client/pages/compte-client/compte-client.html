@@ -1,7 +1,6 @@
 <div class="clients-layout" [class.details-open]="'client'">
   <div class="clients-page">
 
-    <!-- HEADER -->
     <div class="page-header">
       <div class="header-left">
         <div class="icon-wrapper">
@@ -9,16 +8,14 @@
             <path d="M0 20V3.75L5 0L10 3.75V6H20V20H0ZM2 18H4V16H2V18ZM2 14H4V12H2V14ZM2 10H4V8H2V10ZM2 6H4V4H2V6ZM6 6H8V4H6V6ZM6 18H18V8H6V18ZM12 12V10H16V12H12ZM12 16V14H16V16H12ZM8 12V10H10V12H8ZM8 16V14H10V16H8Z" fill="currentColor" />
           </svg>
         </div>
-        <h1 class="page-title" data-testid="_lib_titre_compte_client">{{ clientName?.toUpperCase()}}</h1>
+        <h1 class="page-title" data-testid="_lib_titre_compte_client">{{ clientName?.toUpperCase() }}</h1>
       </div>
     </div>
 
-    <!-- UPLOAD -->
     <p data-testid="_lib_titre_import">Importer le registre RGPD</p>
     <div class="upload-card">
-
       <div class="upload-box" (click)="fileInput.click()">
-        <mat-icon class="upload-icon" >cloud_upload</mat-icon>
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
         <div class="upload-text">
           <span>Glisser déposer le fichier ici ou</span>
           <span class="browse-text">Sélectionner un fichier</span>
@@ -36,21 +33,35 @@
       <div class="upload-bottom">
         <div class="upload-infos">
           <small data-testid="_lib_formats_acceptes">Formats acceptés : .xlsx, .xls</small>
+
           @if (selectedFile) {
             <div class="selected-file" data-testid="_val_fichier_selectionne">
               Fichier sélectionné : {{ selectedFile.name }}
             </div>
           }
+
+          @if (isLoadingPreview) {
+            <div class="preview-info" data-testid="_val_import_preview_loading">
+              Analyse du fichier en cours…
+            </div>
+          }
+
+          @if (importApercu?.remplacementDonnees) {
+            <div class="preview-warning" data-testid="_val_import_preview_warning">
+              Ce fichier remplacera le registre actuel : une confirmation sera demandée avant l'import.
+            </div>
+          }
         </div>
-        <div class = "inline">
+
+        <div class="inline">
           <button
             data-testid="_btn_importer_fichier"
             class="btn-primary"
             type="button"
-            [disabled]="!selectedFile"
+            [disabled]="!selectedFile || isUploading || isLoadingPreview"
             (click)="uploadFile()"
           >
-            Importer le fichier
+            {{ isUploading ? 'Import en cours…' : 'Importer le fichier' }}
           </button>
           <button
             data-testid="_btn_generer_export"
@@ -58,11 +69,10 @@
             type="button"
             (click)="generateExport()"
           >
-            Generer un registre de traitement 
+            Générer un registre de traitement
           </button>
         </div>
       </div>
-
     </div>
   </div>
 </div>
