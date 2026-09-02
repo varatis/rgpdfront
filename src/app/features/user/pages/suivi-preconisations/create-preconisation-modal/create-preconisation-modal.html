@@ -171,6 +171,9 @@
         <div class="form-field" [class.invalid]="notificationModificationRequired">
           <label data-testid="_lib_inp_preconisation_notification_modification" for="inp_preconisation_notification_modification">
             Motif de modifications
+            @if (notificationModificationMandatory) {
+              <span class="required">*</span>
+            }
           </label>
           <textarea
             id="inp_preconisation_notification_modification"

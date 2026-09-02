@@ -86,6 +86,7 @@ export class CreatePreconisationModal implements OnInit {
   submitError: string | null = null;
   loadError: string | null = null;
   notificationModificationRequired = false;
+  notificationModificationMandatory = false;
   private initialEditSnapshot: string | null = null;
   private initialEditState: Record<string, unknown> | null = null;
 
@@ -137,6 +138,11 @@ export class CreatePreconisationModal implements OnInit {
       this.captureInitialEditSnapshot();
     }
 
+    this.updateNotificationModificationValidation();
+    this.form.valueChanges.subscribe(() => {
+      this.updateNotificationModificationValidation();
+    });
+
     const clientFromDetails = this.preconisationToEdit?.client;
     if (clientFromDetails) {
       this.setClientAndLoadTreatments(clientFromDetails);
@@ -162,9 +168,11 @@ export class CreatePreconisationModal implements OnInit {
 
   onSubmit(): void {
     this.notificationModificationRequired = false;
+    this.updateNotificationModificationValidation();
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.notificationModificationRequired = this.form.get('notificationModification')?.hasError('required') ?? false;
       return;
     }
     if (!this.client) {
@@ -174,11 +182,6 @@ export class CreatePreconisationModal implements OnInit {
 
     const value = this.form.getRawValue() as PreconisationFormValue;
     const notificationModification = this.optionalText(value.notificationModification);
-
-    if (this.isEditMode && this.hasEditableChanges() && !notificationModification) {
-      this.notificationModificationRequired = true;
-      return;
-    }
 
     this.isSubmitting = true;
     this.submitError = null;
@@ -264,6 +267,21 @@ export class CreatePreconisationModal implements OnInit {
     return this.notificationModificationRequired
       ? 'Le champ Motif de modifications est requis si vous modifiez le formulaire.'
       : '';
+  }
+
+  private updateNotificationModificationValidation(): void {
+    const control = this.form.get('notificationModification');
+    if (!control) {
+      return;
+    }
+
+    this.notificationModificationMandatory = this.isEditMode && this.hasEditableChanges();
+    control.setValidators(this.notificationModificationMandatory ? [Validators.required] : []);
+    control.updateValueAndValidity({ emitEvent: false });
+
+    if (!this.notificationModificationMandatory || (control.value?.trim?.() ?? '')) {
+      this.notificationModificationRequired = false;
+    }
   }
 
   private setClientAndLoadTreatments(client: Client): void {

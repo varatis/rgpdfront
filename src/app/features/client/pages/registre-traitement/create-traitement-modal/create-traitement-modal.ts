@@ -132,6 +132,7 @@ export class CreateTraitementModal implements OnInit {
   validatorMaxLength = 255;
   validatorFinaliteMaxLength = 500;
   notificationModificationRequired = false;
+  notificationModificationMandatory = false;
 
   clientEtablissements: Etablissement[] = [];
   etablissementInput = '';
@@ -220,6 +221,11 @@ export class CreateTraitementModal implements OnInit {
       });
     }
 
+    this.updateNotificationModificationValidation();
+    this.form.valueChanges.subscribe(() => {
+      this.updateNotificationModificationValidation();
+    });
+
     const clientName = this.keycloakService.getClientName();
     if (clientName) {
       this.apiService.getClientByNom(clientName).subscribe(client => {
@@ -241,19 +247,16 @@ export class CreateTraitementModal implements OnInit {
 
   onSubmit(): void {
     this.notificationModificationRequired = false;
+    this.updateNotificationModificationValidation();
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.notificationModificationRequired = this.form.get('notificationModification')?.hasError('required') ?? false;
       this.activeTab = 0;
       return;
     }
 
     const notificationModification = this.form.get('notificationModification')?.value?.trim() ?? '';
-    if (this.isEditMode && this.hasEditableChanges() && !notificationModification) {
-      this.notificationModificationRequired = true;
-      this.activeTab = 0;
-      return;
-    }
 
     this.isSubmitting = true;
     this.submitError = null;
@@ -392,6 +395,21 @@ export class CreateTraitementModal implements OnInit {
     return this.notificationModificationRequired
       ? 'Le champ Motif de modifications est requis si vous modifiez le formulaire.'
       : '';
+  }
+
+  private updateNotificationModificationValidation(): void {
+    const control = this.form.get('notificationModification');
+    if (!control) {
+      return;
+    }
+
+    this.notificationModificationMandatory = this.isEditMode && this.hasEditableChanges();
+    control.setValidators(this.notificationModificationMandatory ? [Validators.required] : []);
+    control.updateValueAndValidity({ emitEvent: false });
+
+    if (!this.notificationModificationMandatory || (control.value?.trim?.() ?? '')) {
+      this.notificationModificationRequired = false;
+    }
   }
 
   private static aplatirReferentiels(traitement: TraitementDetails): Record<string, string | null> {
