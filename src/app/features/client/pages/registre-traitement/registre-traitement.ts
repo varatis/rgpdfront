@@ -80,6 +80,7 @@ export class RegistreTraitement implements OnInit {
   showCreateModal = false;
   showEditModal = false;
   currentTraitementDetails: TraitementDetails | undefined;
+  detailsRefreshToken = 0;
 
   ngOnInit(): void {
     this.load$.pipe(
@@ -185,6 +186,7 @@ export class RegistreTraitement implements OnInit {
   }
 
   onTraitementUpdated(): void {
+    this.detailsRefreshToken += 1;
     this.loadTraitements(this.page);
   }
 

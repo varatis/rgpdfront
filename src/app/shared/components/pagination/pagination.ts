@@ -17,7 +17,11 @@ export class Pagination {
   pageSizeChange = output<number>();
 
   get length() {
-    return this.totalPages() * this.pageSize();
+    return Math.max(0, this.totalPages()) * this.pageSize();
+  }
+
+  get pageIndex(): number {
+    return Math.max(0, this.currentPage() - 1);
   }
 
   onPageChange(event: PageEvent): void {
