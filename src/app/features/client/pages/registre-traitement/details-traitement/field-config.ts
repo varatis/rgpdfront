@@ -124,7 +124,7 @@ export const TAB_DESCRIPTION: TabConfig = {
 export const TAB_HISTORIQUE: TabConfig = {
   name: 'Historique des modifications',
   fields: [
-    custom('Historique des modifications', 'historiqueTraitement', 'historique', '90%', 'historiqueDisplay'),
+    custom('Historique des modifications', 'historiqueTraitement', 'historique', '90%', 'historiqueEntries'),
   ],
 };
 

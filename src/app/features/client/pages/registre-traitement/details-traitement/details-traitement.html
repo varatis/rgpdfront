@@ -49,7 +49,35 @@
               </p>
             }
 
-            @if (field.render.kind === 'custom') {
+            @if (field.render.kind === 'custom' && field.render.getter === 'historiqueEntries') {
+              <div class="history-list" [attr.data-testid]="'_val_detail_' + field.testIdSuffix">
+                @if (!details()) {
+                  <div class="history-empty skeleton" [style.--skeleton-width]="field.skeletonWidth"></div>
+                } @else if (historiqueEntries().length === 0) {
+                  <p class="history-empty">-</p>
+                } @else {
+                  @for (entry of historiqueEntries(); track $index) {
+                    <article class="history-card">
+                      <div class="history-meta">
+                        <span class="history-badge">{{ entry.date }}</span>
+                      </div>
+                      <div class="history-grid">
+                        <div class="history-row">
+                          <span class="history-label">Champs modifiés</span>
+                          <span class="history-value">{{ entry.field }}</span>
+                        </div>
+                        <div class="history-row">
+                          <span class="history-label">Modification</span>
+                          <span class="history-value">{{ entry.change }}</span>
+                        </div>
+                      </div>
+                    </article>
+                  }
+                }
+              </div>
+            }
+
+            @if (field.render.kind === 'custom' && field.render.getter !== 'historiqueEntries') {
               <p
                 [attr.data-testid]="'_val_detail_' + field.testIdSuffix"
                 [class.skeleton]="!details()"
