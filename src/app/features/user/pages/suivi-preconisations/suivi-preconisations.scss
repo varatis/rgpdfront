@@ -122,6 +122,30 @@
 }
 
 /* --- DETAIL CONTENT --- */
+.detail-title {
+  flex: 1;
+
+  h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  p {
+    margin: 0;
+    padding-top: 5px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
 .tabs-container {
   display: flex;
   flex-direction: column;
@@ -171,29 +195,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.detail-title {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  h2 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-  }
-
-  p {
-    margin: 0;
-    padding-top: 5px;
-    font-size: 14px;
-    color: #333;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
 }
 
 /* --- STATUS BADGES --- */
@@ -283,33 +284,32 @@
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-top: 5px;
+  gap: 14px;
+  margin-top: 8px;
 }
 
 .history-card {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   padding: 16px;
-  border: 1px solid #dbe5f6;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  box-shadow: 0 10px 24px rgba(46, 99, 205, 0.08);
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
 }
 
 .history-meta {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
 }
 
 .history-badge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: 6px 10px;
   border-radius: 999px;
-  background: #eaf0fb;
+  background: #eaf2ff;
   color: #2e63cd;
   font-size: 12px;
   font-weight: 700;
@@ -317,20 +317,22 @@
 
 .history-grid {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .history-row {
   display: grid;
-  gap: 6px;
+  grid-template-columns: minmax(150px, 220px) 1fr;
+  gap: 16px;
+  align-items: start;
 }
 
 .history-label {
   color: #6b7280;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.03em;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .history-value {
@@ -347,6 +349,13 @@
 
 .history-empty {
   margin: 0;
-  padding-top: 5px;
-  color: #374151;
+  color: #6b7280;
+  min-height: 20px;
+}
+
+@media (max-width: 768px) {
+  .history-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }

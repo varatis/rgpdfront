@@ -53,9 +53,17 @@ export interface PreconisationHistoryEntry {
   reason?: string;
 }
 
+interface ParsedPreconisationHistoryEntry extends PreconisationHistoryEntry {
+  time?: number | null;
+}
+
 export const PRECONISATION_HISTORY_TITLE = 'Historique des modifications';
 const PRECONISATION_HISTORY_SEPARATOR = ' ; ';
 const PRECONISATION_HISTORY_EMPTY = '—';
+const HISTORY_FIELDS_LABEL = 'Champs modifiés:';
+const HISTORY_CHANGES_LABEL = 'Modification:';
+const HISTORY_REASON_LABEL = 'Motif de modifications:';
+const HISTORY_DATE_PREFIX = /^\d{2}\/\d{2}\/\d{4}(?:,\s*|\s+)\d{2}:\d{2}/u;
 
 export function splitPreconisationCommentaire(value?: string | null): ParsedPreconisationCommentaire {
   const text = value?.trim();
@@ -113,16 +121,11 @@ export function appendPreconisationHistorique(
     return buildPreconisationCommentaire(parsed.commentaire, parsed.historique);
   }
 
-  const horodatage = new Intl.DateTimeFormat('fr-FR', {
-    dateStyle: 'short',
-    timeStyle: 'short',
-  }).format(date);
-
   const historyLine = [
-    horodatage,
-    `Champs modifiés: ${fields.length ? fields.join(PRECONISATION_HISTORY_SEPARATOR) : PRECONISATION_HISTORY_EMPTY}`,
-    `Modification: ${changes.length ? changes.join(PRECONISATION_HISTORY_SEPARATOR) : PRECONISATION_HISTORY_EMPTY}`,
-    `Motif de modifications: ${noteText || PRECONISATION_HISTORY_EMPTY}`,
+    formatPreconisationHistoryDate(date),
+    `${HISTORY_FIELDS_LABEL} ${fields.length ? fields.join(PRECONISATION_HISTORY_SEPARATOR) : PRECONISATION_HISTORY_EMPTY}`,
+    `${HISTORY_CHANGES_LABEL} ${changes.length ? changes.join(PRECONISATION_HISTORY_SEPARATOR) : PRECONISATION_HISTORY_EMPTY}`,
+    `${HISTORY_REASON_LABEL} ${noteText || PRECONISATION_HISTORY_EMPTY}`,
   ].join(' || ');
 
   const nextHistory = [parsed.historique, historyLine]
@@ -138,39 +141,182 @@ export function parsePreconisationHistoriqueEntries(value?: string | null): Prec
     return [];
   }
 
-  return historique
-    .split(/\r?\n/)
-    .map(line => line.trim())
-    .filter(Boolean)
-    .map(parsePreconisationHistoryLine);
+  return mergePreconisationHistoryEntries(
+    groupPreconisationHistoryBlocks(historique).map(parsePreconisationHistoryBlock)
+  ).map(({ time, ...entry }) => entry);
 }
 
-function parsePreconisationHistoryLine(line: string): PreconisationHistoryEntry {
-  const structuredMatch = /^(?<date>\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2})\s*\|\|\s*Champs modifiés:\s*(?<fields>.*?)\s*\|\|\s*Modification:\s*(?<changes>.*?)\s*\|\|\s*Motif de modifications:\s*(?<reason>.*)$/u.exec(line);
-  if (structuredMatch?.groups) {
+function groupPreconisationHistoryBlocks(historique: string): string[] {
+  const lines = historique
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  return lines.reduce<string[]>((blocks, line) => {
+    if (blocks.length === 0 || startsWithHistoryDate(line)) {
+      blocks.push(line);
+      return blocks;
+    }
+
+    blocks[blocks.length - 1] = `${blocks[blocks.length - 1]} || ${line}`;
+    return blocks;
+  }, []);
+}
+
+function parsePreconisationHistoryBlock(block: string): ParsedPreconisationHistoryEntry {
+  if (block.includes('||')) {
+    return parseStructuredPreconisationHistoryBlock(block);
+  }
+
+  const legacyAuthorMatch = /^(?<date>\d{2}\/\d{2}\/\d{4}(?:,\s*|\s+)\d{2}:\d{2})\s*[—-]\s*(?<author>.*?)\s*:\s*(?<reason>.*)$/u.exec(block);
+  if (legacyAuthorMatch?.groups) {
+    const date = normalizeHistoryDateText(legacyAuthorMatch.groups['date']);
     return {
-      date: structuredMatch.groups['date'],
-      fields: splitHistorySection(structuredMatch.groups['fields']),
-      changes: splitHistorySection(structuredMatch.groups['changes']),
-      reason: normalizeHistorySection(structuredMatch.groups['reason']),
+      date,
+      fields: [],
+      changes: [],
+      reason: normalizeHistorySection(legacyAuthorMatch.groups['reason']),
+      time: toHistoryTimestamp(date),
     };
   }
 
-  const legacyMatch = /^(?<date>\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2})\s*:\s*(?<reason>.*)$/u.exec(line);
-  if (legacyMatch?.groups) {
+  const legacyReasonMatch = /^(?<date>\d{2}\/\d{2}\/\d{4}(?:,\s*|\s+)\d{2}:\d{2})\s*:\s*(?<reason>.*)$/u.exec(block);
+  if (legacyReasonMatch?.groups) {
+    const date = normalizeHistoryDateText(legacyReasonMatch.groups['date']);
     return {
-      date: legacyMatch.groups['date'],
+      date,
       fields: [],
       changes: [],
-      reason: normalizeHistorySection(legacyMatch.groups['reason']),
+      reason: normalizeHistorySection(legacyReasonMatch.groups['reason']),
+      time: toHistoryTimestamp(date),
     };
   }
 
   return {
-    date: '—',
+    date: PRECONISATION_HISTORY_EMPTY,
     fields: [],
-    changes: [line],
+    changes: [block],
   };
+}
+
+function parseStructuredPreconisationHistoryBlock(block: string): ParsedPreconisationHistoryEntry {
+  const segments = block.split('||').map(segment => segment.trim()).filter(Boolean);
+  const firstSegment = segments.shift() ?? '';
+  const { date, remainder } = extractHistoryDate(firstSegment);
+
+  const entry: ParsedPreconisationHistoryEntry = {
+    date: date ?? PRECONISATION_HISTORY_EMPTY,
+    fields: [],
+    changes: [],
+    time: toHistoryTimestamp(date),
+  };
+
+  const extraSegments: string[] = [];
+  const segmentsToParse = remainder ? [remainder, ...segments] : segments;
+
+  segmentsToParse.forEach(segment => {
+    if (segment.startsWith(HISTORY_FIELDS_LABEL)) {
+      entry.fields = splitHistorySection(segment.slice(HISTORY_FIELDS_LABEL.length));
+      return;
+    }
+
+    if (segment.startsWith(HISTORY_CHANGES_LABEL)) {
+      entry.changes = splitHistorySection(segment.slice(HISTORY_CHANGES_LABEL.length));
+      return;
+    }
+
+    if (segment.startsWith(HISTORY_REASON_LABEL)) {
+      entry.reason = normalizeHistorySection(segment.slice(HISTORY_REASON_LABEL.length));
+      return;
+    }
+
+    extraSegments.push(segment);
+  });
+
+  if (!entry.reason) {
+    const fallbackReason = extraSegments.filter(segment => !isLikelyHistoryAuthor(segment)).join(' ');
+    entry.reason = normalizeHistorySection(fallbackReason);
+  }
+
+  if (entry.fields.length === 0 && entry.changes.length === 0 && entry.reason && entry.date !== PRECONISATION_HISTORY_EMPTY) {
+    return entry;
+  }
+
+  if (entry.fields.length === 0 && entry.changes.length === 0 && extraSegments.length > 0) {
+    return {
+      ...entry,
+      changes: [extraSegments.join(' || ')],
+    };
+  }
+
+  return entry;
+}
+
+function mergePreconisationHistoryEntries(
+  entries: ParsedPreconisationHistoryEntry[],
+): ParsedPreconisationHistoryEntry[] {
+  const merged: ParsedPreconisationHistoryEntry[] = [];
+
+  for (let index = 0; index < entries.length; index += 1) {
+    const current = entries[index];
+    const next = entries[index + 1];
+
+    if (next && canMergePreconisationHistoryEntries(current, next)) {
+      const detailEntry = hasPreconisationHistoryDetails(current) ? current : next;
+      const reasonEntry = hasPreconisationHistoryDetails(current) ? next : current;
+
+      merged.push({
+        ...detailEntry,
+        reason: detailEntry.reason ?? reasonEntry.reason,
+      });
+      index += 1;
+      continue;
+    }
+
+    merged.push(current);
+  }
+
+  return merged;
+}
+
+function canMergePreconisationHistoryEntries(
+  first: ParsedPreconisationHistoryEntry,
+  second: ParsedPreconisationHistoryEntry,
+): boolean {
+  const firstHasDetails = hasPreconisationHistoryDetails(first);
+  const secondHasDetails = hasPreconisationHistoryDetails(second);
+  const firstReasonOnly = !firstHasDetails && !!first.reason;
+  const secondReasonOnly = !secondHasDetails && !!second.reason;
+
+  if (!((firstHasDetails && secondReasonOnly) || (secondHasDetails && firstReasonOnly))) {
+    return false;
+  }
+
+  if (first.time == null || second.time == null) {
+    return false;
+  }
+
+  return Math.abs(first.time - second.time) <= 60_000;
+}
+
+function hasPreconisationHistoryDetails(entry: ParsedPreconisationHistoryEntry): boolean {
+  return entry.fields.length > 0 || entry.changes.length > 0;
+}
+
+function extractHistoryDate(segment: string): { date?: string; remainder?: string } {
+  const match = /^(?<date>\d{2}\/\d{2}\/\d{4}(?:,\s*|\s+)\d{2}:\d{2})(?<remainder>.*)$/u.exec(segment.trim());
+  if (!match?.groups) {
+    return {};
+  }
+
+  return {
+    date: normalizeHistoryDateText(match.groups['date']),
+    remainder: match.groups['remainder'].trim().replace(/^[—:-]+\s*/u, '') || undefined,
+  };
+}
+
+function startsWithHistoryDate(line: string): boolean {
+  return HISTORY_DATE_PREFIX.test(line.trim());
 }
 
 function splitHistorySection(value?: string | null): string[] {
@@ -179,12 +325,59 @@ function splitHistorySection(value?: string | null): string[] {
     return [];
   }
 
-  return normalized.split(PRECONISATION_HISTORY_SEPARATOR).map(part => part.trim()).filter(Boolean);
+  return normalized
+    .split(PRECONISATION_HISTORY_SEPARATOR)
+    .map(part => part.trim())
+    .filter(Boolean);
 }
 
 function normalizeHistorySection(value?: string | null): string | undefined {
   const normalized = value?.trim();
   return !normalized || normalized === PRECONISATION_HISTORY_EMPTY ? undefined : normalized;
+}
+
+function normalizeHistoryDateText(value?: string | null): string {
+  const match = /^(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})(?:,\s*|\s+)(?<hour>\d{2}):(?<minute>\d{2})$/u.exec(value?.trim() ?? '');
+  if (!match?.groups) {
+    return value?.trim() || PRECONISATION_HISTORY_EMPTY;
+  }
+
+  return `${match.groups['day']}/${match.groups['month']}/${match.groups['year']} ${match.groups['hour']}:${match.groups['minute']}`;
+}
+
+function toHistoryTimestamp(value?: string | null): number | null {
+  const match = /^(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})\s+(?<hour>\d{2}):(?<minute>\d{2})$/u.exec(normalizeHistoryDateText(value));
+  if (!match?.groups) {
+    return null;
+  }
+
+  const day = Number(match.groups['day']);
+  const month = Number(match.groups['month']);
+  const year = Number(match.groups['year']);
+  const hour = Number(match.groups['hour']);
+  const minute = Number(match.groups['minute']);
+  const timestamp = new Date(year, month - 1, day, hour, minute).getTime();
+
+  return Number.isNaN(timestamp) ? null : timestamp;
+}
+
+function formatPreconisationHistoryDate(date: Date): string {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear());
+  const hour = String(date.getHours()).padStart(2, '0');
+  const minute = String(date.getMinutes()).padStart(2, '0');
+
+  return `${day}/${month}/${year} ${hour}:${minute}`;
+}
+
+function isLikelyHistoryAuthor(value: string): boolean {
+  const normalized = value.trim();
+  if (!normalized) {
+    return true;
+  }
+
+  return !normalized.includes(':') && !normalized.includes(' ') && normalized === normalized.toUpperCase();
 }
 
 export function foldLabel(value?: string | null): string {
