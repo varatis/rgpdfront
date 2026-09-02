@@ -121,12 +121,8 @@ export class DetailsTraitementComponent {
           return null;
         }
 
-        const prefixe = [
-          this.formatHistoriqueDate(entree?.date),
-          entree?.auteur?.trim() || 'Auteur inconnu'
-        ].filter(Boolean).join(' — ');
-
-        return prefixe ? `${prefixe} : ${motif}` : motif;
+        const date = this.formatHistoriqueDate(entree?.date);
+        return date ? `${date} : ${motif}` : motif;
       })
       .filter((value): value is string => !!value)
       .join('\n');

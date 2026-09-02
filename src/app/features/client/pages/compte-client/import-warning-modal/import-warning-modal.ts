@@ -23,6 +23,11 @@ export class ImportWarningModal {
     @Inject(MAT_DIALOG_DATA) public data: ImportWarningModalData
   ) {}
 
+  get warningMessage(): string {
+    const message = this.data.apercu.avertissement || 'Cet import va remplacer les données existantes du registre.';
+    return message.replace(/\s*Exportez le registre actuel avant de confirmer\.?\s*/i, '').trim();
+  }
+
   close(action: ImportWarningModalAction): void {
     this.dialogRef.close(action);
   }

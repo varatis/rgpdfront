@@ -61,7 +61,6 @@ export const TAB_IDENTIFICATION: TabConfig = {
     text('Nom du traitement', 'nom', 'nom', '40%'),
     date("Date d'identification du traitement", 'dateIdentification', 'date_identification', '20%'),
     date('Date de mise à jour', 'dateMiseAJour', 'date_maj', '20%'),
-    custom('Historique des modifications', 'historiqueTraitement', 'historique', '90%', 'historiqueDisplay'),
     text('Data Protection Officer', 'dataProtectionOfficer', 'dpo', '40%'),
     text('Responsable de traitement', 'responsableTraitement.valeur', 'responsable_traitement', '40%'),
     html('Gestionnaire de la mise en œuvre du traitement', 'gestionnaireMiseEnOeuvre', 'gestionnaire', '40%'),
@@ -122,6 +121,13 @@ export const TAB_DESCRIPTION: TabConfig = {
   ],
 };
 
+export const TAB_HISTORIQUE: TabConfig = {
+  name: 'Historique des modifications',
+  fields: [
+    custom('Historique des modifications', 'historiqueTraitement', 'historique', '90%', 'historiqueDisplay'),
+  ],
+};
+
 export const TAB_ANALYSE: TabConfig = {
   name: 'Analyse de conformité',
   fields: [],
@@ -131,5 +137,6 @@ export const ALL_TABS: TabConfig[] = [
   TAB_IDENTIFICATION,
   TAB_DONNEES_PERSO,
   TAB_DESCRIPTION,
+  TAB_HISTORIQUE,
   TAB_ANALYSE,
 ];

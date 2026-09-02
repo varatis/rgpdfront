@@ -11,6 +11,7 @@ import {
   avancementClass,
   complexiteClass,
   displayValue,
+  formatPreconisationHistoriqueDisplay,
   parseAvancementPercent,
   Preconisation,
   PreconisationDetails,
@@ -402,7 +403,7 @@ export class SuiviPreconisations implements OnInit {
 
   historiqueModificationsOf(details: PreconisationDetails | Preconisation): string | undefined {
     return 'commentaire' in details
-      ? splitPreconisationCommentaire(details.commentaire).historique
+      ? formatPreconisationHistoriqueDisplay(details.commentaire)
       : undefined;
   }
 

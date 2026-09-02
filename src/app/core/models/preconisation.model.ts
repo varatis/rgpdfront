@@ -115,18 +115,28 @@ export function appendPreconisationHistorique(
     timeStyle: 'short',
   }).format(date);
 
-  const entry = [horodatage, auteur?.trim() || null]
-    .filter(Boolean)
-    .join(' — ');
-
   const nextHistory = [
     parsed.historique,
-    entry ? `${entry} : ${noteText}` : noteText,
+    `${horodatage} : ${noteText}`,
   ]
     .filter(Boolean)
     .join('\n');
 
   return buildPreconisationCommentaire(parsed.commentaire, nextHistory);
+}
+
+export function formatPreconisationHistoriqueDisplay(value?: string | null): string | undefined {
+  const historique = splitPreconisationCommentaire(value).historique?.trim();
+  if (!historique) {
+    return undefined;
+  }
+
+  return historique
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => line.replace(/^(\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2})\s+—\s+.*?\s*:\s*/u, '$1 : '))
+    .join('\n');
 }
 
 export function foldLabel(value?: string | null): string {

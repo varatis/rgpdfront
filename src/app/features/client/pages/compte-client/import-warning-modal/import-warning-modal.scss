@@ -18,11 +18,13 @@ mat-dialog-content {
 
 .warning-message {
   margin: 0;
+  width: 100%;
   padding: 12px 14px;
   border-radius: 10px;
   background: #fff7ed;
   color: #9a3412;
   line-height: 1.5;
+  text-align: left;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
