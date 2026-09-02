@@ -11,15 +11,29 @@
         (actionClick)="onActionClick($event)">
       </app-header>
 
-      <app-table-traitement
-        [data]="data"
-        [loading]="loading"
-        [selectedId]="traitementSelectionne?.idFonctionnel"
-        [sortColumn]="sortField"
-        [sortDirection]="sortDirection"
-        (select)="onSelectTraitement($event)"
-        (sortChange)="onSortChange($event)">
-      </app-table-traitement>
+      @if (loading || data.length > 0) {
+        <app-table-traitement
+          [data]="data"
+          [loading]="loading"
+          [selectedId]="traitementSelectionne?.idFonctionnel"
+          [sortColumn]="sortField"
+          [sortDirection]="sortDirection"
+          (select)="onSelectTraitement($event)"
+          (sortChange)="onSortChange($event)">
+        </app-table-traitement>
+      }
+
+      @if (!loading && data.length === 0) {
+        <div class="empty-state-slot">
+          <div class="empty-state">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF">
+              <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"
+                    stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p data-testid="_lib_empty_traitements">Aucun traitement trouvé</p>
+          </div>
+        </div>
+      }
 
       <app-pagination
         [currentPage]="currentPage"

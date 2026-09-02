@@ -53,9 +53,7 @@
               <div class="history-list" [attr.data-testid]="'_val_detail_' + field.testIdSuffix">
                 @if (!details()) {
                   <div class="history-empty skeleton" [style.--skeleton-width]="field.skeletonWidth"></div>
-                } @else if (historiqueEntries().length === 0) {
-                  <p class="history-empty">-</p>
-                } @else {
+                } @else if (historiqueEntries().length > 0) {
                   @for (entry of historiqueEntries(); track $index) {
                     <article class="history-card">
                       <div class="history-meta">

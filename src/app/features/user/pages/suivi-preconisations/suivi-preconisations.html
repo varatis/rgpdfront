@@ -8,16 +8,18 @@
   (actionClick)="onHeaderAction($event)"
   (detailClose)="onCloseDetail()">
 
-  <app-preconisations-table
-    slot="list-items"
-    [data]="data"
-    [loading]="loading"
-    [selectedId]="selectedPreconisation?.identifiant"
-    [sortColumn]="sortField"
-    [sortDirection]="sortDirection"
-    (rowClick)="onSelectPreconisation($event)"
-    (sortChange)="onSortChange($event)">
-  </app-preconisations-table>
+  @if (loading || data.length > 0) {
+    <app-preconisations-table
+      slot="list-items"
+      [data]="data"
+      [loading]="loading"
+      [selectedId]="selectedPreconisation?.identifiant"
+      [sortColumn]="sortField"
+      [sortDirection]="sortDirection"
+      (rowClick)="onSelectPreconisation($event)"
+      (sortChange)="onSortChange($event)">
+    </app-preconisations-table>
+  }
 
   <div slot="detail-actions" class="preconisation-detail-actions">
     @if (isAdmin) {
@@ -41,7 +43,7 @@
   </app-pagination>
 
   @if (!loading && data.length === 0) {
-    <div slot="empty-state">
+    <div slot="empty-state" class="empty-state-slot">
       <div class="empty-state">
         <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF">
           <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M9.88 9.88L12 12m2.12 2.12L12 12m0 0l-2.12-2.12M12 12l2.12 2.12M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"
@@ -142,12 +144,10 @@
           @if (activeDetailTab === detailHistoryTab) {
             @let historyEntries = historiqueModificationsOf(details);
             <div class="tab-content">
-              <div class="detail-title">
-                <h2 data-testid="_lib_h2_selected_preco_historique">Historique des modifications</h2>
-                <div class="history-list" data-testid="_val_selected_preco_historique">
-                  @if (historyEntries.length === 0) {
-                    <p class="history-empty">—</p>
-                  } @else {
+              @if (historyEntries.length > 0) {
+                <div class="detail-title">
+                  <h2 data-testid="_lib_h2_selected_preco_historique">Historique des modifications</h2>
+                  <div class="history-list" data-testid="_val_selected_preco_historique">
                     @for (entry of historyEntries; track $index) {
                       <article class="history-card">
                         <div class="history-meta">
@@ -185,9 +185,9 @@
                         </div>
                       </article>
                     }
-                  }
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           }
         </div>

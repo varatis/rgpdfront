@@ -54,7 +54,8 @@
   transition: width 0.3s ease;
   overflow: hidden;
 
-  app-table-traitement {
+  app-table-traitement,
+  .empty-state-slot {
     flex: 1;
     overflow: hidden;
     display: flex;
@@ -64,6 +65,27 @@
 
   app-pagination {
     flex-shrink: 0;
+  }
+}
+
+.empty-state-slot {
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    color: #6B7280;
   }
 }
 
