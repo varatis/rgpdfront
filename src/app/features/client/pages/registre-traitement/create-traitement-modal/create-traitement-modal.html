@@ -135,6 +135,7 @@
               </label>
               <textarea id="inp_notification_modification" data-testid="_inp_notification_modification"
                         formControlName="notificationModification" rows="3"
+                        [required]="notificationModificationMandatory"
                         placeholder="Décrivez la modification à ajouter à l'historique"></textarea>
               <span class="field-help">Cette note sera ajoutée à l'historique du traitement.</span>
               <span class="field-error" data-testid="_val_error_notification_modification">{{ notificationModificationError() }}</span>

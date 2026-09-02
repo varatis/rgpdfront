@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
@@ -256,7 +256,17 @@ export class CreateTraitementModal implements OnInit {
       return;
     }
 
-    const notificationModification = this.form.get('notificationModification')?.value?.trim() ?? '';
+    const notificationControl = this.form.get('notificationModification');
+    const notificationModification = notificationControl?.value?.trim() ?? '';
+
+    if (this.isEditMode && this.hasEditableChanges() && !notificationModification) {
+      notificationControl?.setErrors({ ...(notificationControl.errors ?? {}), required: true });
+      notificationControl?.markAsTouched();
+      this.notificationModificationMandatory = true;
+      this.notificationModificationRequired = true;
+      this.activeTab = 0;
+      return;
+    }
 
     this.isSubmitting = true;
     this.submitError = null;
@@ -404,12 +414,24 @@ export class CreateTraitementModal implements OnInit {
     }
 
     this.notificationModificationMandatory = this.isEditMode && this.hasEditableChanges();
-    control.setValidators(this.notificationModificationMandatory ? [Validators.required] : []);
+    control.setValidators(
+      this.notificationModificationMandatory ? [CreateTraitementModal.trimmedRequiredValidator] : []
+    );
     control.updateValueAndValidity({ emitEvent: false });
 
-    if (!this.notificationModificationMandatory || (control.value?.trim?.() ?? '')) {
+    if (!this.notificationModificationMandatory || !control.hasError('required')) {
       this.notificationModificationRequired = false;
     }
+  }
+
+  private static trimmedRequiredValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+
+    if (typeof value === 'string') {
+      return value.trim() ? null : { required: true };
+    }
+
+    return value == null ? { required: true } : null;
   }
 
   private static aplatirReferentiels(traitement: TraitementDetails): Record<string, string | null> {
