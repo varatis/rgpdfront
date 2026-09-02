@@ -209,10 +209,7 @@ export class RegistreTraitement implements OnInit {
   }
   
   onDeleteClick(): void {
-    if (!this.isAdmin || !this.traitementSelectionne) {
-      return;
-    }
-    this.deleteTraitementModal();
+    if (this.isAdmin && this.traitementSelectionne) this.deleteTraitementModal();
   }
   
   deletionConfirmed(): void {
