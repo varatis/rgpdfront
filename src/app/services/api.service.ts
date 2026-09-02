@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { InfoFichier } from '../core/models/info-fichier.model';
+import { ImportApercu, InfoFichier } from '../core/models/info-fichier.model';
+import { Historisation, HistorisationCreationPayload } from '../core/models/historisation.model';
 import { CreateTraitementPayload, Traitement, TraitementDetails } from '../core/models/traitement.model';
 import { PageResponse } from '../core/models/page-response.model';
 import { Etablissement } from '../core/models/etablissement.model';
@@ -41,11 +42,19 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  uploadRgpdFile(file: File) {
+  uploadRgpdFile(file: File, confirmerRemplacement = false): Observable<InfoFichier> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post<InfoFichier>(this.apiUrl + "importFichierRgpd", formData);
+    const params = new HttpParams().set('confirmerRemplacement', confirmerRemplacement);
+
+    return this.http.post<InfoFichier>(this.apiUrl + 'importFichierRgpd', formData, { params });
+  }
+
+  getImportApercu(nomFichier: string): Observable<ImportApercu> {
+    const params = new HttpParams().set('nomFichier', nomFichier);
+
+    return this.http.get<ImportApercu>(this.apiUrl + 'importFichierRgpd/apercu', { params });
   }
 
 
@@ -100,6 +109,10 @@ export class ApiService {
 
   updateTraitement(id: number, payload: CreateTraitementPayload): Observable<TraitementDetails> {
     return this.http.put<TraitementDetails>(this.apiUrl + "traitements/" + id, payload);
+  }
+
+  addTraitementHistorique(id: number, payload: HistorisationCreationPayload): Observable<Historisation> {
+    return this.http.post<Historisation>(this.apiUrl + 'traitements/' + id + '/historique', payload);
   }
 
   deleteTraitement(id: string): Observable<void> {
