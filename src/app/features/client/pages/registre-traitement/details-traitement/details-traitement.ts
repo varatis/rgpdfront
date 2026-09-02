@@ -11,8 +11,10 @@ type UserRole = 'client' | 'admin' | 'superadmin';
 
 interface HistoryEntryView {
   date: string;
-  field: string;
-  change: string;
+  fields: string[];
+  changes: string[];
+  reason?: string;
+  time?: number | null;
 }
 
 @Component({
@@ -93,17 +95,19 @@ export class DetailsTraitementComponent {
       return [];
     }
 
-    const entries = (details.historiqueTraitement ?? []).flatMap(entree => {
-      const date = this.formatHistoriqueDate(entree?.date) || '—';
-      return this.parseHistoryMotif(entree?.motif, date);
-    });
+    const baseEntries = (details.historiqueTraitement ?? []).map(entree =>
+      this.parseHistoryMotif(entree?.motif, entree?.date)
+    );
+
+    const mergedEntries = this.mergeHistoryEntries(baseEntries)
+      .map(({ time, ...entry }) => entry);
 
     const historiqueImporte = details.historiqueModifications?.trim();
     if (historiqueImporte) {
-      entries.push(...this.parseImportedHistory(historiqueImporte));
+      mergedEntries.push(...this.parseImportedHistory(historiqueImporte));
     }
 
-    return entries;
+    return mergedEntries;
   });
 
   constructor() {
@@ -180,39 +184,88 @@ export class DetailsTraitementComponent {
     });
   }
 
-  private parseHistoryMotif(motif: string | null | undefined, date: string): HistoryEntryView[] {
+  private parseHistoryMotif(
+    motif: string | null | undefined,
+    dateValue: string | Date | null | undefined,
+  ): HistoryEntryView {
     const cleanMotif = motif?.trim();
+    const date = this.formatHistoriqueDate(dateValue) || '—';
+    const time = this.toTimestamp(dateValue);
+
     if (!cleanMotif) {
-      return [];
+      return { date, fields: [], changes: [], time };
     }
 
-    return cleanMotif
+    const fields: string[] = [];
+    const changes: string[] = [];
+    const reasons: string[] = [];
+
+    cleanMotif
       .split(/(?:\r?\n|\s;\s)/g)
       .map(part => part.trim())
       .filter(Boolean)
-      .map(part => this.mapHistoryPart(part, date));
-  }
+      .forEach(part => {
+        const match = /^(?<field>[^:]+)\s*:\s*«\s*(?<from>.*?)\s*»\s*→\s*«\s*(?<to>.*?)\s*»$/u.exec(part);
+        if (!match?.groups) {
+          reasons.push(part);
+          return;
+        }
 
-  private mapHistoryPart(part: string, date: string): HistoryEntryView {
-    const match = /^(?<field>[^:]+)\s*:\s*«\s*(?<from>.*?)\s*»\s*→\s*«\s*(?<to>.*?)\s*»$/u.exec(part);
-
-    if (!match?.groups) {
-      return {
-        date,
-        field: 'Modification',
-        change: part,
-      };
-    }
-
-    const rawField = match.groups['field'].trim();
-    const from = this.prettyHistoryValue(match.groups['from']);
-    const to = this.prettyHistoryValue(match.groups['to']);
+        fields.push(this.prettyHistoryField(match.groups['field'].trim()));
+        changes.push(
+          `${this.prettyHistoryValue(match.groups['from'])} → ${this.prettyHistoryValue(match.groups['to'])}`
+        );
+      });
 
     return {
       date,
-      field: this.prettyHistoryField(rawField),
-      change: `${from} → ${to}`,
+      fields,
+      changes,
+      reason: reasons.join('\n') || undefined,
+      time,
     };
+  }
+
+  private mergeHistoryEntries(entries: HistoryEntryView[]): HistoryEntryView[] {
+    const merged: HistoryEntryView[] = [];
+
+    for (let index = 0; index < entries.length; index += 1) {
+      const current = entries[index];
+      const next = entries[index + 1];
+
+      if (next && this.canMergeHistoryEntries(current, next)) {
+        const detailEntry = current.fields.length > 0 ? current : next;
+        const reasonEntry = current.fields.length > 0 ? next : current;
+
+        merged.push({
+          ...detailEntry,
+          reason: reasonEntry.reason,
+        });
+        index += 1;
+        continue;
+      }
+
+      merged.push(current);
+    }
+
+    return merged;
+  }
+
+  private canMergeHistoryEntries(first: HistoryEntryView, second: HistoryEntryView): boolean {
+    const firstHasDiff = first.fields.length > 0;
+    const secondHasDiff = second.fields.length > 0;
+    const firstReasonOnly = !firstHasDiff && !!first.reason;
+    const secondReasonOnly = !secondHasDiff && !!second.reason;
+
+    if (!((firstHasDiff && secondReasonOnly) || (secondHasDiff && firstReasonOnly))) {
+      return false;
+    }
+
+    if (first.time == null || second.time == null) {
+      return false;
+    }
+
+    return Math.abs(first.time - second.time) <= 60_000;
   }
 
   private parseImportedHistory(historiqueImporte: string): HistoryEntryView[] {
@@ -222,8 +275,8 @@ export class DetailsTraitementComponent {
       .filter(Boolean)
       .map(line => ({
         date: 'Import',
-        field: 'Historique importé',
-        change: line,
+        fields: ['Historique importé'],
+        changes: [line],
       }));
   }
 
@@ -260,5 +313,14 @@ export class DetailsTraitementComponent {
     }
 
     return this.historyDateFormatter.format(date);
+  }
+
+  private toTimestamp(value: string | Date | null | undefined): number | null {
+    if (!value) {
+      return null;
+    }
+
+    const date = value instanceof Date ? value : new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date.getTime();
   }
 }

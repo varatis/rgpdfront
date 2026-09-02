@@ -390,7 +390,7 @@ export class CreateTraitementModal implements OnInit {
 
   notificationModificationError(): string {
     return this.notificationModificationRequired
-      ? 'Le champ Modifications est requis si vous modifiez le formulaire.'
+      ? 'Le champ Motif de modifications est requis si vous modifiez le formulaire.'
       : '';
   }
 

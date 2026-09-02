@@ -62,14 +62,34 @@
                         <span class="history-badge">{{ entry.date }}</span>
                       </div>
                       <div class="history-grid">
-                        <div class="history-row">
-                          <span class="history-label">Champs modifiés</span>
-                          <span class="history-value">{{ entry.field }}</span>
-                        </div>
-                        <div class="history-row">
-                          <span class="history-label">Modification</span>
-                          <span class="history-value">{{ entry.change }}</span>
-                        </div>
+                        @if (entry.fields.length > 0) {
+                          <div class="history-row">
+                            <span class="history-label">Champs modifiés</span>
+                            <span class="history-value">
+                              @for (fieldName of entry.fields; track $index) {
+                                <span class="history-line">{{ fieldName }}</span>
+                              }
+                            </span>
+                          </div>
+                        }
+
+                        @if (entry.changes.length > 0) {
+                          <div class="history-row">
+                            <span class="history-label">Modification</span>
+                            <span class="history-value">
+                              @for (change of entry.changes; track $index) {
+                                <span class="history-line">{{ change }}</span>
+                              }
+                            </span>
+                          </div>
+                        }
+
+                        @if (entry.reason) {
+                          <div class="history-row">
+                            <span class="history-label">Motif de modifications</span>
+                            <span class="history-value">{{ entry.reason }}</span>
+                          </div>
+                        }
                       </div>
                     </article>
                   }

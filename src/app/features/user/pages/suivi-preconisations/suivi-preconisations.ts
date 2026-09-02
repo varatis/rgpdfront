@@ -11,10 +11,11 @@ import {
   avancementClass,
   complexiteClass,
   displayValue,
-  formatPreconisationHistoriqueDisplay,
   parseAvancementPercent,
+  parsePreconisationHistoriqueEntries,
   Preconisation,
   PreconisationDetails,
+  PreconisationHistoryEntry,
   PreconisationSortField,
   prioriteClass,
   scaleLabel,
@@ -401,10 +402,10 @@ export class SuiviPreconisations implements OnInit {
       : undefined;
   }
 
-  historiqueModificationsOf(details: PreconisationDetails | Preconisation): string | undefined {
+  historiqueModificationsOf(details: PreconisationDetails | Preconisation): PreconisationHistoryEntry[] {
     return 'commentaire' in details
-      ? formatPreconisationHistoriqueDisplay(details.commentaire)
-      : undefined;
+      ? parsePreconisationHistoriqueEntries(details.commentaire)
+      : [];
   }
 
   private normalizeScales<T extends Preconisation>(item: T): T {

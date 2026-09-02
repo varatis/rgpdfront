@@ -52,6 +52,19 @@ export class CreatePreconisationModal implements OnInit {
     'traitementIdentifiant',
   ] as const;
 
+  private static readonly CHAMP_LABELS: Record<string, string> = {
+    libelle: 'Préconisation',
+    explication: 'Description / explication',
+    risqueEncours: 'Risque encouru',
+    contraintes: 'Contraintes',
+    cout: 'Coût',
+    priorite: 'Priorité',
+    complexite: 'Complexité',
+    commentaire: 'Commentaire',
+    etatAvancement: 'État d’avancement',
+    traitementIdentifiant: 'Traitement lié',
+  };
+
   @Input() preconisationToEdit: PreconisationDetails | undefined;
   @Output() closed = new EventEmitter<void>();
   @Output() created = new EventEmitter<void>();
@@ -74,6 +87,7 @@ export class CreatePreconisationModal implements OnInit {
   loadError: string | null = null;
   notificationModificationRequired = false;
   private initialEditSnapshot: string | null = null;
+  private initialEditState: Record<string, unknown> | null = null;
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -248,7 +262,7 @@ export class CreatePreconisationModal implements OnInit {
 
   notificationModificationError(): string {
     return this.notificationModificationRequired
-      ? 'Le champ Modifications est requis si vous modifiez le formulaire.'
+      ? 'Le champ Motif de modifications est requis si vous modifiez le formulaire.'
       : '';
   }
 
@@ -292,25 +306,87 @@ export class CreatePreconisationModal implements OnInit {
 
     const parsedExisting = splitPreconisationCommentaire(this.preconisationToEdit?.commentaire);
     const commentaireAvecHistorique = buildPreconisationCommentaire(commentaire, parsedExisting.historique);
+    const summary = this.buildHistorySummary();
 
-    return appendPreconisationHistorique(commentaireAvecHistorique, notification);
+    return appendPreconisationHistorique(
+      commentaireAvecHistorique,
+      notification,
+      summary.fields,
+      summary.changes
+    );
   }
 
   private captureInitialEditSnapshot(): void {
-    this.initialEditSnapshot = this.computeEditableSnapshot();
+    this.initialEditState = this.buildEditableState();
+    this.initialEditSnapshot = JSON.stringify(this.initialEditState);
   }
 
   private hasEditableChanges(): boolean {
-    return this.initialEditSnapshot !== null && this.initialEditSnapshot !== this.computeEditableSnapshot();
+    return this.initialEditSnapshot !== null && this.initialEditSnapshot !== JSON.stringify(this.buildEditableState());
   }
 
-  private computeEditableSnapshot(): string {
+  private buildEditableState(): Record<string, unknown> {
     const raw = this.form.getRawValue() as PreconisationFormValue;
-    const normalized = Object.fromEntries(
+
+    return Object.fromEntries(
       CreatePreconisationModal.CHAMPS_EDITABLES.map(champ => [champ, this.normalizeSnapshotValue(raw[champ])])
     );
+  }
 
-    return JSON.stringify(normalized);
+  private buildHistorySummary(): { fields: string[]; changes: string[] } {
+    const currentState = this.buildEditableState();
+    const initialState = this.initialEditState ?? {};
+    const fields: string[] = [];
+    const changes: string[] = [];
+
+    CreatePreconisationModal.CHAMPS_EDITABLES.forEach(champ => {
+      const before = initialState[champ];
+      const after = currentState[champ];
+
+      if (JSON.stringify(before) === JSON.stringify(after)) {
+        return;
+      }
+
+      fields.push(CreatePreconisationModal.CHAMP_LABELS[champ] ?? champ);
+      changes.push(`${this.prettyValue(champ, before)} → ${this.prettyValue(champ, after)}`);
+    });
+
+    return { fields, changes };
+  }
+
+  private prettyValue(field: string, value: unknown): string {
+    if (value == null || value === '') {
+      return 'vide';
+    }
+
+    if (field === 'priorite' || field === 'complexite') {
+      return scaleLabel(String(value));
+    }
+
+    if (field === 'traitementIdentifiant') {
+      return this.resolveTraitementLabel(String(value));
+    }
+
+    return String(value);
+  }
+
+  private resolveTraitementLabel(identifiant: string): string {
+    const traitement = this.traitements.find(item => item.identifiant === identifiant)
+      ?? (this.preconisationToEdit?.traitementIdentifiant === identifiant
+        ? {
+            identifiant,
+            idFonctionnel: this.preconisationToEdit.traitementIdFonctionnel,
+            nom: this.preconisationToEdit.traitementNom,
+          }
+        : undefined);
+
+    if (!traitement) {
+      return identifiant || 'vide';
+    }
+
+    return traitement.idFonctionnel != null && traitement.nom
+      ? `${traitement.idFonctionnel} - ${traitement.nom}`
+      : (traitement.nom ?? identifiant);
   }
 
   private normalizeSnapshotValue(value: unknown): unknown {
