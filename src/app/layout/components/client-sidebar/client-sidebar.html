@@ -1,5 +1,6 @@
 @if (currentUser()) {
 <div class="double-sidebar-container">
+  @if (isSuperAdmin()) {
   <aside class="sidebar-mini">
     <div class="mini-header">
       <div class="logo-triangle">
@@ -8,18 +9,16 @@
     </div>
 
     <nav class="mini-nav">
-      <a [routerLink]="null" class="mini-nav-item" (click)="toggleClientMenu()" title="Compte client">
-        <mat-icon>business</mat-icon>
+      @for (item of adminNavItems; track item.route) {
+      <a
+        [routerLink]="['/admin', item.route]"
+        routerLinkActive="active"
+        class="mini-nav-item"
+        [title]="item.label"
+        [attr.data-testid]="'_btn_admin_nav_' + item.route">
+        <mat-icon>{{ getIconName(item.icon) }}</mat-icon>
       </a>
-
-      <a [routerLink]="null" class="mini-nav-item disabled" aria-disabled="true" tabindex="-1" title="Administrateurs">
-        <mat-icon>admin_panel_settings</mat-icon>
-      </a>
-
-      <a [routerLink]="null" class="mini-nav-item disabled" aria-disabled="true" tabindex="-1"
-         title="Gestion des préconisations">
-        <mat-icon>tune</mat-icon>
-      </a>
+      }
     </nav>
 
     <div class="mini-footer">
@@ -28,19 +27,15 @@
       </button>
     </div>
   </aside>
+  }
 
-  @if (showClientMenu()) {
   <aside class="sidebar-main">
     <div class="sidebar-header">
       <div class="client-info">
         <div class="client-logo">
-          <img [src]="logo()" [alt]="clientName()" />
+          <img data-testid="_val_logo_client" [src]="logo()" [alt]="clientName()" />
         </div>
       </div>
-      <button class="back-button" (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-        Retour à la liste des clients
-      </button>
     </div>
 
     <nav class="sidebar-nav">
@@ -51,7 +46,15 @@
       </a>
       }
     </nav>
+
+    @if (!isSuperAdmin()) {
+    <div class="sidebar-footer">
+      <button class="logout-btn" data-testid="_btn_deconnexion" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Se déconnecter</span>
+      </button>
+    </div>
+    }
   </aside>
-  }
 </div>
 }

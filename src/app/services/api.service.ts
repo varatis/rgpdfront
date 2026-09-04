@@ -7,7 +7,8 @@ import { Historisation, HistorisationCreationPayload } from '../core/models/hist
 import { CreateTraitementPayload, Traitement, TraitementDetails } from '../core/models/traitement.model';
 import { PageResponse } from '../core/models/page-response.model';
 import { Etablissement } from '../core/models/etablissement.model';
-import { Client } from '../core/models/client.model';
+import { Client, ClientWritePayload } from '../core/models/client.model';
+import { ClientLogoInfo } from '../core/models/client-logo.model';
 import { FiltreTraitementPayload } from '../core/models/filtre-traitement.payload';
 import { FiltrePreconisationPayload } from '../core/models/filtre-preconisation.payload';
 import {
@@ -129,8 +130,63 @@ export class ApiService {
     return this.http.get<Etablissement[]>(this.apiUrl + "etablissements", { params });
   }
 
+  getClients(): Observable<Client[]> {
+    return this.http.get<Client[]>(this.apiUrl + "clients");
+  }
+
   getClientByNom(nom: string): Observable<Client> {
     return this.http.get<Client>(this.apiUrl + "clients/nom/" + encodeURIComponent(nom));
+  }
+
+  createClient(payload: ClientWritePayload): Observable<Client> {
+    return this.http.post<Client>(this.apiUrl + "clients", payload);
+  }
+
+  updateClient(clientId: string, payload: ClientWritePayload): Observable<Client> {
+    return this.http.put<Client>(this.apiUrl + "clients/" + clientId, payload);
+  }
+
+  deleteClient(clientId: string): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + "clients/" + clientId);
+  }
+
+  /**
+   * Contenu binaire du logo. L'endpoint exige un JWT comme le reste de l'API :
+   * une balise `<img src>` partirait anonyme et recevrait un 401. Le blob est
+   * donc rapatrié via l'intercepteur, puis converti en URL d'objet par l'appelant.
+   * Un client sans logo répond 404 : c'est l'état nominal, pas une erreur.
+   *
+   * Le paramètre `_` n'est pas lu par le back : il ne sert qu'à rendre l'URL
+   * différente à chaque chargement. Sans lui, le navigateur ressert l'image
+   * qu'il a en cache après un remplacement fait depuis une autre session : un
+   * PUT n'invalide l'entrée de cache que dans le navigateur qui l'a émis, celui
+   * qui a déposé le logo voit donc le nouveau, tous les autres l'ancien.
+   */
+  getClientLogo(clientId: string): Observable<Blob> {
+    return this.http.get(this.apiUrl + "clients/" + clientId + "/logo", {
+      responseType: 'blob',
+      params: new HttpParams().set('_', Date.now())
+    });
+  }
+
+  /** Nom, taille et type du logo, sans transférer l'image. */
+  getClientLogoInfo(clientId: string): Observable<ClientLogoInfo> {
+    return this.http.get<ClientLogoInfo>(this.apiUrl + "clients/" + clientId + "/logo/info");
+  }
+
+  /**
+   * Dépose ou remplace le logo (PNG, JPEG ou WebP, 1 Mo maximum ; le SVG est
+   * refusé). Le même appel crée et remplace : il n'y a pas de POST distinct.
+   */
+  uploadClientLogo(clientId: string, file: File): Observable<ClientLogoInfo> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.put<ClientLogoInfo>(this.apiUrl + "clients/" + clientId + "/logo", formData);
+  }
+
+  deleteClientLogo(clientId: string): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + "clients/" + clientId + "/logo");
   }
 
   getPreconisations(
