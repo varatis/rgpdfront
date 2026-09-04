@@ -2,10 +2,36 @@
   [title]="pageTitle"
   [icon]="clientIcon"
   [actions]="actions"
-  [isDetailOpen]="!!selectedClient"
+  [isDetailOpen]="isDetailOpen"
   [isEmpty]="displayedClients.length === 0"
-  [detailTitle]="selectedClient ? selectedClient.name : 'Détails Client'"
+  [detailTitle]="detailTitle"
+  (actionClick)="onHeaderAction($event)"
+  (detailClose)="onCloseDetail()"
   >
+
+  @if (selectedClient && !filtreSelectionne) {
+    <!-- Un seul nœud racine sous le @if, sinon la projection dans le slot ne se fait pas. -->
+    <ng-container slot="detail-actions">
+      <button
+        type="button"
+        class="detail-action-btn"
+        title="Modifier"
+        data-testid="_btn_modifier_client_detail"
+        (click)="onEditClient(selectedClient)">
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      <button
+        type="button"
+        class="detail-action-btn danger"
+        title="Supprimer"
+        data-testid="_btn_supprimer_client_detail"
+        [disabled]="suppressionEnCours"
+        (click)="onDeleteClient(selectedClient)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </ng-container>
+  }
 
   <app-page-tabs
     slot="tabs"
@@ -14,70 +40,117 @@
     (tabChange)="setActiveTab($event)">
   </app-page-tabs>
 
-  <div slot="list-header" class="collapse-header" data-testid="_btn_toggle_clients_list" (click)="toggleClientsList()">
-    <span class="collapse-title" data-testid="_lib_clients_list_titre">Client</span>
-    <mat-icon
-      class="chevron"
-      [class.open]="clientsListOpen"
-      >expand_more</mat-icon>
-  </div>
-
-  <div slot="list-items" class="clients-list" data-testid="_lst_clients_list" *ngIf="clientsListOpen">
-    @for (c of displayedClients; track c.id) {
-      <div
-        class="clients-list-item"
-        [attr.data-testid]="'_lst_clients_row_' + c.id"
-        (click)="onSelectClient(c)"
-        [class.selected]="c.id === selectedClient?.id"
-      >
-        <div class="client-info">
-          <div class="client-name" data-testid="_val_client_nom">{{ c.name }}</div>
+  <div slot="list-items" class="clients-list" data-testid="_lst_clients_list">
+    @if (isLoading) {
+      @for (ligne of [1, 2, 3, 4]; track ligne) {
+        <div class="clients-list-item">
+          <div class="skeleton" style="--skeleton-width: 40%"></div>
         </div>
+      }
+    } @else if (erreurChargement) {
+      <div class="clients-list-message" data-testid="_lib_clients_erreur">{{ erreurChargement }}</div>
+    } @else if (displayedClients.length === 0) {
+      <div class="clients-list-message" data-testid="_lib_clients_vide">{{ messageListeVide }}</div>
+    } @else {
+      @for (c of displayedClients; track c.id) {
+        <div
+          class="clients-list-item"
+          [attr.data-testid]="'_lst_clients_row_' + c.id"
+          (click)="onSelectClient(c)"
+          [class.selected]="c.id === selectedClient?.id"
+        >
+          <div class="client-info">
+            <div class="client-name" data-testid="_val_client_nom">{{ c.nom }}</div>
+          </div>
 
-        <div class="client-actions">
-          <button
-            class="action-btn"
-            data-testid="_btn_modifier_client"
-            title="Modifier"
-            (click)="$event.stopPropagation(); onEditClient(c)"
-          >...</button>
-          <button
-            class="view-btn detail"
-            data-testid="_btn_detail_client"
-            title="Détails"
-            (click)="$event.stopPropagation(); onSelectClient(c)"
-          >
-            <mat-icon >chevron_right</mat-icon>
-          </button>
+          <div class="client-actions">
+            <button
+              class="view-btn detail"
+              data-testid="_btn_detail_client"
+              title="Détails"
+              (click)="$event.stopPropagation(); onSelectClient(c)"
+            >
+              <mat-icon >chevron_right</mat-icon>
+            </button>
+          </div>
         </div>
-      </div>
+      }
     }
 
     <div slot="pagination" class="pagination"></div>
   </div>
 
-  <div slot="detail-content">
-    <h3 data-testid="_lib_detail_client_titre">Détails pour {{ selectedClient?.name }}</h3>
-    <div class="detail-content">
-      <div class="field-group">
-        <label data-testid="_lib_label_client_nom">Nom du client</label>
-        <p data-testid="_val_client_nom_detail">{{ selectedClient?.name }}</p>
-      </div>
-
-      <div class="field-group">
-        <label data-testid="_lib_label_client_description">Description</label>
-        <p data-testid="_val_client_description">{{ selectedClient?.description }}</p>
-      </div>
-
-      <div class="field-group">
-        <label data-testid="_lib_label_client_updated_at">UpdatedAt</label>
-        <p data-testid="_val_client_updated_at">{{ selectedClient?.updatedAt }}</p>
-      </div>
+  <!-- Le panneau latéral porte soit les filtres, soit le détail du client sélectionné. -->
+  @if (filtreSelectionne) {
+    <div slot="detail-content" class="filtre-panneau">
+      <app-filtre-client
+        [filters]="currentFilters"
+        (filtreChange)="onFiltreChange($event)"
+        (filtreClose)="onFiltreClose()">
+      </app-filtre-client>
     </div>
+  } @else if (selectedClient) {
+  <div slot="detail-content" class="detail-content">
+    <div class="client-logo">
+      @if (logoEnCours) {
+        <div class="skeleton logo-skeleton"></div>
+      } @else if (logoUrl) {
+        <img
+          class="logo-img"
+          [src]="logoUrl"
+          [alt]="'Logo ' + selectedClient.nom"
+          data-testid="_val_client_logo" />
+      } @else {
+        <div class="logo-placeholder" data-testid="_val_client_logo_absent">
+          <mat-icon>business</mat-icon>
+        </div>
+      }
+    </div>
+
+    <dl class="detail-fields">
+      <div class="field-group">
+        <dt data-testid="_lib_label_client_nom">Nom du client</dt>
+        <dd data-testid="_val_client_nom_detail">{{ selectedClient.nom }}</dd>
+      </div>
+
+      <div class="field-group">
+        <dt data-testid="_lib_label_client_statut">Statut</dt>
+        <dd data-testid="_val_client_statut">
+          <span class="badge" [class.archive]="selectedClient.statut !== statutActif">
+            {{ selectedClient.statut || '—' }}
+          </span>
+        </dd>
+      </div>
+
+      <div class="field-group">
+        <dt data-testid="_lib_label_client_version">Version</dt>
+        <dd data-testid="_val_client_version">{{ selectedClient.version || '—' }}</dd>
+      </div>
+
+      <div class="field-group">
+        <dt data-testid="_lib_label_client_date_version">Date de version</dt>
+        <dd data-testid="_val_client_date_version">
+          {{ selectedClient.dateVersion ? (selectedClient.dateVersion | date: 'dd/MM/yyyy') : '—' }}
+        </dd>
+      </div>
+    </dl>
+
+    @if (erreurSuppression) {
+      <p class="detail-erreur" data-testid="_lib_client_suppression_erreur">{{ erreurSuppression }}</p>
+    }
   </div>
+  }
 
   <div slot="empty-state">
     <!-- <p>Aucun client trouvé pour l'onglet **{{ pageTabs.find(t => t.key === activeTab)?.label }}**.</p> -->
   </div>
 
 </app-master-detail-layout>
+
+@if (editionOuverte) {
+  <app-client-modal
+    [client]="clientAEditer"
+    (closed)="onEditionFermee()"
+    (saved)="onClientEnregistre($event)">
+  </app-client-modal>
+}

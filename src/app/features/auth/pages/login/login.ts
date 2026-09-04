@@ -46,7 +46,10 @@ export class Login {
     const role = this.keycloakService.getUserRole();
 
     // Redirection selon le rôle
-    if (role === 'admin') {
+    if (role === 'superadmin') {
+      this.router.navigate(['/admin/clients']);
+    }
+    else if (role === 'admin') {
       this.router.navigate(['/app/compte-client']);
     } else {
       this.router.navigate(['/app/registre-traitement']);

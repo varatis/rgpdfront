@@ -1,3 +1,4 @@
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild, inject } from '@angular/core';
@@ -9,6 +10,7 @@ import { ApiService } from '../../../../services/api.service';
 import { ImportWarningModal, ImportWarningModalAction } from './import-warning-modal/import-warning-modal';
 import { KeycloakService } from '../../../../core/auth/keycloak.service';
 import { UploadErrorSnackbar } from './upload-error-snackbar';
+import { ClientCourantService } from '../../../../core/services/client-courant.service';
 
 @Component({
   selector: 'app-compte-client',
@@ -21,13 +23,18 @@ export class CompteClient {
   private readonly apiService = inject(ApiService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
-  private readonly keycloakService = inject(KeycloakService);
   private dragDepth = 0;
 
   @ViewChild('fileInput') private fileInput?: ElementRef<HTMLInputElement>;
 
-  readonly clientName = this.keycloakService.getClientName();
   readonly allowedExtensions = ['xlsx', 'xls'];
+
+  private readonly clientCourant = inject(ClientCourantService);
+
+  /** Nom du client rattaché à l'utilisateur connecté, affiché en titre de page. */
+  readonly nomClient = toSignal(this.clientCourant.nomClient$, {
+    initialValue: this.clientCourant.nom || 'Client'
+  });
 
   selectedFile?: File;
   importApercu: ImportApercu | null = null;

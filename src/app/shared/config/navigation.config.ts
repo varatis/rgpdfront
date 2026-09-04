@@ -6,24 +6,12 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
     route: 'clients',
     icon: 'clients',
     roles: []
-  },
-  {
-    label: 'Administrateurs',
-    route: 'administrators',
-    icon: 'administrators',
-    roles: []
-  },
-  {
-    label: 'Gestion des préconisations',
-    route: 'preconisations',
-    icon: 'preconisations',
-    roles: []
   }
 ];
 
 export const CLIENT_NAV_ITEMS: NavItem[] = [
   {
-    label: 'Compte Client',
+    label: 'Gestion des données',
     route: 'compte-client',
     icon: 'clients',
     roles: ['admin']

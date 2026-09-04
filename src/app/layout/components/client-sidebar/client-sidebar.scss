@@ -134,39 +134,17 @@
       align-items: center;
       justify-content: center;
       padding: 0.75rem 0;
-      color: #4F4F4F;
-      transition: all 0.2s;
-      position: relative;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s;
       margin: 0 0.2rem;
+      color: #4F4F4F;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
 
-      svg {
-        width: 24px;
-        height: 24px;
-      }
-
-      &:hover {
-        background: #2E63CD;
-        color: #ffffff;
-
-        .nav-icon {
-          fill: #ffffff;
-        }
-      }
-
+      &:hover,
       &.active {
         background: #2E63CD;
         color: #ffffff;
-
-        .nav-icon {
-          fill: #ffffff;
-        }
-
       }
-
-
     }
   }
 
@@ -205,32 +183,6 @@
 
 
     padding: 0.5rem;
-
-    .back-button {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem 0.5rem;
-      background: none;
-      border-top: 1px solid #E5E7EB;
-      border-bottom: 1px solid #E5E7EB;
-      border-left: none;
-      border-right: none;
-      color: #6B7280;
-      font-size: 0.813rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: color 0.2s;
-
-      &:hover {
-        color: #1F2937;
-      }
-
-      svg {
-        width: 16px;
-        height: 16px;
-      }
-    }
 
     .client-info {
       display: flex;
@@ -297,6 +249,32 @@
         .nav-icon {
           fill: #ffffff;
         }
+      }
+    }
+  }
+
+  // Déconnexion portée par cette sidebar quand le rail de gauche est masqué.
+  .sidebar-footer {
+    padding: 1rem;
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: none;
+      border: none;
+      color: #6B7280;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #FEE2E2;
+        color: #DC2626;
       }
     }
   }
@@ -418,10 +396,6 @@
       width: 200px;
 
       .sidebar-header {
-        .back-button {
-          font-size: 0.75rem;
-        }
-
         .client-title {
           font-size: 1rem;
         }
@@ -445,28 +419,8 @@
     z-index: 1000;
   }
 
-  .sidebar-main {
+  // La marge ne compense le rail passé en `fixed` que s'il est réellement rendu.
+  .sidebar-mini + .sidebar-main {
     margin-left: 60px;
   }
-
-  .mini-nav-item {
-  border: none;
-  outline: none;
-  background: transparent;
-  box-shadow: none;
-  appearance: none;
-  -webkit-appearance: none;
-
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    box-shadow: none;
-  }
-
-  &.disabled {
-    pointer-events: none;
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-}
 }

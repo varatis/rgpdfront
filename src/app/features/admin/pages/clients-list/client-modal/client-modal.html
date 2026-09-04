@@ -1,0 +1,135 @@
+<div class="modal-backdrop" data-testid="_lst_modal_client" (click)="close()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 data-testid="_lib_modal_client_title">{{ modalTitle }}</h2>
+      <button
+        class="modal-close-btn"
+        type="button"
+        data-testid="_btn_modal_client_close"
+        title="Fermer"
+        (click)="close()">✕</button>
+    </div>
+
+    <!-- Form -->
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <div class="form-field">
+        <label for="inp_client_nom" data-testid="_lib_inp_client_nom">
+          Nom du client<span class="required"> *</span>
+        </label>
+        <input
+          id="inp_client_nom"
+          type="text"
+          data-testid="_inp_client_nom"
+          [class.invalid]="isInvalid('nom')"
+          formControlName="nom"
+          maxlength="255"
+          placeholder="Ex : Acme Co."
+          autocomplete="off" />
+        <span class="field-hint" data-testid="_lib_client_nom_aide">
+          Doit correspondre au groupe Keycloak du client : c'est la clé de cloisonnement des données.
+        </span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="inp_client_statut" data-testid="_lib_inp_client_statut">Statut</label>
+          <select id="inp_client_statut" data-testid="_inp_client_statut" formControlName="statut">
+            @for (statut of statuts; track statut.value) {
+              <option [value]="statut.value">{{ statut.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="inp_client_version" data-testid="_lib_inp_client_version">Version du registre</label>
+          <input
+            id="inp_client_version"
+            type="text"
+            data-testid="_inp_client_version"
+            [class.invalid]="isInvalid('version')"
+            formControlName="version"
+            maxlength="20"
+            placeholder="Ex : 3.25"
+            autocomplete="off" />
+        </div>
+
+        <div class="form-field">
+          <label for="inp_client_date_version" data-testid="_lib_inp_client_date_version">Date de version</label>
+          <input
+            id="inp_client_date_version"
+            type="date"
+            data-testid="_inp_client_date_version"
+            formControlName="dateVersion" />
+        </div>
+      </div>
+
+      <!-- Logo -->
+      <div class="form-field">
+        <label data-testid="_lib_inp_client_logo">Logo</label>
+
+        <div class="logo-zone">
+          @if (logoUrl) {
+            <img class="logo-apercu" [src]="logoUrl" alt="Aperçu du logo" data-testid="_val_client_logo_apercu" />
+          } @else {
+            <div class="logo-apercu logo-placeholder" data-testid="_val_client_logo_absent">
+              <mat-icon>image</mat-icon>
+            </div>
+          }
+
+          <div class="logo-actions">
+            <input
+              id="inp_client_logo"
+              class="logo-input"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              data-testid="_inp_client_logo"
+              (change)="onLogoSelected($event)" />
+            <label class="btn-outline" for="inp_client_logo" data-testid="_btn_choisir_logo">
+              {{ logoUrl ? 'Remplacer' : 'Choisir un fichier' }}
+            </label>
+
+            @if (logoUrl) {
+              <button
+                type="button"
+                class="btn-ghost danger"
+                data-testid="_btn_supprimer_logo"
+                (click)="supprimerLogo()">Retirer</button>
+            }
+
+            <span class="field-hint" data-testid="_lib_client_logo_aide">
+              PNG, JPEG ou WebP, 1 Mo maximum. Le SVG est refusé.
+            </span>
+          </div>
+        </div>
+
+        @if (logoErreur) {
+          <span class="field-error" data-testid="_lib_client_logo_erreur">{{ logoErreur }}</span>
+        }
+      </div>
+
+      @if (submitError) {
+        <div class="submit-error" data-testid="_lib_client_submit_erreur">{{ submitError }}</div>
+      }
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn-outline"
+          data-testid="_btn_annuler_client"
+          [disabled]="isSubmitting"
+          (click)="close()">Annuler</button>
+        <button
+          type="submit"
+          class="btn-primary"
+          data-testid="_btn_enregistrer_client"
+          [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Enregistrement…' : 'Enregistrer' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

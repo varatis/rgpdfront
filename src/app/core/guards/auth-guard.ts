@@ -41,7 +41,12 @@ export const adminGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  redirectToRoleHome(router, keycloakService.getUserRole());
+  const role = keycloakService.getUserRole();
+  if (role === 'superadmin') {
+    return true;
+  }
+
+  redirectToRoleHome(router, role);
   return false;
 };
 
