@@ -11,13 +11,15 @@ $color-bg-hover: #f9fafb;
 $color-bg-secondary: #f3f4f6;
 $color-danger: #ef4444;
 
-app-master-detail-layout {
+:host app-master-detail-layout {
   ::ng-deep .split-layout.split-active .left-section {
-    width: 80%;
+    width: auto;
+    flex: 1 1 auto;
   }
 
   ::ng-deep .right-section {
-    width: 20%;
+    width: 340px;
+    flex-shrink: 0;
   }
 }
 
