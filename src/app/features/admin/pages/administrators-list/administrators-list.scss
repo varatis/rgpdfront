@@ -11,6 +11,16 @@ $color-bg-hover: #f9fafb;
 $color-bg-secondary: #f3f4f6;
 $color-danger: #ef4444;
 
+app-master-detail-layout {
+  ::ng-deep .split-layout.split-active .left-section {
+    width: 80%;
+  }
+
+  ::ng-deep .right-section {
+    width: 20%;
+  }
+}
+
 .admins-list {
   flex: 1;
   min-height: 0;
@@ -37,6 +47,7 @@ $color-danger: #ef4444;
       color: $color-text-dark;
       font-size: 0.9rem;
       white-space: nowrap;
+      text-transform: uppercase;
     }
   }
 
