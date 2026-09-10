@@ -1,0 +1,72 @@
+<div class="filtres-container">
+
+  <div class="filtres-body">
+
+    <div class="filter-control">
+      <label class="filter-label" for="filtre_admin_nom" data-testid="_lib_filtre_admin_nom">
+        Nom
+      </label>
+      <mat-form-field class="filter-field" appearance="outline">
+        <input
+          matInput
+          id="filtre_admin_nom"
+          type="text"
+          data-testid="_inp_filtre_admin_nom"
+          [(ngModel)]="nom"
+          placeholder="Rechercher un nom..."
+          autocomplete="off"
+          (keyup.enter)="onApply()" />
+      </mat-form-field>
+    </div>
+
+    <div class="filter-control">
+      <label class="filter-label" for="filtre_admin_prenom" data-testid="_lib_filtre_admin_prenom">
+        Prénom
+      </label>
+      <mat-form-field class="filter-field" appearance="outline">
+        <input
+          matInput
+          id="filtre_admin_prenom"
+          type="text"
+          data-testid="_inp_filtre_admin_prenom"
+          [(ngModel)]="prenom"
+          placeholder="Rechercher un prénom..."
+          autocomplete="off"
+          (keyup.enter)="onApply()" />
+      </mat-form-field>
+    </div>
+
+    <div class="filter-control">
+      <label class="filter-label" for="filtre_admin_client" data-testid="_lib_filtre_admin_client">
+        Client
+      </label>
+      <mat-form-field class="filter-field" appearance="outline">
+        <input
+          matInput
+          id="filtre_admin_client"
+          type="text"
+          data-testid="_inp_filtre_admin_client"
+          [(ngModel)]="client"
+          placeholder="Rechercher un client..."
+          autocomplete="off"
+          (keyup.enter)="onApply()" />
+      </mat-form-field>
+    </div>
+
+  </div>
+
+  <div class="filtres-footer">
+    <button mat-button type="button" data-testid="_btn_reset_filtre_admin" (click)="onReset()">
+      Réinitialiser les filtres
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      data-testid="_btn_apply_filtre_admin"
+      (click)="onApply()">
+      <mat-icon aria-hidden="true">filter_alt</mat-icon>
+      Appliquer les filtres
+    </button>
+  </div>
+</div>
