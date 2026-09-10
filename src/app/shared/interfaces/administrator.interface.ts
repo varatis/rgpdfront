@@ -34,6 +34,7 @@ export interface AdministratorCreatePayload {
   clientId: string;
   groupe: string;
   actif: boolean;
+  motDePasse: string;
 }
 
 export interface AdministratorUpdatePayload {
@@ -44,6 +45,15 @@ export interface AdministratorUpdatePayload {
   clientId?: string | null;
   groupe?: string | null;
   actif: boolean;
+  motDePasse?: string | null;
+}
+
+export interface AdministratorUpdatePatch {
+  nom?: string;
+  prenom?: string;
+  email?: string;
+  roles?: AdministratorRole[];
+  motDePasse?: string | null;
 }
 
 export function utilisateurToAdministrator(dto: UtilisateurApi): Administrator {
@@ -64,7 +74,7 @@ export function utilisateurToAdministrator(dto: UtilisateurApi): Administrator {
 
 export function administratorToUpdatePayload(
   admin: Administrator,
-  patch?: Partial<Pick<Administrator, 'nom' | 'prenom' | 'email' | 'roles'>>
+  patch?: AdministratorUpdatePatch
 ): AdministratorUpdatePayload {
   return {
     nom: patch?.nom ?? admin.nom,
@@ -73,6 +83,7 @@ export function administratorToUpdatePayload(
     roles: [...(patch?.roles ?? admin.roles)],
     clientId: admin.clientId ?? null,
     groupe: admin.clientNom ?? null,
-    actif: admin.isActive
+    actif: admin.isActive,
+    motDePasse: patch?.motDePasse ?? null
   };
 }

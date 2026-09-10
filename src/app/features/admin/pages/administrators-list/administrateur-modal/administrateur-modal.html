@@ -81,6 +81,57 @@
         </div>
       }
 
+      <div class="form-field">
+        <label for="inp_admin_motdepasse" data-testid="_lib_inp_admin_motdepasse">
+          @if (isEditMode) {
+            Réinitialiser le mot de passe
+          } @else {
+            Mot de passe initial<span class="required"> *</span>
+          }
+        </label>
+        <div class="password-row">
+          <input
+            id="inp_admin_motdepasse"
+            [type]="motDePasseVisible ? 'text' : 'password'"
+            data-testid="_inp_admin_motdepasse"
+            [class.invalid]="isInvalid('motDePasse')"
+            formControlName="motDePasse"
+            maxlength="128"
+            [placeholder]="isEditMode ? 'Vide = inchangé' : '8 caractères minimum'"
+            autocomplete="new-password" />
+          <button
+            type="button"
+            class="icon-btn"
+            data-testid="_btn_admin_motdepasse_visibilite"
+            [title]="motDePasseVisible ? 'Masquer' : 'Afficher'"
+            (click)="basculerVisibiliteMotDePasse()">
+            <mat-icon>{{ motDePasseVisible ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <button
+            type="button"
+            class="btn-outline"
+            data-testid="_btn_admin_motdepasse_generer"
+            (click)="genererMotDePasse()">
+            <mat-icon>key</mat-icon>
+            Générer
+          </button>
+        </div>
+        @if (motDePasseTropCourt) {
+          <span class="field-error" data-testid="_lib_admin_motdepasse_erreur">
+            Le mot de passe doit contenir au moins 8 caractères.
+          </span>
+        }
+        @if (isEditMode) {
+          <span class="field-hint" data-testid="_lib_admin_motdepasse_aide">
+            Laisser vide pour conserver le mot de passe actuel.
+          </span>
+        } @else {
+          <span class="field-hint" data-testid="_lib_admin_motdepasse_aide">
+            Temporaire : l'utilisateur devra le remplacer à sa première connexion.
+          </span>
+        }
+      </div>
+
       @if (!isEditMode) {
         <div class="form-field">
           <label for="inp_admin_client" data-testid="_lib_inp_admin_client">

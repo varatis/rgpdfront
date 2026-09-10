@@ -9,6 +9,7 @@ import {
   Validators
 } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -32,6 +33,7 @@ import {
     CommonModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
@@ -58,6 +60,7 @@ export class AdministrateurModal implements OnInit {
   clients: Client[] = [];
   clientsFiltres: Client[] = [];
   clientsErreur: string | null = null;
+  motDePasseVisible = false;
 
   get isEditMode(): boolean {
     return !!this.admin;
@@ -78,6 +81,11 @@ export class AdministrateurModal implements OnInit {
     return !!identifiant && identifiant !== email;
   }
 
+  get motDePasseTropCourt(): boolean {
+    const champ = this.form.get('motDePasse');
+    return !!champ && champ.touched && champ.hasError('minlength');
+  }
+
   ngOnInit(): void {
     const admin = this.admin;
 
@@ -88,6 +96,12 @@ export class AdministrateurModal implements OnInit {
       clientNom: [
         admin?.clientNom ?? '',
         this.isEditMode ? [] : [Validators.required, this.clientConnu.bind(this)]
+      ],
+      motDePasse: [
+        '',
+        this.isEditMode
+          ? [Validators.minLength(8), Validators.maxLength(128)]
+          : [Validators.required, Validators.minLength(8), Validators.maxLength(128)]
       ],
       roleUser: [this.admin?.roles.includes('user') ?? false],
       roleAdmin: [this.admin?.roles.includes('admin') ?? false]
@@ -120,6 +134,19 @@ export class AdministrateurModal implements OnInit {
 
   onRoleChange(): void {
     this.rolesErreur = null;
+  }
+
+  basculerVisibiliteMotDePasse(): void {
+    this.motDePasseVisible = !this.motDePasseVisible;
+  }
+
+  genererMotDePasse(): void {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*';
+    const tirage = new Uint32Array(16);
+    crypto.getRandomValues(tirage);
+    const motDePasse = Array.from(tirage, valeur => alphabet[valeur % alphabet.length]).join('');
+    this.motDePasseVisible = true;
+    this.form.get('motDePasse')?.setValue(motDePasse);
   }
 
   onSubmit(): void {
@@ -190,17 +217,20 @@ export class AdministrateurModal implements OnInit {
       roles: this.rolesSelectionnes(),
       clientId: String(client?.id ?? ''),
       groupe: nomClient,
-      actif: true
+      actif: true,
+      motDePasse: valeurs.motDePasse ?? ''
     };
   }
 
   private buildUpdatePayload(admin: Administrator): AdministratorUpdatePayload {
     const valeurs = this.form.getRawValue();
+    const saisie = valeurs.motDePasse ?? '';
 
     return administratorToUpdatePayload(admin, {
       nom: (valeurs.nom ?? '').trim(),
       prenom: (valeurs.prenom ?? '').trim(),
-      email: (valeurs.email ?? '').trim()
+      email: (valeurs.email ?? '').trim(),
+      motDePasse: saisie.trim() ? saisie : null
     });
   }
 
