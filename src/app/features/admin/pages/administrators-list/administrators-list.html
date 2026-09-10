@@ -7,7 +7,6 @@
   (actionClick)="onHeaderAction($event)"
   (detailClose)="onCloseDetail()">
 
-  @if (administrateursPage.length > 0) {
   <div slot="list-items" class="admins-list" data-testid="_lst_administrateurs_list">
     <div class="table-container">
       <table class="admin-table" data-testid="_lst_administrateurs_table">
@@ -34,11 +33,13 @@
                 } @else {
                   <div class="roles-cell">
                     <mat-checkbox
+                      class="role-checkbox"
                       [checked]="possedeRole(a, 'user')"
                       [disabled]="rolesEnCours(a.id)"
                       [attr.data-testid]="'_chk_admin_role_user_' + a.id"
                       (change)="onToggleRole(a, 'user', $event.checked)">User</mat-checkbox>
                     <mat-checkbox
+                      class="role-checkbox"
                       [checked]="possedeRole(a, 'admin')"
                       [disabled]="rolesEnCours(a.id)"
                       [attr.data-testid]="'_chk_admin_role_admin_' + a.id"
@@ -71,7 +72,6 @@
       </table>
     </div>
   </div>
-  }
 
   @if (isLoading && administrateursFiltres.length === 0) {
     <div slot="empty-state" class="empty-state">

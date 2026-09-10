@@ -109,10 +109,12 @@
           </span>
           <div class="roles-group">
             <mat-checkbox
+              class="role-checkbox"
               formControlName="roleUser"
               data-testid="_chk_admin_create_user"
               (change)="onRoleChange()">User</mat-checkbox>
             <mat-checkbox
+              class="role-checkbox"
               formControlName="roleAdmin"
               data-testid="_chk_admin_create_admin"
               (change)="onRoleChange()">Admin</mat-checkbox>

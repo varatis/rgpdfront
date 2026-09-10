@@ -50,9 +50,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 14px 24px;
+  flex-wrap: nowrap;
+  gap: 8px;
+  padding: 14px 16px;
   border-top: 1px solid #eef0f3;
   margin-top: auto;
   flex-shrink: 0;

@@ -112,6 +112,17 @@ $color-danger: #ef4444;
   flex-wrap: wrap;
 }
 
+.role-checkbox {
+  --mdc-checkbox-container-shape: 6px;
+  --mdc-checkbox-selected-icon-color: #2E63CD;
+  --mdc-checkbox-selected-hover-icon-color: #2E63CD;
+  --mdc-checkbox-selected-focus-icon-color: #2E63CD;
+  --mdc-checkbox-selected-pressed-icon-color: #2E63CD;
+  --mdc-checkbox-selected-checkmark-color: #ffffff;
+  --mdc-checkbox-unselected-hover-icon-color: #2E63CD;
+  --mdc-checkbox-unselected-focus-icon-color: #2E63CD;
+}
+
 .role-badge {
   display: inline-block;
   padding: 0.15rem 0.6rem;

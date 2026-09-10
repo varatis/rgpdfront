@@ -48,7 +48,6 @@ export class AdministratorsList implements OnInit {
   actions: HeaderAction[] = [
     {
       label: 'Ajouter un administrateur',
-      icon: 'add',
       action: 'create',
       color: 'primary',
       testId: '_btn_ajouter_administrateur'
