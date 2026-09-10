@@ -238,7 +238,7 @@ export class ClientsList implements OnInit, OnDestroy {
       return;
     }
 
-    if (!window.confirm(`Supprimer le client ${client.nom} ?`)) {
+    if (!window.confirm(`Supprimer le client ${client.nom} ? Tous ses utilisateurs seront également supprimés.`)) {
       return;
     }
 

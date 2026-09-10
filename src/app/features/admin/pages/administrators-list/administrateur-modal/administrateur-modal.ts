@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { startWith } from 'rxjs/operators';
+import { startWith, switchMap } from 'rxjs/operators';
 
 import { ApiService } from '../../../../../services/api.service';
 import { Client } from '../../../../../core/models/client.model';
@@ -70,6 +70,12 @@ export class AdministrateurModal implements OnInit {
   get emailInvalide(): boolean {
     const champ = this.form.get('email');
     return !!champ && champ.touched && champ.hasError('email') && !champ.hasError('required');
+  }
+
+  get identifiantDiffere(): boolean {
+    const identifiant = (this.admin?.identifiant ?? '').trim().toLowerCase();
+    const email = (this.form.get('email')?.value ?? '').trim().toLowerCase();
+    return !!identifiant && identifiant !== email;
   }
 
   ngOnInit(): void {
@@ -151,19 +157,24 @@ export class AdministrateurModal implements OnInit {
         }
       });
     } else {
-      this.apiService.createAdministrator(this.buildCreatePayload()).subscribe({
-        next: admin => {
-          this.isSubmitting = false;
-          this.notifier('Administrateur créé avec succès', 'success');
-          this.saved.emit(admin);
-          this.closed.emit();
-        },
-        error: err => {
-          this.isSubmitting = false;
-          this.submitError = this.messageErreur(err);
-          this.notifier('Erreur lors de la création de l\u2019administrateur', 'error');
-        }
-      });
+      const payload = this.buildCreatePayload();
+
+      this.apiService
+        .createAdministrator(payload)
+        .pipe(switchMap(created => this.apiService.updateAdministrator(created.id, payload)))
+        .subscribe({
+          next: admin => {
+            this.isSubmitting = false;
+            this.notifier('Administrateur créé avec succès', 'success');
+            this.saved.emit(admin);
+            this.closed.emit();
+          },
+          error: err => {
+            this.isSubmitting = false;
+            this.submitError = this.messageErreur(err);
+            this.notifier('Erreur lors de la création de l\u2019administrateur', 'error');
+          }
+        });
     }
   }
 
@@ -178,6 +189,7 @@ export class AdministrateurModal implements OnInit {
       email: (valeurs.email ?? '').trim(),
       roles: this.rolesSelectionnes(),
       clientId: String(client?.id ?? ''),
+      groupe: nomClient,
       actif: true
     };
   }
@@ -255,14 +267,29 @@ export class AdministrateurModal implements OnInit {
   }
 
   private messageErreur(err: unknown): string {
-    const erreur = err as { status?: number; error?: string | { detail?: string } };
+    const erreur = err as {
+      status?: number;
+      error?: string | { detail?: string; message?: string };
+    };
 
     if (erreur?.status === 409) {
       return 'Un administrateur avec cette adresse mail existe déjà.';
     }
 
-    if (typeof erreur?.error === 'object' && erreur.error?.detail) {
-      return erreur.error.detail;
+    const corps = erreur?.error;
+
+    if (typeof corps === 'string' && corps.trim()) {
+      return corps.trim();
+    }
+
+    if (typeof corps === 'object' && corps) {
+      if (corps.detail) {
+        return corps.detail;
+      }
+
+      if (corps.message) {
+        return corps.message;
+      }
     }
 
     return 'Une erreur est survenue. Veuillez réessayer.';

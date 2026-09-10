@@ -5,6 +5,7 @@ export interface Administrator {
   nom: string;
   prenom: string;
   email: string;
+  identifiant?: string;
   clientId?: string | null;
   clientNom?: string | null;
   roles: AdministratorRole[];
@@ -31,6 +32,7 @@ export interface AdministratorCreatePayload {
   email: string;
   roles: AdministratorRole[];
   clientId: string;
+  groupe: string;
   actif: boolean;
 }
 
@@ -40,6 +42,7 @@ export interface AdministratorUpdatePayload {
   email: string;
   roles: AdministratorRole[];
   clientId?: string | null;
+  groupe?: string | null;
   actif: boolean;
 }
 
@@ -49,6 +52,7 @@ export function utilisateurToAdministrator(dto: UtilisateurApi): Administrator {
     nom: dto.nom ?? '',
     prenom: dto.prenom ?? '',
     email: dto.email ?? '',
+    identifiant: dto.identifiant ?? '',
     clientId: dto.clientId ?? null,
     clientNom: dto.clientNom ?? null,
     roles: (dto.roles ?? []).filter((role): role is AdministratorRole =>
@@ -68,6 +72,7 @@ export function administratorToUpdatePayload(
     email: patch?.email ?? admin.email,
     roles: [...(patch?.roles ?? admin.roles)],
     clientId: admin.clientId ?? null,
+    groupe: admin.clientNom ?? null,
     actif: admin.isActive
   };
 }

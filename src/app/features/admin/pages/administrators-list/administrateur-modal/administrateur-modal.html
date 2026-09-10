@@ -65,6 +65,22 @@
         }
       </div>
 
+      @if (isEditMode) {
+        <div class="form-field">
+          <span class="group-label" data-testid="_lib_inp_admin_identifiant">
+            Identifiant de connexion
+          </span>
+          <div class="readonly-value" data-testid="_val_admin_identifiant">
+            {{ admin?.identifiant || '—' }}
+          </div>
+          @if (identifiantDiffere) {
+            <span class="field-hint" data-testid="_lib_admin_identifiant_aide">
+              L'identifiant conserve l'email de création même si l'adresse mail est modifiée.
+            </span>
+          }
+        </div>
+      }
+
       @if (!isEditMode) {
         <div class="form-field">
           <label for="inp_admin_client" data-testid="_lib_inp_admin_client">
