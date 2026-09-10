@@ -12,7 +12,8 @@ import { Pagination } from '../../../../shared/components/pagination/pagination'
 import { ApiService } from '../../../../services/api.service';
 import {
   Administrator,
-  AdministratorRole
+  AdministratorRole,
+  administratorToUpdatePayload
 } from '../../../../shared/interfaces/administrator.interface';
 import {
   FILTRE_ADMINISTRATEUR_VIDE,
@@ -201,7 +202,7 @@ export class AdministratorsList implements OnInit {
     this.rolesEnAttente.add(admin.id);
 
     this.apiService
-      .updateAdministrator(admin.id, { roles: suivants })
+      .updateAdministrator(admin.id, administratorToUpdatePayload(admin, { roles: suivants }))
       .pipe(
         finalize(() => this.rolesEnAttente.delete(admin.id)),
         takeUntilDestroyed(this.destroyRef)

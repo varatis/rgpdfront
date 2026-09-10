@@ -21,7 +21,8 @@ import {
   Administrator,
   AdministratorCreatePayload,
   AdministratorRole,
-  AdministratorUpdatePayload
+  AdministratorUpdatePayload,
+  administratorToUpdatePayload
 } from '../../../../../shared/interfaces/administrator.interface';
 
 @Component({
@@ -136,7 +137,7 @@ export class AdministrateurModal implements OnInit {
     this.rolesErreur = null;
 
     if (this.admin) {
-      this.apiService.updateAdministrator(this.admin.id, this.buildUpdatePayload()).subscribe({
+      this.apiService.updateAdministrator(this.admin.id, this.buildUpdatePayload(this.admin)).subscribe({
         next: admin => {
           this.isSubmitting = false;
           this.notifier('Administrateur modifié avec succès', 'success');
@@ -168,24 +169,27 @@ export class AdministrateurModal implements OnInit {
 
   private buildCreatePayload(): AdministratorCreatePayload {
     const valeurs = this.form.getRawValue();
+    const nomClient = (valeurs.clientNom ?? '').trim();
+    const client = this.clients.find(item => this.normaliser(item.nom) === this.normaliser(nomClient));
 
     return {
       nom: (valeurs.nom ?? '').trim(),
       prenom: (valeurs.prenom ?? '').trim(),
       email: (valeurs.email ?? '').trim(),
-      clientNom: (valeurs.clientNom ?? '').trim(),
-      roles: this.rolesSelectionnes()
+      roles: this.rolesSelectionnes(),
+      clientId: String(client?.id ?? ''),
+      actif: true
     };
   }
 
-  private buildUpdatePayload(): AdministratorUpdatePayload {
+  private buildUpdatePayload(admin: Administrator): AdministratorUpdatePayload {
     const valeurs = this.form.getRawValue();
 
-    return {
+    return administratorToUpdatePayload(admin, {
       nom: (valeurs.nom ?? '').trim(),
       prenom: (valeurs.prenom ?? '').trim(),
       email: (valeurs.email ?? '').trim()
-    };
+    });
   }
 
   private rolesSelectionnes(): AdministratorRole[] {

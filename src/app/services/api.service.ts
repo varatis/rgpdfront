@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { ImportApercu, InfoFichier } from '../core/models/info-fichier.model';
 import { Historisation, HistorisationCreationPayload } from '../core/models/historisation.model';
@@ -28,7 +29,9 @@ import { FiltreViolationPayload } from '../core/models/filtre-violation.payload'
 import {
   Administrator,
   AdministratorCreatePayload,
-  AdministratorUpdatePayload
+  AdministratorUpdatePayload,
+  UtilisateurApi,
+  utilisateurToAdministrator
 } from '../shared/interfaces/administrator.interface';
 
 @Injectable({
@@ -195,19 +198,25 @@ export class ApiService {
   }
 
   getAdministrators(): Observable<Administrator[]> {
-    return this.http.get<Administrator[]>(this.apiUrl + "administrateurs");
+    return this.http.get<UtilisateurApi[]>(this.apiUrl + "utilisateurs").pipe(
+      map(utilisateurs => (utilisateurs ?? []).map(utilisateurToAdministrator))
+    );
   }
 
   createAdministrator(payload: AdministratorCreatePayload): Observable<Administrator> {
-    return this.http.post<Administrator>(this.apiUrl + "administrateurs", payload);
+    return this.http.post<UtilisateurApi>(this.apiUrl + "utilisateurs", payload).pipe(
+      map(utilisateurToAdministrator)
+    );
   }
 
   updateAdministrator(id: string, payload: AdministratorUpdatePayload): Observable<Administrator> {
-    return this.http.put<Administrator>(this.apiUrl + "administrateurs/" + id, payload);
+    return this.http.put<UtilisateurApi>(this.apiUrl + "utilisateurs/" + id, payload).pipe(
+      map(utilisateurToAdministrator)
+    );
   }
 
   deleteAdministrator(id: string): Observable<void> {
-    return this.http.delete<void>(this.apiUrl + "administrateurs/" + id);
+    return this.http.delete<void>(this.apiUrl + "utilisateurs/" + id);
   }
 
   getPreconisations(
