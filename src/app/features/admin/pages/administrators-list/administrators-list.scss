@@ -54,6 +54,39 @@ $color-danger: #ef4444;
       font-size: 0.9rem;
       white-space: nowrap;
       text-transform: uppercase;
+      user-select: none;
+
+      &.sortable {
+        cursor: pointer;
+
+        &:hover {
+          color: $color-text-medium;
+        }
+      }
+    }
+  }
+
+  .header-content {
+    display: block;
+  }
+
+  .header-label {
+    overflow-wrap: break-word;
+  }
+
+  .sort-icon {
+    display: inline-block;
+    margin-left: 6px;
+    vertical-align: middle;
+    color: #9CA3AF;
+    transition: transform 0.15s ease, color 0.15s ease;
+
+    &.active {
+      color: #2563EB;
+    }
+
+    &.desc {
+      transform: rotate(180deg);
     }
   }
 

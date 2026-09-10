@@ -71,6 +71,9 @@ export class AdministratorsList implements OnInit {
   currentPage = 1;
   readonly pageSize = 20;
 
+  sortField: string | null = null;
+  sortDirection: 'asc' | 'desc' = 'asc';
+
   editionOuverte = false;
   adminAEditer: Administrator | null = null;
   suppressionId: string | null = null;
@@ -85,14 +88,27 @@ export class AdministratorsList implements OnInit {
     return this.appliquerFiltres(this.administrateurs);
   }
 
+  get administrateursTries(): Administrator[] {
+    if (!this.sortField) {
+      return this.administrateursFiltres;
+    }
+
+    const colonne = this.sortField;
+    const facteur = this.sortDirection === 'asc' ? 1 : -1;
+
+    return [...this.administrateursFiltres].sort(
+      (a, b) => facteur * this.valeurTri(a, colonne).localeCompare(this.valeurTri(b, colonne), 'fr', { sensitivity: 'base' })
+    );
+  }
+
   get totalPages(): number {
-    return Math.max(1, Math.ceil(this.administrateursFiltres.length / this.pageSize));
+    return Math.max(1, Math.ceil(this.administrateursTries.length / this.pageSize));
   }
 
   get administrateursPage(): Administrator[] {
     const debut = (this.currentPage - 1) * this.pageSize;
 
-    return this.administrateursFiltres.slice(debut, debut + this.pageSize);
+    return this.administrateursTries.slice(debut, debut + this.pageSize);
   }
 
   get isDetailOpen(): boolean {
@@ -181,6 +197,17 @@ export class AdministratorsList implements OnInit {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
     }
+  }
+
+  onSort(colonne: string): void {
+    if (this.sortField === colonne) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = colonne;
+      this.sortDirection = 'asc';
+    }
+
+    this.currentPage = 1;
   }
 
   onToggleRole(admin: Administrator, role: AdministratorRole, checked: boolean): void {
@@ -307,6 +334,21 @@ export class AdministratorsList implements OnInit {
 
       return true;
     });
+  }
+
+  private valeurTri(admin: Administrator, colonne: string): string {
+    switch (colonne) {
+      case 'prenom':
+        return admin.prenom;
+      case 'email':
+        return admin.email;
+      case 'client':
+        return admin.clientNom ?? '';
+      case 'role':
+        return this.estSuperAdmin(admin) ? 'super-admin' : [...admin.roles].sort().join(',');
+      default:
+        return admin.nom;
+    }
   }
 
   private normaliser(valeur?: string | null): string {

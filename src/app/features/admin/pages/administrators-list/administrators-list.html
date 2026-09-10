@@ -16,11 +16,131 @@
       <table class="admin-table" data-testid="_lst_administrateurs_table">
         <thead>
           <tr>
-            <th data-testid="_lib_col_nom">Nom</th>
-            <th data-testid="_lib_col_prenom">Prénom</th>
-            <th data-testid="_lib_col_email">Adresse mail</th>
-            <th data-testid="_lib_col_client">Client</th>
-            <th data-testid="_lib_col_role">Rôle</th>
+            <th
+              class="sortable"
+              title="Nom"
+              data-testid="_btn_sort_nom"
+              (click)="onSort('nom')">
+              <span class="header-content">
+                <span class="header-label">Nom</span>
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField === 'nom'"
+                  [class.desc]="sortField === 'nom' && sortDirection === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </th>
+            <th
+              class="sortable"
+              title="Prénom"
+              data-testid="_btn_sort_prenom"
+              (click)="onSort('prenom')">
+              <span class="header-content">
+                <span class="header-label">Prénom</span>
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField === 'prenom'"
+                  [class.desc]="sortField === 'prenom' && sortDirection === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </th>
+            <th
+              class="sortable"
+              title="Adresse mail"
+              data-testid="_btn_sort_email"
+              (click)="onSort('email')">
+              <span class="header-content">
+                <span class="header-label">Adresse mail</span>
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField === 'email'"
+                  [class.desc]="sortField === 'email' && sortDirection === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </th>
+            <th
+              class="sortable"
+              title="Client"
+              data-testid="_btn_sort_client"
+              (click)="onSort('client')">
+              <span class="header-content">
+                <span class="header-label">Client</span>
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField === 'client'"
+                  [class.desc]="sortField === 'client' && sortDirection === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </th>
+            <th
+              class="sortable"
+              title="Rôle"
+              data-testid="_btn_sort_role"
+              (click)="onSort('role')">
+              <span class="header-content">
+                <span class="header-label">Rôle</span>
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField === 'role'"
+                  [class.desc]="sortField === 'role' && sortDirection === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </th>
             <th class="actions-col">Actions</th>
           </tr>
         </thead>
