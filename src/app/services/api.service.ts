@@ -25,6 +25,11 @@ import {
   ViolationStatut
 } from '../core/models/violation.model';
 import { FiltreViolationPayload } from '../core/models/filtre-violation.payload';
+import {
+  Administrator,
+  AdministratorCreatePayload,
+  AdministratorUpdatePayload
+} from '../shared/interfaces/administrator.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -187,6 +192,22 @@ export class ApiService {
 
   deleteClientLogo(clientId: string): Observable<void> {
     return this.http.delete<void>(this.apiUrl + "clients/" + clientId + "/logo");
+  }
+
+  getAdministrators(): Observable<Administrator[]> {
+    return this.http.get<Administrator[]>(this.apiUrl + "administrateurs");
+  }
+
+  createAdministrator(payload: AdministratorCreatePayload): Observable<Administrator> {
+    return this.http.post<Administrator>(this.apiUrl + "administrateurs", payload);
+  }
+
+  updateAdministrator(id: string, payload: AdministratorUpdatePayload): Observable<Administrator> {
+    return this.http.put<Administrator>(this.apiUrl + "administrateurs/" + id, payload);
+  }
+
+  deleteAdministrator(id: string): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + "administrateurs/" + id);
   }
 
   getPreconisations(

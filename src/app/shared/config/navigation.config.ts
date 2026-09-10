@@ -6,6 +6,12 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
     route: 'clients',
     icon: 'clients',
     roles: []
+  },
+  {
+    label: 'Administrateurs',
+    route: 'administrators',
+    icon: 'administrators',
+    roles: []
   }
 ];
 

@@ -1,0 +1,149 @@
+<div class="modal-backdrop" data-testid="_lst_modal_administrateur" (click)="onBackdropClick($event)">
+  <div class="modal-panel">
+
+    <div class="modal-header">
+      <h2 data-testid="_lib_modal_administrateur_title">{{ modalTitle }}</h2>
+      <button
+        class="modal-close-btn"
+        type="button"
+        data-testid="_btn_modal_administrateur_close"
+        title="Fermer"
+        (click)="close()">✕</button>
+    </div>
+
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="inp_admin_nom" data-testid="_lib_inp_admin_nom">
+            Nom<span class="required"> *</span>
+          </label>
+          <input
+            id="inp_admin_nom"
+            type="text"
+            data-testid="_inp_admin_nom"
+            [class.invalid]="isInvalid('nom')"
+            formControlName="nom"
+            maxlength="100"
+            placeholder="Ex : Dupont"
+            autocomplete="off" />
+        </div>
+
+        <div class="form-field">
+          <label for="inp_admin_prenom" data-testid="_lib_inp_admin_prenom">
+            Prénom<span class="required"> *</span>
+          </label>
+          <input
+            id="inp_admin_prenom"
+            type="text"
+            data-testid="_inp_admin_prenom"
+            [class.invalid]="isInvalid('prenom')"
+            formControlName="prenom"
+            maxlength="100"
+            placeholder="Ex : Marie"
+            autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="inp_admin_email" data-testid="_lib_inp_admin_email">
+          Adresse mail<span class="required"> *</span>
+        </label>
+        <input
+          id="inp_admin_email"
+          type="email"
+          data-testid="_inp_admin_email"
+          [class.invalid]="isInvalid('email')"
+          formControlName="email"
+          maxlength="255"
+          placeholder="Ex : marie.dupont@exemple.fr"
+          autocomplete="off" />
+        @if (emailInvalide) {
+          <span class="field-error" data-testid="_lib_admin_email_erreur">
+            Veuillez saisir une adresse mail valide.
+          </span>
+        }
+      </div>
+
+      @if (!isEditMode) {
+        <div class="form-field">
+          <label for="inp_admin_client" data-testid="_lib_inp_admin_client">
+            Client<span class="required"> *</span>
+          </label>
+          <mat-form-field class="client-field" appearance="outline">
+            <input
+              matInput
+              id="inp_admin_client"
+              type="text"
+              data-testid="_inp_admin_client"
+              formControlName="clientNom"
+              [matAutocomplete]="clientsAuto"
+              placeholder="Rechercher un client..."
+              autocomplete="off" />
+            <mat-autocomplete #clientsAuto="matAutocomplete">
+              @for (client of clientsFiltres; track client.id) {
+                <mat-option [value]="client.nom" [attr.data-testid]="'_opt_admin_client_' + client.id">
+                  {{ client.nom }}
+                </mat-option>
+              }
+              @if (clientsFiltres.length === 0) {
+                <mat-option disabled>Aucun client trouvé.</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+          @if (isInvalid('clientNom')) {
+            <span class="field-error" data-testid="_lib_admin_client_erreur">
+              Veuillez choisir un client de la liste.
+            </span>
+          }
+          @if (clientsErreur) {
+            <span class="field-error" data-testid="_lib_admin_clients_chargement_erreur">
+              {{ clientsErreur }}
+            </span>
+          }
+        </div>
+
+        <div class="form-field">
+          <span class="group-label" data-testid="_lib_inp_admin_roles">
+            Rôles<span class="required"> *</span>
+          </span>
+          <div class="roles-group">
+            <mat-checkbox
+              class="role-checkbox"
+              formControlName="roleUser"
+              data-testid="_chk_admin_create_user"
+              (change)="onRoleChange()">User</mat-checkbox>
+            <mat-checkbox
+              class="role-checkbox"
+              formControlName="roleAdmin"
+              data-testid="_chk_admin_create_admin"
+              (change)="onRoleChange()">Admin</mat-checkbox>
+          </div>
+          @if (rolesErreur) {
+            <span class="field-error" data-testid="_lib_admin_roles_erreur">{{ rolesErreur }}</span>
+          }
+        </div>
+      }
+
+      @if (submitError) {
+        <div class="submit-error" data-testid="_lib_admin_submit_erreur">{{ submitError }}</div>
+      }
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn-outline"
+          data-testid="_btn_annuler_administrateur"
+          [disabled]="isSubmitting"
+          (click)="close()">Annuler</button>
+        <button
+          type="submit"
+          class="btn-primary"
+          data-testid="_btn_enregistrer_administrateur"
+          [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Enregistrement…' : 'Enregistrer' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

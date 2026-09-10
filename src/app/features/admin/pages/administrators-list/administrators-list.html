@@ -1,47 +1,69 @@
-<div class="administrateurs-layout" [class.details-open]="selectedAdmin">
-  <div class="administrateurs-page">
+<app-master-detail-layout
+  [title]="pageTitle"
+  [icon]="pageIcon"
+  [actions]="actions"
+  [isDetailOpen]="isDetailOpen"
+  [detailTitle]="detailTitle"
+  (actionClick)="onHeaderAction($event)"
+  (detailClose)="onCloseDetail()">
 
-    <!-- HEADER -->
-    <div class="page-header">
-      <div class="header-left">
-        <div class="icon-wrapper">
-          <mat-icon class="nav-icon" >admin_panel_settings</mat-icon>
-        </div>
-        <h1 class="page-title" data-testid="_lib_titre_administrateurs">Administrateurs</h1>
-      </div>
-
-      <div class="header-actions">
-        <button class="btn-filter" data-testid="_btn_filtres_administrateurs" (click)="onFilterAdmins()">
-          <mat-icon >tune</mat-icon>
-          Filtres
-        </button>
-        <button class="btn-primary" data-testid="_btn_ajouter_administrateur" (click)="onCreateAdmin()">+ Ajouter un administrateur</button>
-      </div>
-    </div>
-
-    <!-- TABLE DES ADMINISTRATEURS -->
+  <div slot="list-items" class="admins-list" data-testid="_lst_administrateurs_list">
     <div class="table-container">
       <table class="admin-table" data-testid="_lst_administrateurs_table">
         <thead>
           <tr>
             <th data-testid="_lib_col_nom">Nom</th>
             <th data-testid="_lib_col_prenom">Prénom</th>
-            <th data-testid="_lib_col_email">Email</th>
+            <th data-testid="_lib_col_email">Adresse mail</th>
+            <th data-testid="_lib_col_client">Client</th>
+            <th data-testid="_lib_col_role">Rôle</th>
             <th class="actions-col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          @for (a of administrateurs; track a.id) {
+          @for (a of administrateursPage; track a.id) {
             <tr [attr.data-testid]="'_lst_administrateurs_row_' + a.id">
               <td data-testid="_val_admin_nom">{{ a.nom }}</td>
               <td data-testid="_val_admin_prenom">{{ a.prenom }}</td>
               <td data-testid="_val_admin_email">{{ a.email }}</td>
+              <td data-testid="_val_admin_client">{{ a.clientNom || '—' }}</td>
+              <td data-testid="_val_admin_roles">
+                @if (estSuperAdmin(a)) {
+                  <span class="role-badge super">Super admin</span>
+                } @else {
+                  <div class="roles-cell">
+                    <mat-checkbox
+                      class="role-checkbox"
+                      [checked]="possedeRole(a, 'user')"
+                      [disabled]="rolesEnCours(a.id)"
+                      [attr.data-testid]="'_chk_admin_role_user_' + a.id"
+                      (change)="onToggleRole(a, 'user', $event.checked)">User</mat-checkbox>
+                    <mat-checkbox
+                      class="role-checkbox"
+                      [checked]="possedeRole(a, 'admin')"
+                      [disabled]="rolesEnCours(a.id)"
+                      [attr.data-testid]="'_chk_admin_role_admin_' + a.id"
+                      (change)="onToggleRole(a, 'admin', $event.checked)">Admin</mat-checkbox>
+                  </div>
+                }
+              </td>
               <td class="actions">
-                <button class="action-btn" data-testid="_btn_modifier_administrateur" title="Modifier" (click)="onEditAdmin(a)">
-                  <mat-icon class="icon" >edit</mat-icon>
+                <button
+                  class="action-btn"
+                  type="button"
+                  data-testid="_btn_modifier_administrateur"
+                  title="Modifier"
+                  (click)="onEditAdmin(a)">
+                  <mat-icon class="icon">edit</mat-icon>
                 </button>
-                <button class="action-btn delete" data-testid="_btn_supprimer_administrateur" title="Supprimer" (click)="onDeleteAdmin(a)">
-                  <mat-icon class="icon" >delete</mat-icon>
+                <button
+                  class="action-btn delete"
+                  type="button"
+                  data-testid="_btn_supprimer_administrateur"
+                  title="Supprimer"
+                  [disabled]="suppressionEnCours(a.id)"
+                  (click)="onDeleteAdmin(a)">
+                  <mat-icon class="icon">delete</mat-icon>
                 </button>
               </td>
             </tr>
@@ -49,14 +71,45 @@
         </tbody>
       </table>
     </div>
-
-    <div class="pagination" data-testid="_lst_pagination_administrateurs">
-      <button class="page-btn" [disabled]="true">«</button>
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <button class="page-btn">»</button>
-    </div>
-
   </div>
-</div>
+
+  @if (isLoading && administrateursFiltres.length === 0) {
+    <div slot="empty-state" class="empty-state">
+      <p data-testid="_lib_loading_administrateurs">Chargement des administrateurs…</p>
+    </div>
+  } @else if (!isLoading && administrateursFiltres.length === 0) {
+    <div slot="empty-state" class="empty-state">
+      <mat-icon aria-hidden="true">folder_off</mat-icon>
+      <p data-testid="_lib_empty_administrateurs">{{ messageListeVide }}</p>
+    </div>
+  }
+
+  @if (!isLoading && administrateursFiltres.length > 0) {
+  <app-pagination
+    slot="pagination"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [pageSize]="pageSize"
+    (pageChange)="goToPage($event)">
+  </app-pagination>
+  }
+
+  @if (filtreSelectionne) {
+    <div slot="detail-content" class="filtre-panneau">
+      <app-filtre-administrateur
+        [filters]="currentFilters"
+        (filtreChange)="onFiltreChange($event)"
+        (filtreClose)="onFiltreClose()">
+      </app-filtre-administrateur>
+    </div>
+  }
+
+</app-master-detail-layout>
+
+@if (editionOuverte) {
+  <app-administrateur-modal
+    [admin]="adminAEditer"
+    (closed)="onEditionFermee()"
+    (saved)="onAdminEnregistre($event)">
+  </app-administrateur-modal>
+}
