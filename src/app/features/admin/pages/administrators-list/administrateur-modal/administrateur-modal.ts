@@ -83,7 +83,7 @@ export class AdministrateurModal implements OnInit {
         this.isEditMode ? [] : [Validators.required, this.clientConnu.bind(this)]
       ],
       roleUser: [this.admin?.roles.includes('user') ?? false],
-      roleAdmin: [this.admin?.roles.includes('admin') ?? true]
+      roleAdmin: [this.admin?.roles.includes('admin') ?? false]
     });
 
     this.form.get('clientNom')?.valueChanges.pipe(startWith('')).subscribe(valeur => {
