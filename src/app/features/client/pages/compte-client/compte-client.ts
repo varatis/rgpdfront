@@ -8,7 +8,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ImportApercu, InfoFichier } from '../../../../core/models/info-fichier.model';
 import { ApiService } from '../../../../services/api.service';
 import { ImportWarningModal, ImportWarningModalAction } from './import-warning-modal/import-warning-modal';
-import { KeycloakService } from '../../../../core/auth/keycloak.service';
 import { UploadErrorSnackbar } from './upload-error-snackbar';
 import { ClientCourantService } from '../../../../core/services/client-courant.service';
 
