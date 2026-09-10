@@ -1,4 +1,4 @@
-<div class="filtres-container">
+<form class="filtres-container" (ngSubmit)="onApply()">
 
   <div class="filtres-body">
 
@@ -13,9 +13,9 @@
           type="text"
           data-testid="_inp_filtre_admin_nom"
           [(ngModel)]="nom"
+          name="nom"
           placeholder="Rechercher un nom..."
-          autocomplete="off"
-          (keyup.enter)="onApply()" />
+          autocomplete="off" />
       </mat-form-field>
     </div>
 
@@ -30,9 +30,9 @@
           type="text"
           data-testid="_inp_filtre_admin_prenom"
           [(ngModel)]="prenom"
+          name="prenom"
           placeholder="Rechercher un prénom..."
-          autocomplete="off"
-          (keyup.enter)="onApply()" />
+          autocomplete="off" />
       </mat-form-field>
     </div>
 
@@ -47,9 +47,9 @@
           type="text"
           data-testid="_inp_filtre_admin_client"
           [(ngModel)]="client"
+          name="client"
           placeholder="Rechercher un client..."
-          autocomplete="off"
-          (keyup.enter)="onApply()" />
+          autocomplete="off" />
       </mat-form-field>
     </div>
 
@@ -69,4 +69,4 @@
       Appliquer
     </button>
   </div>
-</div>
+</form>

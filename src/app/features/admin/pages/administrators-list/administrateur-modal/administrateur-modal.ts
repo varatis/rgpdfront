@@ -101,10 +101,19 @@ export class AdministrateurModal implements OnInit {
     }
   }
 
-  onBackdropClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.close();
+  onFormEnter(event: Event): void {
+    if (event.defaultPrevented) {
+      return;
     }
+
+    const cible = event.target as HTMLElement | null;
+
+    if (cible?.closest('button')) {
+      return;
+    }
+
+    event.preventDefault();
+    this.onSubmit();
   }
 
   isInvalid(controle: string): boolean {

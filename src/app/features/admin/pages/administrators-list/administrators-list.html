@@ -7,7 +7,11 @@
   (actionClick)="onHeaderAction($event)"
   (detailClose)="onCloseDetail()">
 
-  <div slot="list-items" class="admins-list" data-testid="_lst_administrateurs_list">
+  <div
+    slot="list-items"
+    class="admins-list"
+    [class.has-rows]="administrateursPage.length > 0"
+    data-testid="_lst_administrateurs_list">
     <div class="table-container">
       <table class="admin-table" data-testid="_lst_administrateurs_table">
         <thead>

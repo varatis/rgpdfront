@@ -1,4 +1,4 @@
-<div class="modal-backdrop" data-testid="_lst_modal_administrateur" (click)="onBackdropClick($event)">
+<div class="modal-backdrop" data-testid="_lst_modal_administrateur">
   <div class="modal-panel">
 
     <div class="modal-header">
@@ -11,7 +11,7 @@
         (click)="close()">✕</button>
     </div>
 
-    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" (keydown.enter)="onFormEnter($event)" novalidate>
 
       <div class="form-row">
         <div class="form-field">
@@ -80,7 +80,7 @@
               [matAutocomplete]="clientsAuto"
               placeholder="Rechercher un client..."
               autocomplete="off" />
-            <mat-autocomplete #clientsAuto="matAutocomplete">
+            <mat-autocomplete #clientsAuto="matAutocomplete" autoActiveFirstOption>
               @for (client of clientsFiltres; track client.id) {
                 <mat-option [value]="client.nom" [attr.data-testid]="'_opt_admin_client_' + client.id">
                   {{ client.nom }}
