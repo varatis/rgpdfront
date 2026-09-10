@@ -7,6 +7,7 @@
   (actionClick)="onHeaderAction($event)"
   (detailClose)="onCloseDetail()">
 
+  @if (administrateursPage.length > 0) {
   <div slot="list-items" class="admins-list" data-testid="_lst_administrateurs_list">
     <div class="table-container">
       <table class="admin-table" data-testid="_lst_administrateurs_table">
@@ -70,6 +71,7 @@
       </table>
     </div>
   </div>
+  }
 
   @if (isLoading && administrateursFiltres.length === 0) {
     <div slot="empty-state" class="empty-state">
@@ -82,6 +84,7 @@
     </div>
   }
 
+  @if (!isLoading && administrateursFiltres.length > 0) {
   <app-pagination
     slot="pagination"
     [currentPage]="currentPage"
@@ -89,6 +92,7 @@
     [pageSize]="pageSize"
     (pageChange)="goToPage($event)">
   </app-pagination>
+  }
 
   @if (filtreSelectionne) {
     <div slot="detail-content" class="filtre-panneau">

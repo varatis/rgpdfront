@@ -148,6 +148,10 @@
   }
 }
 
+::ng-deep .mat-mdc-autocomplete-panel {
+  max-height: 180px;
+}
+
 .roles-group {
   display: flex;
   align-items: center;

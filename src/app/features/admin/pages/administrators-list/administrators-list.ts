@@ -64,7 +64,6 @@ export class AdministratorsList implements OnInit {
 
   administrateurs: Administrator[] = [];
   isLoading = false;
-  erreurChargement: string | null = null;
 
   filtreSelectionne = false;
   currentFilters: FiltreAdministrateurPayload = { ...FILTRE_ADMINISTRATEUR_VIDE };
@@ -105,10 +104,6 @@ export class AdministratorsList implements OnInit {
   }
 
   get messageListeVide(): string {
-    if (this.erreurChargement) {
-      return this.erreurChargement;
-    }
-
     return this.hasActiveFilters
       ? 'Aucun administrateur ne correspond aux filtres.'
       : 'Aucun administrateur trouvé.';
@@ -259,7 +254,6 @@ export class AdministratorsList implements OnInit {
 
   private chargerAdministrateurs(): void {
     this.isLoading = true;
-    this.erreurChargement = null;
 
     this.apiService
       .getAdministrators()
@@ -277,7 +271,6 @@ export class AdministratorsList implements OnInit {
         },
         error: () => {
           this.administrateurs = [];
-          this.erreurChargement = 'Le chargement des administrateurs a échoué.';
         }
       });
   }
