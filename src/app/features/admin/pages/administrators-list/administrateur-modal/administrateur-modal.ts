@@ -101,17 +101,7 @@ export class AdministrateurModal implements OnInit {
     }
   }
 
-  onFormEnter(event: Event): void {
-    if (event.defaultPrevented) {
-      return;
-    }
-
-    const cible = event.target as HTMLElement | null;
-
-    if (cible?.closest('button')) {
-      return;
-    }
-
+  onModalEnter(event: Event): void {
     event.preventDefault();
     this.onSubmit();
   }

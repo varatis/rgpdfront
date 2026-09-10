@@ -1,5 +1,5 @@
 <div class="modal-backdrop" data-testid="_lst_modal_administrateur">
-  <div class="modal-panel">
+  <div class="modal-panel" (keydown.enter)="onModalEnter($event)">
 
     <div class="modal-header">
       <h2 data-testid="_lib_modal_administrateur_title">{{ modalTitle }}</h2>
@@ -11,7 +11,7 @@
         (click)="close()">✕</button>
     </div>
 
-    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" (keydown.enter)="onFormEnter($event)" novalidate>
+    <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
       <div class="form-row">
         <div class="form-field">
