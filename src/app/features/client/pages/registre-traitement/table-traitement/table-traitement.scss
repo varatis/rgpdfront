@@ -32,14 +32,17 @@
 
   &.sortable {
     .sort-icon {
-      stroke: currentColor;
-      transition: opacity 0.2s ease;
-      opacity: 0.4;
-    }
+      color: #9CA3AF;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, color 0.15s ease;
 
-    &:hover .sort-icon,
-    &.active .sort-icon {
-      opacity: 1;
+      &.active {
+        color: #2563EB;
+      }
+
+      &.desc {
+        transform: rotate(180deg);
+      }
     }
 
     &:hover {

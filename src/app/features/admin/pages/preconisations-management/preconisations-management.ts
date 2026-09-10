@@ -24,7 +24,43 @@ preconisations: Preconisation[] = [
 
   ];
 
+  sortField: string | null = null;
+  sortDirection: 'asc' | 'desc' = 'asc';
+
+  get preconisationsTriees(): Preconisation[] {
+    if (!this.sortField) {
+      return this.preconisations;
+    }
+
+    const colonne = this.sortField;
+    const facteur = this.sortDirection === 'asc' ? 1 : -1;
+
+    return [...this.preconisations].sort(
+      (a, b) => facteur * this.valeurTri(a, colonne).localeCompare(this.valeurTri(b, colonne), 'fr', { sensitivity: 'base' })
+    );
+  }
+
+  onSort(colonne: string): void {
+    if (this.sortField === colonne) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = colonne;
+      this.sortDirection = 'asc';
+    }
+  }
+
   onFilterPreconisations(): void {}
 
   onCreatePreconisation(): void {}
+
+  private valeurTri(preconisation: Preconisation, colonne: string): string {
+    switch (colonne) {
+      case 'priorite':
+        return preconisation.priorite ?? '';
+      case 'complexite':
+        return preconisation.complexite ?? '';
+      default:
+        return preconisation.titre ?? '';
+    }
+  }
 }

@@ -24,14 +24,86 @@
       <table class="preconisation-table" data-testid="_lst_preconisations_table">
         <thead>
           <tr>
-            <th data-testid="_lib_col_preconisation">Préconisation</th>
-            <th data-testid="_lib_col_priorite">Priorité</th>
-            <th data-testid="_lib_col_complexite">Complexité</th>
+            <th
+              class="sortable"
+              title="Préconisation"
+              data-testid="_btn_sort_preconisation"
+              (click)="onSort('titre')">
+              <span class="header-content">
+                <span class="header-label">Préconisation</span>
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField === 'titre'"
+                  [class.desc]="sortField === 'titre' && sortDirection === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </th>
+            <th
+              class="sortable"
+              title="Priorité"
+              data-testid="_btn_sort_priorite"
+              (click)="onSort('priorite')">
+              <span class="header-content">
+                <span class="header-label">Priorité</span>
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField === 'priorite'"
+                  [class.desc]="sortField === 'priorite' && sortDirection === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </th>
+            <th
+              class="sortable"
+              title="Complexité"
+              data-testid="_btn_sort_complexite"
+              (click)="onSort('complexite')">
+              <span class="header-content">
+                <span class="header-label">Complexité</span>
+                <svg
+                  class="sort-icon"
+                  [class.active]="sortField === 'complexite'"
+                  [class.desc]="sortField === 'complexite' && sortDirection === 'desc'"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true">
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </th>
             <th class="actions-col"></th>
           </tr>
         </thead>
         <tbody>
-          @for (p of preconisations; track p.id) {
+          @for (p of preconisationsTriees; track p.id) {
             <tr [attr.data-testid]="'_lst_preconisations_row_' + p.id">
               <td data-testid="_val_preco_titre">{{ p.titre }}</td>
               <td>

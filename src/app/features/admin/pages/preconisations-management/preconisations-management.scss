@@ -116,6 +116,39 @@
       font-size: 0.9rem;
       color: #4b5563;
       border-bottom: 1px solid #e5e7eb;
+      user-select: none;
+
+      &.sortable {
+        cursor: pointer;
+
+        &:hover {
+          color: #374151;
+        }
+      }
+    }
+  }
+
+  .header-content {
+    display: block;
+  }
+
+  .header-label {
+    overflow-wrap: break-word;
+  }
+
+  .sort-icon {
+    display: inline-block;
+    margin-left: 6px;
+    vertical-align: middle;
+    color: #9CA3AF;
+    transition: transform 0.15s ease, color 0.15s ease;
+
+    &.active {
+      color: #2563EB;
+    }
+
+    &.desc {
+      transform: rotate(180deg);
     }
   }
 

@@ -32,11 +32,6 @@ export class TableTraitement {
     this.sortChange.emit({ field: column, direction: newDirection });
   }
 
-  getSortIcon(column: SortColumn): string {
-    if (this.sortColumn() !== column) return 'unfold_more';
-    return this.sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward';
-  }
-
   getAriaSort(column: SortColumn): 'ascending' | 'descending' | 'none' {
     if (this.sortColumn() !== column) return 'none';
     return this.sortDirection() === 'asc' ? 'ascending' : 'descending';

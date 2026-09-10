@@ -41,13 +41,6 @@ export class PreconisationsTable {
     this.sortChange.emit({ field: column, direction });
   }
 
-  getSortIcon(column: PreconisationSortField): string {
-    if (this.sortColumn() !== column) {
-      return 'unfold_more';
-    }
-    return this.sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward';
-  }
-
   getAriaSort(column: PreconisationSortField): 'ascending' | 'descending' | 'none' {
     if (this.sortColumn() !== column) {
       return 'none';

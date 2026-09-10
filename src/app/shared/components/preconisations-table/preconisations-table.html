@@ -2,7 +2,6 @@
   <div class="table-header">
     <div
       class="header-cell sortable"
-      [class.active]="sortColumn() === 'libelle'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('libelle')"
       (click)="toggleSort('libelle')"
@@ -10,12 +9,26 @@
       (keydown.space)="toggleSort('libelle')"
       tabindex="0">
       <span>PRÉCONISATION</span>
-      <mat-icon class="sort-icon">{{ getSortIcon('libelle') }}</mat-icon>
+      <svg
+        class="sort-icon"
+        [class.active]="sortColumn() === 'libelle'"
+        [class.desc]="sortColumn() === 'libelle' && sortDirection() === 'desc'"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        aria-hidden="true">
+        <path
+          d="M1 1l4 4 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </div>
 
     <div
       class="header-cell sortable"
-      [class.active]="sortColumn() === 'priorite'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('priorite')"
       (click)="toggleSort('priorite')"
@@ -23,12 +36,26 @@
       (keydown.space)="toggleSort('priorite')"
       tabindex="0">
       <span>PRIORITÉ</span>
-      <mat-icon class="sort-icon">{{ getSortIcon('priorite') }}</mat-icon>
+      <svg
+        class="sort-icon"
+        [class.active]="sortColumn() === 'priorite'"
+        [class.desc]="sortColumn() === 'priorite' && sortDirection() === 'desc'"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        aria-hidden="true">
+        <path
+          d="M1 1l4 4 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </div>
 
     <div
       class="header-cell sortable col-complexite"
-      [class.active]="sortColumn() === 'complexite'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('complexite')"
       (click)="toggleSort('complexite')"
@@ -36,12 +63,26 @@
       (keydown.space)="toggleSort('complexite')"
       tabindex="0">
       <span>COMPLEXITÉ</span>
-      <mat-icon class="sort-icon">{{ getSortIcon('complexite') }}</mat-icon>
+      <svg
+        class="sort-icon"
+        [class.active]="sortColumn() === 'complexite'"
+        [class.desc]="sortColumn() === 'complexite' && sortDirection() === 'desc'"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        aria-hidden="true">
+        <path
+          d="M1 1l4 4 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </div>
 
     <div
       class="header-cell sortable col-avancement"
-      [class.active]="sortColumn() === 'etatAvancement'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('etatAvancement')"
       (click)="toggleSort('etatAvancement')"
@@ -49,7 +90,22 @@
       (keydown.space)="toggleSort('etatAvancement')"
       tabindex="0">
       <span>AVANCEMENT</span>
-      <mat-icon class="sort-icon">{{ getSortIcon('etatAvancement') }}</mat-icon>
+      <svg
+        class="sort-icon"
+        [class.active]="sortColumn() === 'etatAvancement'"
+        [class.desc]="sortColumn() === 'etatAvancement' && sortDirection() === 'desc'"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        aria-hidden="true">
+        <path
+          d="M1 1l4 4 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </div>
 
     <div class="header-cell arrow-col"></div>

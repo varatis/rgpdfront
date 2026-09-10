@@ -52,9 +52,4 @@ export class Table {
   onSelect(item: TableItem) {
     this.select.emit(item);
   }
-
-  getSortIcon(column: string): string {
-    if (this.sortColumn !== column) return 'unfold_more';
-    return this.sortDirection === 'asc' ? 'expand_more' : 'expand_less';
-  }
 }

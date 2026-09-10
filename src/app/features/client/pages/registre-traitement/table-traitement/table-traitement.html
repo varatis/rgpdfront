@@ -2,7 +2,6 @@
   <div class="table-header">
     <div
       class="header-cell sortable id"
-      [class.active]="sortColumn() === 'idFonctionnel'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('idFonctionnel')"
       (click)="toggleSort('idFonctionnel')"
@@ -11,12 +10,26 @@
       tabindex="0"
     >
       <span class="header-text">ID</span>
-      <mat-icon class="sort-icon">{{ getSortIcon('idFonctionnel') }}</mat-icon>
+      <svg
+        class="sort-icon"
+        [class.active]="sortColumn() === 'idFonctionnel'"
+        [class.desc]="sortColumn() === 'idFonctionnel' && sortDirection() === 'desc'"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        aria-hidden="true">
+        <path
+          d="M1 1l4 4 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </div>
 
     <div
       class="header-cell sortable"
-      [class.active]="sortColumn() === 'nom'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('nom')"
       (click)="toggleSort('nom')"
@@ -25,12 +38,26 @@
       tabindex="0"
     >
       TRAITEMENT
-      <mat-icon class="sort-icon">{{ getSortIcon('nom') }}</mat-icon>
+      <svg
+        class="sort-icon"
+        [class.active]="sortColumn() === 'nom'"
+        [class.desc]="sortColumn() === 'nom' && sortDirection() === 'desc'"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        aria-hidden="true">
+        <path
+          d="M1 1l4 4 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </div>
 
     <div
       class="header-cell sortable col-gestionnaire"
-      [class.active]="sortColumn() === 'gestionnaireMiseEnOeuvre'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('gestionnaireMiseEnOeuvre')"
       (click)="toggleSort('gestionnaireMiseEnOeuvre')"
@@ -39,12 +66,26 @@
       tabindex="0"
     >
       GESTIONNAIRE
-      <mat-icon class="sort-icon">{{ getSortIcon('gestionnaireMiseEnOeuvre') }}</mat-icon>
+      <svg
+        class="sort-icon"
+        [class.active]="sortColumn() === 'gestionnaireMiseEnOeuvre'"
+        [class.desc]="sortColumn() === 'gestionnaireMiseEnOeuvre' && sortDirection() === 'desc'"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        aria-hidden="true">
+        <path
+          d="M1 1l4 4 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </div>
 
     <div
       class="header-cell sortable col-finalite"
-      [class.active]="sortColumn() === 'finalitePrincipale'"
       role="columnheader"
       [attr.aria-sort]="getAriaSort('finalitePrincipale')"
       (click)="toggleSort('finalitePrincipale')"
@@ -53,7 +94,22 @@
       tabindex="0"
     >
       FINALITÉ PRINCIPALE
-      <mat-icon class="sort-icon">{{ getSortIcon('finalitePrincipale') }}</mat-icon>
+      <svg
+        class="sort-icon"
+        [class.active]="sortColumn() === 'finalitePrincipale'"
+        [class.desc]="sortColumn() === 'finalitePrincipale' && sortDirection() === 'desc'"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        aria-hidden="true">
+        <path
+          d="M1 1l4 4 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </div>
 
     <div class="header-cell-arrow"></div>
